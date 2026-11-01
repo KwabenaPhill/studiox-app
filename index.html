@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.2</title>
+<title>Studio X 1.3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -104,6 +104,12 @@ pre.w{white-space:pre-wrap;word-break:break-word;font-family:var(--f);font-size:
 .plus{color:var(--green)!important}.minus{color:var(--red)!important}
 .pillm{font-size:11px;font-weight:700;border-radius:99px;padding:3px 8px;background:var(--card2);border:1px solid var(--line);color:var(--mute)}.pillm.on{color:var(--green);border-color:rgba(48,209,88,.45)}
 .chcard{display:flex;align-items:center;gap:12px}
+/* 1.3: every box is a button; the balance card (Match Vision / Sure Stake money look) */
+button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
+.balcard{display:block;width:100%;text-align:left;border:1px solid var(--accLine);border-radius:var(--r);padding:18px 18px 16px;margin-bottom:12px;color:#fff;
+  background:radial-gradient(120% 140% at 100% 0%,rgba(244,114,182,.22),transparent 55%),radial-gradient(120% 140% at 0% 100%,rgba(34,211,238,.16),transparent 55%),#141018}
+.balcard .bl{font-size:11px;letter-spacing:2px;font-weight:700;color:#C4B5FD}.balcard .bv{font-size:34px;font-weight:900;margin-top:6px;letter-spacing:-.5px}.balcard .bs{font-size:12.5px;color:var(--mute);margin-top:4px}
+.set-row .t .prog{margin-top:6px}
 /* Fix notes in Studio X colours */
 #fxSheet button.main{background:var(--acc)!important;color:#fff!important}#fxSheet .in{background:#101012!important}
 /* tab bar (Match Vision line icons) */
@@ -140,7 +146,7 @@ pre.w{white-space:pre-wrap;word-break:break-word;font-family:var(--f);font-size:
 
 <script>
 (function(){
-VERSION='1.2';
+VERSION='1.3';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -171,7 +177,7 @@ const BOTFATHER='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUE
 const IC={tickOnShare:['#30D158','tick'],lateHours:['#FF9F0A','clock'],showFuture:['#0A84FF','cal'],bots:['img',BOTFATHER],key:['#5E5CE6','api'],
  autoGet:['#32ADE6','dl'],chans:['#BF5AF2','ch'],showOff:['#636366','eyeOff'],install:['#0A84FF','phone'],startTab:['#5E5CE6','home'],
  autoUpdate:['#30D158','refresh'],update:['#0A84FF','up'],backup:['#0A84FF','cloudUp'],restore:['#30D158','cloudDown'],clearMedia:['#FF453A','trash'],
- defaults:['#8E8E93','reset'],currency:['#30D158','money']};
+ defaults:['#8E8E93','reset'],currency:['#30D158','money'],apikeys:['#FF9F0A','api']};
 const ln=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${LN[k]||''}</svg>`;
 
 /* ---------- channels and settings ---------- */
@@ -195,7 +201,7 @@ const SET={ /* every setting, its default and one short help line */
  autoGet:{d:true,t:'Get videos by itself',h:'Downloads Shorts ready to share (Wi-Fi or data)'},
  style:{d:'1',t:'Look',h:'1. Studio Violet'}};
 
-let S={channels:[],ideas:[],money:{},done:{},settings:{},feed:{items:[],files:{},last:0,err:''},logos:{}};
+let S={channels:[],ideas:[],money:{},done:{},settings:{},feed:{items:[],files:{},last:0,err:''},logos:{},stats:{}};
 function idb(){return new Promise((ok,no)=>{const r=indexedDB.open('studiox',2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('m'))d.createObjectStore('m');};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);});}
 async function kvGet(store,k){try{const d=await idb();return await new Promise(ok=>{const q=d.transaction(store).objectStore(store).get(k);q.onsuccess=()=>ok(q.result);q.onerror=()=>ok(null);});}catch(e){return null;}}
 async function kvPut(store,k,v){try{const d=await idb();await new Promise(ok=>{const t=d.transaction(store,'readwrite');t.objectStore(store).put(v,k);t.oncomplete=ok;t.onerror=ok;});}catch(e){}}
@@ -204,7 +210,7 @@ async function load(){const v=await kvGet('kv','data');if(v)Object.assign(S,v);
   if(!S.channels.length)S.channels=START.map(c=>({id:slug(c[0]),name:c[0],platform:c[1],color:c[2],url:'',on:true}));
   S.channels.forEach(c=>{if(/^c\d+$/.test(c.id)){c.id=slug(c.name);}if(!c.color)c.color=COLORS[0];});   // 1.0 -> 1.1
   S.channels=S.channels.filter(c=>!(c.id==='tiktok'&&c.platform==='TikTok'));   // 1.2: TikTok is an app, not a channel
-  S.money=S.money||{};S.done=S.done||{};S.ideas=S.ideas||[];S.logos=S.logos||{};S.feed=Object.assign({items:[],files:{},last:0,err:''},S.feed&&S.feed.items?S.feed:{});
+  S.money=S.money||{};S.stats=S.stats||{};S.done=S.done||{};S.ideas=S.ideas||[];S.logos=S.logos||{};S.feed=Object.assign({items:[],files:{},last:0,err:''},S.feed&&S.feed.items?S.feed:{});
   for(const k in SET)if(!(k in S.settings))S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:SET[k].d;}
 let svT=null;const save=()=>{clearTimeout(svT);svT=setTimeout(()=>kvPut('kv','data',S),150);};
 const set=k=>S.settings[k];
@@ -247,7 +253,7 @@ function drawHome(){const T=tasks().filter(t=>homeCh==='all'||t.ch.id===homeCh);
   const wk=Date.now()-7*864e5;const doneWk=Object.values(S.done).filter(x=>x>wk).length;
   const chs=chList();const selC=homeCh!=='all'&&chBy(homeCh);const sc=document.querySelector('#p-home .chips');const keepX=sc?sc.scrollLeft:0;
   $('p-home').innerHTML=`${installCard()}
-  <div class="summary"><div class="sbox on"><div class="lbl">To post</div><div class="big">${open.length}</div></div><div class="sbox"><div class="lbl">Late</div><div class="big ${late?'red':''}">${late}</div></div><div class="sbox"><div class="lbl">Shared 7d</div><div class="big">${doneWk}</div></div></div>
+  <div class="summary"><button class="sbox on" data-box="open"><div class="lbl">To post</div><div class="big">${open.length}</div></button><button class="sbox" data-box="late"><div class="lbl">Late</div><div class="big ${late?'red':''}">${late}</div></button><button class="sbox" data-box="shared"><div class="lbl">Shared 7d</div><div class="big">${doneWk}</div></button></div>
   <div class="chips"><button class="chip all ${homeCh==='all'?'on':''}" data-hch="all">All</button>${chs.map(c=>`<button class="chip ${homeCh===c.id?'on':''} ${c.pin?'pin':''}" data-hch="${c.id}" data-lp="${c.id}">${logo(c)}${esc(c.name)}</button>`).join('')}</div>
   ${selC?chanCard(selC,T):''}
   <div class="card"><div class="ct">To do now</div>${list.length?list.map((t,i)=>todoRow(t,i===0)).join(''):`<div class="empty">${S.feed.items.length?'All shared ✓':feedHelp()}</div>`}</div>
@@ -255,9 +261,9 @@ function drawHome(){const T=tasks().filter(t=>homeCh==='all'||t.ch.id===homeCh);
   const nc=document.querySelector('#p-home .chips');if(nc)nc.scrollLeft=keepX;
   $('lateDot').style.display=late?'block':'none';$('lateDot').textContent=late;fillThumbs();}
 function chanCard(c,T){const open=T.filter(t=>!complete(t));const nx=open.find(t=>!future(t))||open[0];const m=S.money[c.id]||{};const tot=(m.list||[]).reduce((a,x)=>a+(+x.amt||0),0);
-  return `<div class="card"><div class="chcard">${logo(c,'big')}<div style="flex:1;min-width:0"><b style="font-size:16px">${esc(c.name)}</b><div class="muted">${open.length} to post${nx?' · next '+niceTime(nx.when):''}</div></div>
+  return `<div class="card"><div class="chcard" data-cpage="${c.id}" style="cursor:pointer">${logo(c,'big')}<div style="flex:1;min-width:0"><b style="font-size:16px">${esc(c.name)}</b><div class="muted">${open.length} to post${nx?' · next '+niceTime(nx.when):''}</div></div>
    <span class="pillm ${m.on?'on':''}">${m.on?'Monetized':'Not monetized'}</span></div>
-   <div class="row"><button class="btn out" data-chan="${c.id}">Channel</button><button class="btn out" data-mon="${c.id}">Money ${tot?money(tot):''}</button><button class="btn out" data-pin="${c.id}">${c.pin?'Unpin':'Pin to top'}</button></div></div>`;}
+   <div class="row"><button class="btn out" data-cpage="${c.id}">Channel</button><button class="btn out" data-cpage="${c.id}" data-ptab="money">Money ${tot?money(tot):''}</button><button class="btn out" data-pin="${c.id}">${c.pin?'Unpin':'Pin to top'}</button></div></div>`;}
 function todoRow(t,next){const th=t.item.thumb&&t.item.thumb.path;
   return `<div class="todo"><div class="ic">${th?`<img data-m="${th}" alt="">`:t.kind==='short'?'🎬':t.kind==='post'?'🖼️':'▶'}<span class="ch">${logo(t.ch)}</span></div><div class="tx">
   <button class="tt" data-task="${t.id}">${esc(t.label)}${next?'<span class="nx">NEXT</span>':''}<span class="tm ${lateOf(t)?'late':''}">${niceTime(t.when)}</span></button>
@@ -273,52 +279,136 @@ function drawRecords(){const T=tasks();const from={week:Date.now()-7*864e5,month
   const per={};shares.forEach(s=>{per[s.t.ch.id]=(per[s.t.ch.id]||0)+1;});
   const vids=S.feed.items.filter(i=>i.when&&new Date(i.when).getTime()>=from);
   $('p-records').innerHTML=`<div class="bar"><select id="recP">${[['week','This week'],['month','This month'],['year','This year'],['all','All time']].map(o=>`<option value="${o[0]}" ${recP===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
-  <div class="summary"><div class="sbox on"><div class="lbl">Shared</div><div class="big">${shares.length}</div></div><div class="sbox"><div class="lbl">Videos</div><div class="big">${vids.length}</div></div><div class="sbox"><div class="lbl">Done</div><div class="big">${T.filter(complete).length}</div></div></div>
-  <div class="sect">Channels</div><div class="card">${chList().map(c=>`<div class="rec" data-chan="${c.id}" style="cursor:pointer">${logo(c,'big')}<div><b>${esc(c.name)}</b><div class="muted">${S.feed.items.filter(i=>chBy(i.channel)===c).length} video(s)</div></div><span class="n">${per[c.id]||0}</span><span class="chv" style="color:#555;font-size:22px">›</span></div>`).join('')}</div>
+  <div class="summary"><button class="sbox on" data-box="shared"><div class="lbl">Shared</div><div class="big">${shares.length}</div></button><button class="sbox" data-box="videos"><div class="lbl">Videos</div><div class="big">${vids.length}</div></button><button class="sbox" data-box="open"><div class="lbl">To post</div><div class="big">${T.filter(t=>!complete(t)).length}</div></button></div>
+  <div class="sect">Channels</div><div class="card">${chList().map(c=>`<div class="rec" data-cpage="${c.id}" style="cursor:pointer">${logo(c,'big')}<div><b>${esc(c.name)}</b><div class="muted">${S.feed.items.filter(i=>chBy(i.channel)===c).length} video(s)</div></div><span class="n">${per[c.id]||0}</span><span class="chv" style="color:#555;font-size:22px">›</span></div>`).join('')}</div>
+  <div class="sect">Subscribers</div><div class="set-list">${chList().map(c=>{const st=statsOf(c.id);return `<button class="set-row" data-cpage="${c.id}" data-ptab="numbers">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${st.views!=null?fmtN(st.views)+' views':'Tap to add numbers'}</small></span><span class="v">${st.subs!=null?fmtN(st.subs):'–'} ${gTxt(growth(c.id,'subs',7))}</span><span class="chv">›</span></button>`;}).join('')}</div>
   <div class="sect">Shared</div><div class="card">${shares.length?shares.sort((a,b)=>b.ts-a.ts).slice(0,60).map(s=>`<div class="rec" data-task="${s.t.id}" style="cursor:pointer">${bi(s.a)}<div style="min-width:0"><b>${esc(s.t.label)}</b><div class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.t.item.title)}</div></div><span class="muted" style="margin-left:auto;white-space:nowrap">${niceTime(new Date(s.ts))}</span></div>`).join(''):'<div class="empty">Nothing shared yet.</div>'}</div>`;
   $('recP').onchange=e=>{recP=e.target.value;drawRecords();};}
 
 function drawChannels(){const T=tasks();
   $('p-channels').innerHTML=`<div class="tiles">${chList().map(c=>{const n=T.filter(t=>t.ch===c&&!complete(t)).length;
-    return `<button class="tile ${c.pin?'pin':''}" data-chan="${c.id}" data-lp="${c.id}" style="${c.on?'':'opacity:.45'}">${n?`<span class="cnt">${n}</span>`:''}${logo(c,'huge')}<b>${esc(c.name)}</b><small>${S.feed.items.some(i=>chBy(i.channel)===c)?'Bot connected':c.on?esc(c.platform):'Off'}</small></button>`;}).join('')}
+    return `<button class="tile ${c.pin?'pin':''}" data-cpage="${c.id}" data-lp="${c.id}" style="${c.on?'':'opacity:.45'}">${n?`<span class="cnt">${n}</span>`:''}${logo(c,'huge')}<b>${esc(c.name)}</b><small>${S.feed.items.some(i=>chBy(i.channel)===c)?'Bot connected':c.on?esc(c.platform):'Off'}</small></button>`;}).join('')}
     <button class="tile add" id="addCh"><span style="font-size:30px">＋</span>Add channel</button></div>
     <p class="muted" style="text-align:center;margin-top:12px">Hold a channel to pin it to the top.</p>`;}
 
-/* ---------- MONEY: monetization and earnings per channel ---------- */
-let monP='month';
+/* ---------- MONEY 1.3 (Philip, 1 Nov: "like Match Vision and Sure Stake: total balance, switch accounts, every box clickable, every payment recorded") ---------- */
+let monP='month',monAcc='all';
 const money=n=>(n<0?'-':'')+set('currency')+Math.abs(n).toLocaleString('en-GB',{maximumFractionDigits:2});
 const YPP=[['subs','Subscribers',1000],['hours','Watch hours (12 months)',4000],['shorts','Shorts views (90 days)',10000000]];
-function drawMoney(){const from={week:Date.now()-7*864e5,month:Date.now()-30*864e5,year:Date.now()-365*864e5,all:0}[monP];
-  const all=[];for(const c of chList()){const m=S.money[c.id]||{};(m.list||[]).forEach(x=>all.push({...x,c}));}
-  const inP=all.filter(x=>new Date(x.date).getTime()>=from);const tot=inP.reduce((a,x)=>a+(+x.amt||0),0);
-  const mon=chList().filter(c=>(S.money[c.id]||{}).on).length;
-  $('p-money').innerHTML=`<div class="bar"><select id="monP">${[['week','This week'],['month','This month'],['year','This year'],['all','All time']].map(o=>`<option value="${o[0]}" ${monP===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
-  <div class="summary"><div class="sbox on"><div class="lbl">Earned</div><div class="big ${tot>=0?'plus':'minus'}">${money(tot)}</div></div><div class="sbox"><div class="lbl">Monetized</div><div class="big">${mon}/${chList().length}</div></div><div class="sbox"><div class="lbl">Payments</div><div class="big">${inP.length}</div></div></div>
-  <div class="row" style="margin:0 0 12px"><button class="btn" data-mon="add">＋ Add money</button></div>
-  <div class="sect">Channels</div><div class="set-list">${chList().map(c=>{const m=S.money[c.id]||{};const t=(m.list||[]).filter(x=>new Date(x.date).getTime()>=from).reduce((a,x)=>a+(+x.amt||0),0);
-    const p=m.on?'':YPP.slice(0,2).map(([k,,max])=>Math.min(100,Math.round((+(m[k]||0))/max*100))).join('% · ')+'%';
-    return `<button class="set-row" data-mon="${c.id}">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${m.on?'Monetized':'Not yet · '+p+' (subs · hours)'}</small></span><span class="v ${t>0?'plus':t<0?'minus':''}">${money(t)}</span><span class="chv">›</span></button>`;}).join('')}</div>`;
+const PERIODS=[['week','This week'],['month','This month'],['year','This year'],['all','All time']];
+const fromP=p=>({week:Date.now()-7*864e5,month:Date.now()-30*864e5,year:Date.now()-365*864e5,all:0}[p]);
+const IN_SRC=['YouTube AdSense','YouTube Shorts','TikTok Rewards','Facebook','Instagram','Sponsor','Affiliate','Other'];
+const OUT_SRC=['Taken out','Cost','Equipment','Ads','Software','Other'];
+const mOf=id=>{const m=S.money[id]=S.money[id]||{on:false,list:[]};m.list=m.list||[];return m;};
+function txAll(acc){const out=[];for(const c of S.channels){if(acc!=='all'&&c.id!==acc)continue;mOf(c.id).list.forEach(x=>out.push({...x,c}));}return out.sort((a,b)=>String(b.date).localeCompare(String(a.date))||b.id-a.id);}
+const sumIn=L=>L.filter(x=>+x.amt>0).reduce((a,x)=>a+(+x.amt),0);
+const sumOut=L=>L.filter(x=>+x.amt<0).reduce((a,x)=>a+(+x.amt),0);
+const dShort=d=>new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+const txRow=x=>`<button class="set-row" data-tx="${x.c.id}|${x.id}">${logo(x.c,'big')}<span class="t">${esc(x.src||(+x.amt<0?'Taken out':'Payment'))}<small>${esc(x.c.name)} · ${dShort(x.date)}${x.note?' · '+esc(x.note):''}</small></span><span class="v ${+x.amt>=0?'plus':'minus'}" style="font-size:15px">${+x.amt>=0?'+':''}${money(+x.amt)}</span><span class="chv">›</span></button>`;
+function drawMoney(){const from=fromP(monP);const acc=monAcc!=='all'&&chBy(monAcc)?monAcc:'all';const c=acc==='all'?null:chBy(acc);
+  const all=txAll(acc);const inP=all.filter(x=>new Date(x.date).getTime()>=from);
+  const bal=all.reduce((a,x)=>a+(+x.amt||0),0);const mon=chList().filter(x=>mOf(x.id).on).length;
+  const sc=document.querySelector('#p-money .chips');const keepX=sc?sc.scrollLeft:0;
+  $('p-money').innerHTML=`<div class="chips"><button class="chip all ${acc==='all'?'on':''}" data-macc="all">All channels</button>${chList().map(x=>`<button class="chip ${acc===x.id?'on':''} ${x.pin?'pin':''}" data-macc="${x.id}">${logo(x)}${esc(x.name)}</button>`).join('')}</div>
+  <div class="bar"><select id="monP">${PERIODS.map(o=>`<option value="${o[0]}" ${monP===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
+  <button class="balcard" data-mbox="all"><div class="bl">${c?esc(c.name).toUpperCase():'ALL CHANNELS'} BALANCE</div><div class="bv ${bal<0?'minus':''}">${money(bal)}</div><div class="bs">${c?(mOf(c.id).on?'Monetized ✓':'Not monetized yet'):mon+' of '+chList().length+' channels monetized'}</div></button>
+  <div class="summary"><button class="sbox on" data-mbox="in"><div class="lbl">Earned</div><div class="big plus">${money(sumIn(inP))}</div></button><button class="sbox" data-mbox="mon"><div class="lbl">Monetized</div><div class="big">${c?(mOf(c.id).on?'Yes':'No'):mon+'/'+chList().length}</div></button><button class="sbox" data-mbox="out"><div class="lbl">Taken out</div><div class="big minus">${money(-sumOut(inP))}</div></button></div>
+  <div class="row" style="margin:0 0 12px"><button class="btn out" data-madd="in|${acc}">＋ Add money</button><button class="btn out" data-madd="out|${acc}">− Take out money</button></div>
+  <div class="sect">Transactions · ${PERIODS.find(o=>o[0]===monP)[1].toLowerCase()}</div>${inP.length?`<div class="set-list">${inP.slice(0,40).map(txRow).join('')}</div>`:'<div class="card"><div class="empty">No transactions in this period. Tap ＋ Add money.</div></div>'}
+  ${acc==='all'?`<div class="sect">Each channel</div><div class="set-list">${chList().map(x=>{const L=txAll(x.id);const t=L.filter(y=>new Date(y.date).getTime()>=from).reduce((a,y)=>a+(+y.amt||0),0);const st=S.stats[x.id]||{};
+    return `<button class="set-row" data-cpage="${x.id}" data-ptab="money">${logo(x,'big')}<span class="t">${esc(x.name)}<small>${mOf(x.id).on?'Monetized ✓':'Not yet · '+roadPct(x.id)+'%'}${st.subs!=null?' · '+fmtN(st.subs)+' subs':''}</small></span><span class="v ${t>0?'plus':t<0?'minus':''}">${money(t)}</span><span class="chv">›</span></button>`;}).join('')}</div>`:`<div class="row"><button class="btn" data-cpage="${acc}">Open ${esc(c.name)}</button></div>`}`;
+  const nc=document.querySelector('#p-money .chips');if(nc)nc.scrollLeft=keepX;
   $('monP').onchange=e=>{monP=e.target.value;drawMoney();};}
-function moneySub(id){if(id==='add'){const c=chList()[0];return addMoney(c&&c.id);}
-  const c=chBy(id);const m=S.money[c.id]=S.money[c.id]||{on:false,list:[]};m.list=m.list||[];const tot=m.list.reduce((a,x)=>a+(+x.amt||0),0);
-  openSub(c.name+' · Money',`<div class="card"><div class="chcard">${logo(c,'big')}<div style="flex:1"><b>Total earned</b><div class="big ${tot>=0?'plus':'minus'}" style="font-size:24px;font-weight:800">${money(tot)}</div></div></div></div>
-   <div class="set-list"><div class="set-row"><span class="t">Monetized<small>YouTube Partner Program (or TikTok rewards) is on</small></span><label class="sw"><input type="checkbox" id="mOn" ${m.on?'checked':''}><span></span></label></div></div>
-   ${m.on?'':`<div class="card"><div class="ct">Road to monetization</div>${YPP.map(([k,l,max])=>`<div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${l}</span><b>${(+(m[k]||0)).toLocaleString()} / ${max.toLocaleString()}</b></div><div class="prog"><i style="width:${Math.min(100,(+(m[k]||0))/max*100)}%"></i></div></div>`).join('')}
-    <div class="row"><button class="btn out" id="mNums">Update numbers</button></div><p class="muted" style="margin-top:8px">YouTube needs 1,000 subscribers and 4,000 watch hours, or 1,000 subscribers and 10M Shorts views.</p></div>`}
-   <div class="row" style="margin-bottom:12px"><button class="btn" id="mAdd">＋ Add money</button></div>
-   <div class="sect">Payments</div><div class="card">${m.list.length?[...m.list].sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<div class="rec"><div><b>${esc(x.src||'Payment')}</b><div class="muted">${new Date(x.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}${x.note?' · '+esc(x.note):''}</div></div><span class="n ${+x.amt>=0?'plus':'minus'}" style="font-size:16px">${money(+x.amt)}</span><button class="btn red" style="flex:none;padding:6px 9px;margin-left:8px" data-mdel="${c.id}|${x.id}">✕</button></div>`).join(''):'<div class="empty">No payments yet.</div>'}</div>`,()=>{
-   $('mOn').onchange=e=>{m.on=e.target.checked;save();moneySub(id);};
-   if($('mNums'))$('mNums').onclick=()=>{for(const [k,l] of YPP){const v=prompt(l+':',m[k]||0);if(v===null)return;m[k]=+String(v).replace(/[^0-9.]/g,'')||0;}save();moneySub(id);};
-   $('mAdd').onclick=()=>addMoney(c.id);});}
-function addMoney(chId){const chs=chList();openSub('Add money',`<div class="card">
+const fmtN=n=>(+n||0)>=1e6?((+n)/1e6).toFixed(1).replace('.0','')+'M':(+n||0)>=1e4?Math.round((+n)/1e3)+'K':(+n||0).toLocaleString('en-GB');
+function roadPct(id){const st=Object.assign({},mOf(id),S.stats[id]||{});const a=Math.min(1,(+st.subs||0)/1000),b=Math.max(Math.min(1,(+st.hours||0)/4000),Math.min(1,(+st.shorts||0)/1e7));return Math.round((a+b)/2*100);}
+function moneyList(kind,acc){const from=fromP(monP);let L=txAll(acc||'all').filter(x=>new Date(x.date).getTime()>=from);
+  if(kind==='in')L=L.filter(x=>+x.amt>0);if(kind==='out')L=L.filter(x=>+x.amt<0);
+  const t=L.reduce((a,x)=>a+(+x.amt||0),0);const by={};L.forEach(x=>{by[x.src||'Other']=(by[x.src||'Other']||0)+(+x.amt);});
+  openSub({in:'Earned',out:'Taken out',all:'All transactions'}[kind]+(acc&&acc!=='all'?' · '+chBy(acc).name:''),`<div class="card"><div class="muted">${PERIODS.find(o=>o[0]===monP)[1]}</div><div class="big ${t>=0?'plus':'minus'}" style="font-size:28px;font-weight:800">${money(t)}</div><div class="muted">${L.length} transaction(s)</div></div>
+   ${Object.keys(by).length?`<div class="sect">By source</div><div class="card">${Object.entries(by).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1])).map(([k,v])=>`<div class="rec"><b>${esc(k)}</b><span class="n ${v>=0?'plus':'minus'}" style="font-size:15px">${money(v)}</span></div>`).join('')}</div>`:''}
+   <div class="sect">Transactions</div>${L.length?`<div class="set-list">${L.map(txRow).join('')}</div>`:'<div class="card"><div class="empty">Nothing here yet.</div></div>'}
+   <div class="row"><button class="btn" data-madd="${kind==='out'?'out':'in'}|${acc||'all'}">${kind==='out'?'− Take out money':'＋ Add money'}</button></div>`);}
+function monRoad(){openSub('Monetization',`<p class="muted" style="margin:0 4px 10px">YouTube pays from 1,000 subscribers + 4,000 watch hours, or 1,000 subscribers + 10M Shorts views. Tap a channel to update it.</p>
+  <div class="set-list">${chList().map(c=>{const m=mOf(c.id);return `<button class="set-row" data-cpage="${c.id}" data-ptab="numbers">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${m.on?'Monetized ✓':'Road: '+roadPct(c.id)+'%'}</small><div class="prog"><i style="width:${m.on?100:roadPct(c.id)}%"></i></div></span><span class="chv">›</span></button>`;}).join('')}</div>`);}
+function addMoney(kind,chId){const chs=chList();if(!chId||chId==='all')chId=(chs[0]||{}).id;const out=kind==='out';
+  openSub(out?'Take out money':'Add money',`<div class="card">
    <label class="muted">Channel</label><select id="aCh" style="margin:6px 0 10px">${chs.map(c=>`<option value="${c.id}" ${c.id===chId?'selected':''}>${esc(c.name)}</option>`).join('')}</select>
-   <label class="muted">Amount (${set('currency')}) · use minus for a cost</label><input id="aAmt" type="number" step="0.01" inputmode="decimal" style="margin:6px 0 10px">
-   <label class="muted">From</label><select id="aSrc" style="margin:6px 0 10px">${['YouTube AdSense','YouTube Shorts','TikTok Rewards','Facebook','Instagram','Sponsor','Other','Cost'].map(o=>`<option>${o}</option>`).join('')}</select>
+   <label class="muted">Amount (${set('currency')})</label><input id="aAmt" type="number" step="0.01" min="0" inputmode="decimal" style="margin:6px 0 10px">
+   <label class="muted">${out?'What for':'From'}</label><select id="aSrc" style="margin:6px 0 10px">${(out?OUT_SRC:IN_SRC).map(o=>`<option>${o}</option>`).join('')}</select>
    <label class="muted">Date</label><input id="aDate" type="date" value="${new Date().toISOString().slice(0,10)}" style="margin:6px 0 10px">
    <label class="muted">Note</label><input id="aNote" placeholder="optional" style="margin-top:6px"></div>
-   <div class="row"><button class="btn" id="aSave">Save</button></div>`,()=>{$('aSave').onclick=()=>{const amt=parseFloat($('aAmt').value);if(isNaN(amt)){toast('Type the amount');return;}
-     const id=$('aCh').value;const m=S.money[id]=S.money[id]||{on:false,list:[]};m.list=m.list||[];m.list.push({id:Date.now(),amt,src:$('aSrc').value,date:$('aDate').value||new Date().toISOString().slice(0,10),note:$('aNote').value.trim()});
-     save();toast('Saved ✓');moneySub(id);};});}
+   <div class="row"><button class="btn" id="aSave">Save</button></div>`,()=>{$('aSave').onclick=()=>{let amt=Math.abs(parseFloat($('aAmt').value));if(!amt){toast('Type the amount');return;}if(out)amt=-amt;
+     const id=$('aCh').value;mOf(id).list.push({id:Date.now(),amt,src:$('aSrc').value,date:$('aDate').value||new Date().toISOString().slice(0,10),note:$('aNote').value.trim()});
+     save();toast(out?'Taken out ✓':'Saved ✓');closeSub();};});}
+function txSub(key){const [cid,tid]=key.split('|');const c=chBy(cid);const m=mOf(cid);const x=m.list.find(y=>String(y.id)===tid);if(!x)return;const out=+x.amt<0;
+  openSub(out?'Taken out':'Payment',`<div class="card" style="text-align:center">${logo(c,'huge')}<div class="big ${out?'minus':'plus'}" style="font-size:30px;font-weight:800;margin-top:8px">${out?'':'+'}${money(+x.amt)}</div><div class="muted">${esc(c.name)} · ${dShort(x.date)}</div></div>
+   <div class="card"><label class="muted">Amount (${set('currency')})</label><input id="eAmt" type="number" step="0.01" value="${Math.abs(+x.amt)}" style="margin:6px 0 10px">
+   <label class="muted">${out?'What for':'From'}</label><select id="eSrc" style="margin:6px 0 10px">${(out?OUT_SRC:IN_SRC).map(o=>`<option ${o===x.src?'selected':''}>${o}</option>`).join('')}</select>
+   <label class="muted">Date</label><input id="eDate" type="date" value="${esc(x.date)}" style="margin:6px 0 10px">
+   <label class="muted">Note</label><input id="eNote" value="${esc(x.note||'')}" style="margin-top:6px"></div>
+   <div class="row"><button class="btn" id="eSave">Save changes</button></div><div class="row"><button class="btn out" data-cpage="${c.id}" data-ptab="money">Open ${esc(c.name)}</button><button class="btn red" id="eDel">Delete</button></div>`,()=>{
+   $('eSave').onclick=()=>{const a=Math.abs(parseFloat($('eAmt').value));if(!a){toast('Type the amount');return;}Object.assign(x,{amt:out?-a:a,src:$('eSrc').value,date:$('eDate').value||x.date,note:$('eNote').value.trim()});save();toast('Saved ✓');closeSub();};
+   $('eDel').onclick=()=>{if(!confirm('Delete this transaction?'))return;const keep=[...m.list];m.list=m.list.filter(y=>y!==x);save();closeSub();undoToast('Deleted',()=>{m.list=keep;save();drawAll();});};});}
+function undoToast(msg,undo){const t=$('toast');t.innerHTML=`${esc(msg)} <button style="background:none;border:0;color:#8B5CF6;font-weight:800;margin-left:8px" id="undoB">UNDO</button>`;t.style.display='block';clearTimeout(toast.t);
+  $('undoB').onclick=()=>{undo();t.style.display='none';toast('Back ✓');};toast.t=setTimeout(()=>t.style.display='none',5000);}
+
+/* ---------- CHANNEL PAGE 1.3 (Philip: "when I click a channel give me EVERYTHING about it, settings go to Settings") ---------- */
+function statsOf(id){const m=mOf(id);const st=S.stats[id]||{};return {subs:st.subs!=null?st.subs:m.subs,views:st.views,hours:st.hours!=null?st.hours:m.hours,shorts:st.shorts!=null?st.shorts:m.shorts,at:st.at,src:st.src,hist:st.hist||[]};}
+function growth(id,k,days){const h=(S.stats[id]||{}).hist||[];if(h.length<2)return null;const now=h[h.length-1];const old=[...h].reverse().find(x=>new Date(x.d).getTime()<=Date.now()-days*864e5)||h[0];if(!old||old===now||now[k]==null||old[k]==null)return null;return now[k]-old[k];}
+const gTxt=g=>g==null?'':`<span class="${g>=0?'plus':'minus'}" style="font-size:11px;font-weight:700">${g>=0?'+':''}${fmtN(g)} 7d</span>`;
+function chanPage(id,tab){const c=chBy(id);if(!c)return;const T=tasks().filter(t=>t.ch===c);const open=T.filter(t=>!complete(t));const vids=S.feed.items.filter(i=>chBy(i.channel)===c).sort((a,b)=>String(b.when||'').localeCompare(String(a.when||'')));
+  const m=mOf(c.id);const L=txAll(c.id);const bal=L.reduce((a,x)=>a+(+x.amt||0),0);const st=statsOf(c.id);
+  const shared=[];T.forEach(t=>t.apps.forEach(a=>{const ts=S.done[t.id+'|'+a];if(ts)shared.push(ts);}));
+  openSub(c.name,`<div class="card"><div class="chcard">${logo(c,'huge')}<div style="flex:1;min-width:0"><b style="font-size:19px">${esc(c.name)}</b><div class="muted">${esc(c.platform)}${vids.length?' · Bot connected':''}${st.at?' · numbers '+niceTime(st.at):''}</div>
+   <div style="margin-top:6px"><span class="pillm ${m.on?'on':''}">${m.on?'Monetized':'Not monetized'}</span></div></div></div>
+   <div class="row">${c.url?`<button class="btn out" id="cpOpen">Open channel</button>`:''}<button class="btn out" data-chan="${c.id}">Channel settings</button></div></div>
+  <div class="summary"><button class="sbox on" data-cp="numbers|${c.id}"><div class="lbl">Subscribers</div><div class="big">${st.subs!=null?fmtN(st.subs):'–'}</div>${gTxt(growth(c.id,'subs',7))}</button><button class="sbox" data-cp="numbers|${c.id}"><div class="lbl">Views</div><div class="big">${st.views!=null?fmtN(st.views):'–'}</div>${gTxt(growth(c.id,'views',7))}</button><button class="sbox" data-cp="money|${c.id}"><div class="lbl">Balance</div><div class="big ${bal<0?'minus':bal>0?'plus':''}">${money(bal)}</div></button></div>
+  <div class="summary"><button class="sbox" data-cp="posts|${c.id}"><div class="lbl">Videos</div><div class="big">${vids.length}</div></button><button class="sbox" data-cp="todo|${c.id}"><div class="lbl">To post</div><div class="big ${open.filter(lateOf).length?'red':''}">${open.length}</div></button><button class="sbox" data-cp="shared|${c.id}"><div class="lbl">Shared</div><div class="big">${shared.length}</div></button></div>
+  <div class="card" data-cp="numbers|${c.id}" style="cursor:pointer"><div class="ct">Monetization ${m.on?'✓':''}</div>${m.on?'<div class="muted">Monetized. Payments go in Money below.</div>':YPP.map(([k,l,max])=>`<div style="margin-top:9px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${l}</span><b>${fmtN(st[k]||0)} / ${fmtN(max)}</b></div><div class="prog"><i style="width:${Math.min(100,(+st[k]||0)/max*100)}%"></i></div></div>`).join('')}</div>
+  <div class="sect">To post</div><div class="card">${open.length?open.slice(0,8).map((t,i)=>todoRow(t,i===0)).join(''):'<div class="empty">All shared ✓</div>'}</div>
+  <div class="sect">Videos</div>${vids.length?`<div class="set-list">${vids.slice(0,12).map(vidRow).join('')}</div>`:`<div class="card"><div class="empty">${vids.length?'':'No videos from the bot yet. They show here after each upload.'}</div></div>`}
+  <div class="sect">Money</div><div class="set-list">${L.length?L.slice(0,6).map(txRow).join(''):'<div class="set-row"><span class="t">No transactions yet</span></div>'}</div>
+  <div class="row"><button class="btn out" data-madd="in|${c.id}">＋ Add money</button><button class="btn out" data-madd="out|${c.id}">− Take out</button></div>
+  <div class="row"><button class="btn out" data-cp="money|${c.id}">All money</button><button class="btn out" data-cp="numbers|${c.id}">Update numbers</button></div>`,()=>{
+   if($('cpOpen'))$('cpOpen').onclick=()=>window.open(c.url,'_blank');
+   if(tab==='money')setTimeout(()=>cpSub('money',c.id),0);if(tab==='numbers')setTimeout(()=>cpSub('numbers',c.id),0);fillThumbs();});
+}
+function vidRow(i){const T=tasks().filter(t=>t.item===i);const done=T.filter(complete).length;
+  return `<button class="set-row" data-vid="${esc(i.id)}"><span class="i">${i.thumb&&i.thumb.path?`<img data-m="${i.thumb.path}">`:ln('video')}</span><span class="t">${esc(i.title)}<small>${niceTime(i.when)} · ${done}/${T.length} shared</small></span><span class="chv">›</span></button>`;}
+function vidSub(id){const i=S.feed.items.find(x=>x.id===id);if(!i)return;const c=chBy(i.channel);const T=tasks().filter(t=>t.item===i);
+  openSub(i.title.slice(0,40),`<div class="card" style="padding:10px">${i.thumb&&i.thumb.path?`<img class="media" data-m="${i.thumb.path}">`:''}<div class="ct" style="margin-top:10px">${esc(i.title)}</div><div class="muted">${esc(c?c.name:'')} · ${niceTime(i.when)}</div>
+   ${i.youtube&&i.youtube.url?`<div class="row"><button class="btn out" id="vOpen">Open on YouTube</button>${c?`<button class="btn out" data-cpage="${c.id}">Open ${esc(c.name)}</button>`:''}</div>`:''}</div>
+   <div class="sect">Posts for this video</div><div class="card">${T.map((t,k)=>todoRow(t,false)).join('')||'<div class="empty">Nothing to share.</div>'}</div>`,()=>{if($('vOpen'))$('vOpen').onclick=()=>window.open(i.youtube.url,'_blank');fillThumbs();});}
+function cpSub(kind,id){const c=chBy(id);if(!c)return;
+  if(kind==='money')return moneyList('all',id);
+  if(kind==='posts'){const v=S.feed.items.filter(i=>chBy(i.channel)===c);return openSub(c.name+' · Videos',v.length?`<div class="set-list">${v.map(vidRow).join('')}</div>`:'<div class="card"><div class="empty">No videos yet.</div></div>',fillThumbs);}
+  if(kind==='todo')return listSub('open',id);
+  if(kind==='shared')return listSub('shared',id);
+  if(kind==='numbers'){const m=mOf(id);const st=statsOf(id);const h=(S.stats[id]||{}).hist||[];
+    return openSub(c.name+' · Numbers',`<div class="card"><div class="ct">${st.src==='bot'?'From the bot':'Typed by you'}</div><div class="muted">${st.at?'Last update '+niceTime(st.at):'No numbers yet'}. When the channel bot sends numbers (YouTube API on the laptop), they fill in by themselves.</div></div>
+     <div class="set-list"><div class="set-row"><span class="t">Monetized<small>YouTube Partner Program (or TikTok rewards) is on</small></span><label class="sw"><input type="checkbox" id="nOn" ${m.on?'checked':''}><span></span></label></div></div>
+     <div class="card">${[['subs','Subscribers'],['views','Total views'],['hours','Watch hours (12 months)'],['shorts','Shorts views (90 days)']].map(([k,l])=>`<label class="muted">${l}</label><input id="n_${k}" type="number" inputmode="numeric" value="${st[k]!=null?st[k]:''}" style="margin:6px 0 10px">`).join('')}
+     <div class="row"><button class="btn" id="nSave">Save numbers</button></div></div>
+     ${h.length?`<div class="sect">History</div><div class="card">${[...h].reverse().slice(0,30).map(x=>`<div class="rec"><span class="muted">${dShort(x.d)}</span><span style="margin-left:auto;font-weight:700">${fmtN(x.subs||0)} subs · ${fmtN(x.views||0)} views</span></div>`).join('')}</div>`:''}`,()=>{
+     $('nOn').onchange=e=>{m.on=e.target.checked;save();toast(m.on?'Monetized ✓':'Not monetized');};
+     $('nSave').onclick=()=>{const v={};for(const k of ['subs','views','hours','shorts']){const x=$('n_'+k).value;if(x!=='')v[k]=+x;}setStats(id,v,'me');toast('Saved ✓');cpSub('numbers',id);};});}}
+function setStats(id,v,src){const st=S.stats[id]=S.stats[id]||{hist:[]};Object.assign(st,v,{at:new Date().toISOString(),src});st.hist=st.hist||[];
+  const d=new Date().toISOString().slice(0,10);const last=st.hist[st.hist.length-1];const snap={d,subs:st.subs,views:st.views,hours:st.hours};
+  if(last&&last.d===d)st.hist[st.hist.length-1]=snap;else st.hist.push(snap);st.hist=st.hist.slice(-400);save();}
+
+/* ---------- lists behind every Home box ---------- */
+function listSub(kind,chId){let T=tasks();if(chId)T=T.filter(t=>t.ch.id===chId);const c=chId&&chBy(chId);
+  if(kind==='shared'){const wk=chId?0:Date.now()-7*864e5;const L=[];T.forEach(t=>t.apps.forEach(a=>{const ts=S.done[t.id+'|'+a];if(ts&&ts>=wk)L.push({t,a,ts});}));
+    return openSub((c?c.name+' · ':'')+'Shared'+(chId?'':' (7 days)'),L.length?`<div class="set-list">${L.sort((a,b)=>b.ts-a.ts).map(s=>`<button class="set-row" data-task="${s.t.id}"><span class="i pic">${SVG[s.a]}</span><span class="t">${esc(s.t.label)} · ${PN[s.a]}<small>${esc(s.t.ch.name)} · ${esc(s.t.item.title)}</small></span><span class="v">${niceTime(new Date(s.ts))}</span><span class="chv">›</span></button>`).join('')}</div>`:'<div class="card"><div class="empty">Nothing shared yet.</div></div>');}
+  let L=T.filter(t=>!complete(t));if(kind==='late')L=L.filter(lateOf);
+  openSub((c?c.name+' · ':'')+(kind==='late'?'Late':'To post'),`<div class="card">${L.length?L.map((t,i)=>todoRow(t,i===0)).join(''):`<div class="empty">${kind==='late'?'Nothing late ✓':'All shared ✓'}</div>`}</div>`,fillThumbs);}
+
+/* ---------- Settings > Channel settings (settings of every channel, never the Channels tab) ---------- */
+function chanSettingsList(){openSub('Channel settings',`<p class="muted" style="margin:0 4px 10px">Name, logo, link, colour, on/off and pin for each channel.</p>
+  <div class="set-list">${S.channels.map(c=>`<button class="set-row" data-chan="${c.id}">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${esc(c.platform)}${c.url?' · '+esc(c.url.replace(/^https?:\/\//,'')):' · no link yet'}</small></span><span class="v ${c.on?'on':''}">${c.on?'On':'Off'}</span><span class="chv">›</span></button>`).join('')}</div>
+  <div class="row"><button class="btn" id="addCh">＋ Add channel</button></div>`);}
+function apiSub(){openSub('Channel API keys',`<div class="card"><div class="ct">Keys stay on the laptop</div><div class="cs">Each channel's YouTube API key lives only in that channel's bot on the laptop (Private folder). The bot sends Studio X the numbers (subscribers, views, watch hours) and the uploads. No key is ever stored in this app or on GitHub.</div></div>
+  <div class="set-list">${S.channels.map(c=>{const st=S.stats[c.id]||{};const bot=S.feed.items.some(i=>chBy(i.channel)===c);return `<button class="set-row" data-cpage="${c.id}" data-ptab="numbers">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${bot?'Uploads: bot connected':'Uploads: no bot yet'} · ${st.src==='bot'?'Numbers: from bot':'Numbers: typed'}</small></span><span class="v ${bot?'on':''}">${bot?'✓':'–'}</span><span class="chv">›</span></button>`;}).join('')}</div>`);}
 function drawIdeas(){const chs=S.channels.filter(chOn);
   $('p-ideas').innerHTML=`<div class="card"><div class="ct">New idea</div><select id="idCh" style="margin:6px 0 8px">${chs.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select>
   <textarea id="idTx" placeholder="Video or Short idea"></textarea><div class="row"><button class="btn" id="idAdd">Save idea</button></div></div>
@@ -335,7 +425,7 @@ function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><
    g('Posting',[r('appsShort','tt','Shorts',appsTxt('appsShort')),r('appsPost','ig','Post pictures',appsTxt('appsPost')),r('appsLink','wa','Video link',appsTxt('appsLink')),
      r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture'))])+
    g('Laptop and bots',[r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','API key',key()?'Connected':'Paste it once to connect',key()?'✓':'Connect',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
-   g('Channels',[r('chans','ch','Channels',S.channels.filter(c=>c.on).length+' on'),r('currency','money','Money currency','Used on the Money tab',set('currency')),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
+   g('Channels',[r('chans','ch','Channel settings',S.channels.filter(c=>c.on).length+' on · name, logo, link'),r('apikeys','key','Channel API keys','Kept on the laptop, numbers come here'),r('currency','money','Money currency','Used on the Money tab',set('currency')),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
    g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',money:'Money',ideas:'Home'}[set('startTab')]),
      r('autoUpdate','up','Update by itself',SET.autoUpdate.h,set('autoUpdate')?'On':'Off',set('autoUpdate')),r('update','reset','Check for update','v'+VERSION)])+
    g('Data',[r('backup','dl','Backup','Save everything to a file'),r('restore','up','Restore','Load a backup file'),r('clearMedia','trash','Clear saved videos','Frees phone space'),r('defaults','reset','Back to default','Settings only')]);}
@@ -346,14 +436,17 @@ function showTab(t){document.querySelectorAll('.nav-btn').forEach(b=>b.classList
 document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 
 /* ---------- sub pages ---------- */
-function openSub(title,html,after){$('subTitle').textContent=title;$('subBody').innerHTML=html;$('sub').classList.add('open');$('sub').scrollTop=0;after&&after();}
-const closeSub=()=>{$('sub').classList.remove('open');drawAll();};
-$('subBack').onclick=closeSub;
+/* 1.3: sub pages stack, so Back goes one page back (channel > payment > back to the channel) */
+let subStack=[],subCur=null,subTask='';
+function openSub(title,html,after){if($('sub').classList.contains('open')&&subCur&&subCur.title!==title)subStack.push(subCur);subCur={title,html,after};subTask='';
+  $('subTitle').textContent=title;$('subBody').innerHTML=html;$('sub').classList.add('open');$('sub').scrollTop=0;after&&after();}
+const closeSub=()=>{subStack=[];subCur=null;$('sub').classList.remove('open');drawAll();};
+$('subBack').onclick=()=>{const p=subStack.pop();if(!p){closeSub();return;}subCur=p;$('subTitle').textContent=p.title;$('subBody').innerHTML=p.html;$('sub').scrollTop=0;p.after&&p.after();fillThumbs();};
 const swRow=(k,label,help)=>`<div class="set-list"><div class="set-row"><span class="t">${label}<small>${help}</small></span><label class="sw"><input type="checkbox" data-set="${k}" ${set(k)?'checked':''}><span></span></label></div></div>`;
 const stepRow=k=>`<div class="set-list"><div class="set-row"><span class="t">${SET[k].t}<small>${SET[k].h}</small></span><span class="step"><button data-step="${k}" data-d="-1">−</button><b>${set(k)}</b><button data-step="${k}" data-d="1">+</button></span></div></div>`;
 function appsSub(k){openSub(SET[k].t,`<p class="muted" style="margin:4px 4px 10px">${SET[k].h}</p><div class="set-list">${ALLAPPS.map(a=>`<div class="set-row"><span class="i pic">${SVG[a]}</span><span class="t">${PN[a]}</span><label class="sw"><input type="checkbox" data-app-k="${k}" data-a="${a}" ${set(k).includes(a)?'checked':''}><span></span></label></div>`).join('')}</div>`);}
 
-function taskSub(id){const t=tasks().find(x=>x.id===id);if(!t)return;
+function taskSub(id){const t=tasks().find(x=>x.id===id);if(!t)return;setTimeout(()=>{subTask=id;},0);
   openSub(t.label,`<div class="card" style="padding:10px"><div id="tMedia" class="empty">${t.kind==='link'?'':'Loading…'}</div>
    <div class="ct" style="margin-top:10px">${esc(t.item.title)}</div><div class="muted">${esc(t.ch.name)} · ${niceTime(t.when)}${t.url?` · <a style="color:var(--acc)" href="${t.url}" target="_blank">Open on YouTube</a>`:''}</div>
    ${t.file&&t.file.skip?`<p class="muted" style="color:var(--red)">File ${esc(t.file.skip)}: share it from the laptop.</p>`:''}</div>
@@ -377,7 +470,7 @@ async function share(t,a){const w=t.words[WK[a]]||t.words.instagram||t.words.tik
     if(set('tickOnShare')){S.done[t.id+'|'+a]=Date.now();save();}
     toast(copied?`Words copied: paste them in ${PN[a]} ✓`:'Shared ✓');refresh();}
   catch(e){if(e&&e.name==='AbortError')return;toast('Could not share: '+(e.message||e));}}
-function refresh(){if($('sub').classList.contains('open')){const id=$('sub').dataset.task;if(id)taskSub(id);}drawHome();drawRecords();drawChannels();}
+function refresh(){if($('sub').classList.contains('open')){const id=subTask;if(id)taskSub(id);}drawHome();drawRecords();drawChannels();}
 
 function chanSub(c){const isNew=!c;c=c||{id:'c'+Date.now(),name:'',platform:'YouTube',color:COLORS[S.channels.length%COLORS.length],url:'',on:true};
   openSub(isNew?'Add channel':c.name,`<div class="card" style="text-align:center"><div id="kLogo">${c.name?logo(c,'huge'):'<span class="lg huge" style="background:#333">?</span>'}</div>
@@ -408,7 +501,8 @@ function setSub(s){
      ${Object.keys(S.feed.files).map(f=>`<div class="muted">• ${esc(f.replace('.json',''))}</div>`).join('')}<div class="row"><button class="btn" id="fNow">Check now</button></div></div>`,()=>{$('fNow').onclick=async()=>{await feed(true);setSub('bots');};});
   if(s==='key')return openSub('API key',`<div class="card"><div class="ct">${key()?'Connected ✓':'Not connected'}</div><div class="cs">Your GitHub mailbox key (the same one Match Vision and Fix notes use). Paste it once: it stays on this phone and also connects Fix notes.</div><div class="row"><button class="btn" id="kSet">${key()?'Change key':'Paste key'}</button></div></div>`,()=>{
      $('kSet').onclick=()=>{const t=prompt('Paste the GitHub key for your private mailbox (surestake707-sync):');if(!t||!t.trim())return;let a={};try{a=JSON.parse(localStorage.getItem('fixhub_sync')||'{}');}catch(e){}a.repo=REPO;a.token=t.trim();a.on=true;try{localStorage.setItem('fixhub_sync',JSON.stringify(a));}catch(e){}toast('Saved ✓');feed(true);setSub('key');};});
-  if(s==='chans')return showTab('channels');
+  if(s==='chans')return chanSettingsList();
+  if(s==='apikeys')return apiSub();
   if(s==='currency')return openSub('Money currency',`<div class="set-list">${['$','GH₵','€','£'].map(o=>`<button class="set-row" data-pick="currency" data-val="${o}"><span class="t">${o}</span>${set('currency')===o?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
   if(s==='install')return doInstall();
   if(s==='update')return checkUpdate();
@@ -427,14 +521,20 @@ document.addEventListener('click',async e=>{const q=sel=>e.target.closest(sel);l
   if(b=q('[data-share]')){e.stopPropagation();const t=tasks().find(x=>x.id===b.dataset.share);if(t)share(t,b.dataset.app);return;}
   if(b=q('[data-copy]')){const t=tasks().find(x=>x.id===b.dataset.copy);if(t){toast(await copyWords(t,b.dataset.app)?'Words copied ✓':'Could not copy');}return;}
   if(b=q('[data-tick]')){const k=b.dataset.tick+'|'+b.dataset.app;if(S.done[k])delete S.done[k];else S.done[k]=Date.now();save();taskSub(b.dataset.tick);drawHome();return;}
-  if(b=q('[data-task]')){$('sub').dataset.task=b.dataset.task;taskSub(b.dataset.task);return;}
+  if(b=q('[data-task]')){subTask=b.dataset.task;taskSub(b.dataset.task);return;}
   if(b=q('[data-hch]')){if(lpFired){lpFired=false;return;}homeCh=homeCh===b.dataset.hch?'all':b.dataset.hch;drawHome();return;}
   if(b=q('[data-pin]')){togglePin(b.dataset.pin);return;}
-  if(b=q('[data-mon]')){moneySub(b.dataset.mon);return;}
-  if(b=q('[data-mdel]')){const [cid,mid]=b.dataset.mdel.split('|');if(confirm('Delete this payment?')){const m=S.money[cid];m.list=m.list.filter(x=>String(x.id)!==mid);save();moneySub(cid);}return;}
+  if(b=q('[data-box]')){const k=b.dataset.box;if(k==='videos'){openSub('Videos',`<div class="set-list">${S.feed.items.map(vidRow).join('')}</div>`||'',fillThumbs);return;}listSub(k);return;}
+  if(b=q('[data-macc]')){monAcc=b.dataset.macc;drawMoney();return;}
+  if(b=q('[data-mbox]')){const k=b.dataset.mbox;if(k==='mon')return monRoad();moneyList(k,monAcc);return;}
+  if(b=q('[data-madd]')){const [k,acc]=b.dataset.madd.split('|');addMoney(k,acc);return;}
+  if(b=q('[data-tx]')){txSub(b.dataset.tx);return;}
+  if(b=q('[data-vid]')){vidSub(b.dataset.vid);return;}
+  if(b=q('[data-cp]')){const [k,id]=b.dataset.cp.split('|');cpSub(k,id);return;}
+  if(b=q('[data-cpage]')){if(lpFired){lpFired=false;return;}chanPage(b.dataset.cpage,b.dataset.ptab);return;}
   if(b=q('[data-chan]')){if(lpFired){lpFired=false;return;}chanSub(chBy(b.dataset.chan));return;}
   if(b=q('#addCh')){chanSub(null);return;}
-  if(b=q('[data-s]')){$('sub').dataset.task='';setSub(b.dataset.s);return;}
+  if(b=q('[data-s]')){subTask='';setSub(b.dataset.s);return;}
   if(b=q('[data-pick]')){S.settings[b.dataset.pick]=b.dataset.val;save();setSub(b.dataset.pick);return;}
   if(b=q('[data-step]')){const k=b.dataset.step;S.settings[k]=Math.max(SET[k].min,Math.min(SET[k].max,(+set(k))+(+b.dataset.d)));save();b.parentNode.querySelector('b').textContent=set(k);if(k==='feedMins')feedTimer();return;}
   if(b=q('[data-idone]')){const i=S.ideas.find(x=>x.id==b.dataset.idone);if(i){i.done=!i.done;save();drawIdeas();}return;}
@@ -452,6 +552,10 @@ async function feed(manual){if(!set('feedOn')||!key()||!navigator.onLine){if(man
       const j=await (await api('studiox/feed/'+f.name,true)).json();
       if(j.channel&&!chBy(j.channel))S.channels.push({id:slug(j.channel),name:j.channel,platform:'YouTube',color:COLORS[S.channels.length%COLORS.length],url:'',on:true});
       S.feed.items=S.feed.items.filter(i=>i.channel!==j.channel).concat(j.items||[]);S.feed.files[f.name]=f.sha;ch=true;}
+    try{const rs=await api('studiox/stats');if(rs.ok){for(const f of (await rs.json()).filter(x=>x.name.endsWith('.json'))){   // 1.3: numbers from each channel bot
+      if(S.feed.files['stats/'+f.name]===f.sha)continue;const j=await (await api('studiox/stats/'+f.name,true)).json();const c=chBy(j.channel||'');
+      if(c){const v={};['subs','views','hours','shorts'].forEach(k=>{if(j[k]!=null)v[k]=+j[k];});setStats(c.id,v,'bot');if(j.monetized!=null)mOf(c.id).on=!!j.monetized;ch=true;}
+      S.feed.files['stats/'+f.name]=f.sha;}}}catch(_){}
     S.feed.last=Date.now();S.feed.err='';save();if(ch){drawAll();if(set('autoGet'))autoGet();}else drawHome();if(manual)toast(ch?'New posts ✓':'Up to date ✓');}
   catch(e){S.feed.err=String(e.message||e).slice(0,50);save();drawHome();if(manual)toast('Bot feed: '+S.feed.err);}}
 async function autoGet(){for(const t of tasks())if(!complete(t)&&t.file&&t.file.path){try{await media(t.file,true);}catch(e){}}}
