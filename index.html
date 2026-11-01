@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.5</title>
+<title>Studio X 1.5.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -150,7 +150,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='1.5';
+VERSION='1.5.1';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -497,13 +497,14 @@ document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>showTab(b.dataset
 /* ---------- sub pages ---------- */
 /* 1.3: sub pages stack, so Back goes one page back (channel > payment > back to the channel) */
 let subStack=[],subCur=null,subTask='';
-function openSub(title,html,after){const wasOpen=$('sub').classList.contains('open');
+function openSub(title,html,after){stopMedia();const wasOpen=$('sub').classList.contains('open');
   if(!wasOpen||(subCur&&subCur.title!==title)){try{history.pushState({sub:subDepth+1},'');subDepth++;}catch(e){}}
   if(wasOpen&&subCur&&subCur.title!==title)subStack.push(subCur);subCur={title,html,after};subTask='';
   $('subTitle').textContent=title;$('subBody').innerHTML=html;$('sub').classList.add('open');$('sub').scrollTop=0;after&&after();}
-const closeSub=()=>{const n=subDepth;subDepth=0;subStack=[];subCur=null;$('sub').classList.remove('open');drawAll();
+const stopMedia=()=>document.querySelectorAll('#subBody video,#subBody audio').forEach(m=>{try{m.pause();m.removeAttribute('src');m.load();}catch(e){}});   // 1.5.1: the sound stops when you leave
+const closeSub=()=>{stopMedia();const n=subDepth;subDepth=0;subStack=[];subCur=null;$('sub').classList.remove('open');drawAll();
   if(n>0){popSkip++;try{history.go(-n);}catch(e){popSkip=0;}}};
-function subBackStep(){subDepth=Math.max(0,subDepth-1);const p=subStack.pop();
+function subBackStep(){stopMedia();subDepth=Math.max(0,subDepth-1);const p=subStack.pop();
   if(!p){subStack=[];subCur=null;$('sub').classList.remove('open');drawAll();return;}
   subCur=p;$('subTitle').textContent=p.title;$('subBody').innerHTML=p.html;$('sub').scrollTop=0;p.after&&p.after();fillThumbs();}
 $('subBack').onclick=()=>{if(subDepth>0)history.back();else subBackStep();};
