@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.4</title>
+<title>Studio X 1.5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -110,6 +110,10 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
   background:radial-gradient(120% 140% at 100% 0%,rgba(244,114,182,.22),transparent 55%),radial-gradient(120% 140% at 0% 100%,rgba(34,211,238,.16),transparent 55%),#141018}
 .balcard .bl{font-size:11px;letter-spacing:2px;font-weight:700;color:#C4B5FD}.balcard .bv{font-size:34px;font-weight:900;margin-top:6px;letter-spacing:-.5px}.balcard .bs{font-size:12.5px;color:var(--mute);margin-top:4px}
 .set-row .t .prog{margin-top:6px}
+.pp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.pp-t{padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:#000;aspect-ratio:3/4}
+.pp-t img{width:100%;height:100%;object-fit:cover;display:block}.pp-t.on{border-color:#FFD60A}
+.pp-row{display:flex;gap:6px;overflow-x:auto;margin-top:8px}.pp-f{position:relative;flex:none;width:70px;height:92px;border:2px solid #FFD60A;border-radius:10px;overflow:hidden}
+.pp-f img{width:100%;height:100%;object-fit:cover}.pp-f i{position:absolute;top:2px;right:2px;width:24px;height:24px;border-radius:50%;background:#FF453A;color:#fff;font-style:normal;text-align:center;line-height:24px;font-weight:900}
 /* Fix notes in Studio X colours */
 #fxSheet button.main{background:var(--acc)!important;color:#fff!important}#fxSheet .in{background:#101012!important}
 /* tab bar (Match Vision line icons) */
@@ -146,7 +150,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='1.4';
+VERSION='1.5';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -177,7 +181,7 @@ const BOTFATHER='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUE
 const IC={tickOnShare:['#30D158','tick'],lateHours:['#FF9F0A','clock'],showFuture:['#0A84FF','cal'],bots:['img',BOTFATHER],key:['#5E5CE6','api'],
  autoGet:['#32ADE6','dl'],chans:['#BF5AF2','ch'],showOff:['#636366','eyeOff'],install:['#0A84FF','phone'],startTab:['#5E5CE6','home'],
  autoUpdate:['#30D158','refresh'],update:['#0A84FF','up'],backup:['#0A84FF','cloudUp'],restore:['#30D158','cloudDown'],clearMedia:['#FF453A','trash'],
- defaults:['#8E8E93','reset'],currency:['#30D158','money'],apikeys:['#FF9F0A','api']};
+ defaults:['#8E8E93','reset'],photos:['#A3E635','video'],currency:['#30D158','money'],apikeys:['#FF9F0A','api']};
 const ln=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${LN[k]||''}</svg>`;
 
 /* ---------- channels and settings ---------- */
@@ -409,6 +413,57 @@ function chanSettingsList(){openSub('Channel settings',`<p class="muted" style="
   <div class="row"><button class="btn" id="addCh">＋ Add channel</button></div>`);}
 function apiSub(){openSub('Channel API keys',`<div class="card"><div class="ct">Keys stay on the laptop</div><div class="cs">Each channel's YouTube API key lives only in that channel's bot on the laptop (Private folder). The bot sends Studio X the numbers (subscribers, views, watch hours) and the uploads. No key is ever stored in this app or on GitHub.</div></div>
   <div class="set-list">${S.channels.map(c=>{const st=S.stats[c.id]||{};const bot=S.feed.items.some(i=>chBy(i.channel)===c);return `<button class="set-row" data-cpage="${c.id}" data-ptab="numbers">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${bot?'Uploads: bot connected':'Uploads: no bot yet'} · ${st.src==='bot'?'Numbers: from bot':'Numbers: typed'}</small></span><span class="v ${bot?'on':''}">${bot?'✓':'–'}</span><span class="chv">›</span></button>`;}).join('')}</div>`);}
+/* ---------- PLAYER PHOTOS 1.5 (Philip: "pick the RankX player photos on my phone, synced with the laptop") ---------- */
+const ghRaw=async p=>{const r=await api(p,true);if(r.status===404)return null;if(!r.ok)throw new Error('GitHub '+r.status);return r.json();};
+async function ghSha(p){const r=await api(p);if(!r.ok)return null;return (await r.json()).sha;}
+async function ghPut(p,b64,msg){const sha=await ghSha(p);
+  const r=await fetch(`https://api.github.com/repos/${REPO}/contents/${p.split('/').map(encodeURIComponent).join('/')}`,{method:'PUT',headers:{Authorization:'Bearer '+key(),Accept:'application/vnd.github+json','Content-Type':'application/json'},
+    body:JSON.stringify({message:msg,content:b64,...(sha?{sha}:{})})});if(!r.ok)throw new Error('GitHub '+r.status);}
+const b64u=s=>btoa(unescape(encodeURIComponent(s)));
+let PP={players:[],favs:{},done:{},loaded:0};
+const pkey=s=>String(s||'').normalize('NFKD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+async function ppLoad(){if(!key())return;try{PP.favs=(await ghRaw('rankx/favourites.json'))||{};PP.done=(await ghRaw('rankx/phone_done.json'))||{};PP.loaded=Date.now();}catch(e){toast('Photos: '+e.message);}}
+async function ppRequest(item){const cur=(await ghRaw('rankx/phone_requests.json'))||{items:[]};item.id=Date.now()+'-'+Math.random().toString(36).slice(2,6);
+  cur.items=(cur.items||[]).concat(item).slice(-400);await ghPut('rankx/phone_requests.json',b64u(JSON.stringify(cur,null,1)),'Studio X: player photo');return item.id;}
+function ppParse(t){return t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const a=l.split('|').map(s=>s.trim());return {name:a[0],club:a[1]||'',country:a[2]||'',res:[],q:''};});}
+const ppFavs=p=>PP.favs[pkey(p.name)]||[];
+async function wikiTitle(n){try{const j=await (await fetch('https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srlimit=1&srsearch='+encodeURIComponent(n+' footballer'))).json();return ((j.query||{}).search||[])[0]?.title||n;}catch(e){return n;}}
+async function ppSearch(p){const out=[],seen=new Set();const add=(full,thumb,t)=>{if(!full||seen.has(full))return;seen.add(full);out.push({full,thumb:thumb||full,t});};
+  const title=p.page||(p.page=await wikiTitle(p.name));
+  try{const j=await (await fetch('https://en.wikipedia.org/api/rest_v1/page/media-list/'+encodeURIComponent(title.replace(/ /g,'_')))).json();
+    (j.items||[]).forEach(it=>{const ss=it.srcset||[];if(it.type!=='image'||!ss.length)return;let s=ss[ss.length-1].src;if(s.startsWith('//'))s='https:'+s;if(/\.(jpe?g|png|webp)/i.test(s)&&!/logo|flag|svg|signature|map/i.test(s))add(s,s,'Wikipedia');});}catch(e){}
+  try{const q=(p.q||p.name)+' football';const j=await (await fetch('https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=40&prop=imageinfo&iiprop=url&iiurlwidth=400&gsrsearch='+encodeURIComponent(q))).json();
+    Object.values((j.query||{}).pages||{}).sort((a,b)=>(a.index||0)-(b.index||0)).forEach(pg=>{const ii=(pg.imageinfo||[])[0]||{};if(/\.(jpe?g|png|webp)$/i.test(ii.url||''))add(ii.url,ii.thumburl,'Commons');});}catch(e){}
+  p.res=out;}
+function photoTool(){if(!key()){openSub('Player photos',`<div class="card"><div class="empty">Paste the API key first: Settings › API key.</div></div>`);return;}
+  const draw=()=>{const L=PP.players;const favN=Object.keys(PP.favs).length;
+    $('subBody').innerHTML=`<div class="card"><div class="ct">Players for a video</div><div class="cs">One per line: Name | Club | Country. Tap a photo = ★ favourite for every RankX video (the laptop saves it in a minute or two).</div>
+     <textarea id="ppIn" placeholder="Harry Kane | Bayern Munich | England&#10;Luis Diaz | Bayern Munich | Colombia">${esc(L.map(p=>[p.name,p.club,p.country].filter(Boolean).join(' | ')).join('\n'))}</textarea>
+     <div class="row"><button class="btn" id="ppGo">Search all</button><button class="btn out" id="ppFav">Saved (${favN})</button></div></div>
+     ${L.map((p,i)=>{const F=ppFavs(p);return `<div class="card"><div style="display:flex;align-items:center;gap:8px"><b style="font-size:16px;flex:1">${i+1}. ${esc(p.name)}</b><span class="pillm ${F.length?'on':''}">${F.length?'★ '+F.length+' saved':'no photo yet'}</span></div>
+       ${F.length?`<div class="pp-row">${F.map((x,k)=>`<span class="pp-f"><img src="${esc(x.thumb||x.full)}" referrerpolicy="no-referrer"><i data-ppdel="${i}|${k}">✕</i></span>`).join('')}</div>`:''}
+       <div class="row" style="flex-wrap:wrap"><button class="btn out" data-ppgoogle="${i}">Google</button><button class="btn out" data-ppmore="${i}">Search</button><button class="btn out" data-ppfile="${i}">From phone</button></div>
+       <div class="row"><input id="ppL${i}" placeholder="paste a picture link (Google: hold the picture > Copy image address)"><button class="btn" style="flex:none" data-pplink="${i}">Add</button></div>
+       <div class="pp-grid">${p.res.length?p.res.map((r,k)=>`<button class="pp-t" data-pppick="${i}|${k}"><img loading="lazy" src="${esc(r.thumb)}" referrerpolicy="no-referrer"></button>`).join(''):`<div class="muted">${p.busy?'Searching…':'Tap Search, or Google + paste the link.'}</div>`}</div></div>`;}).join('')}`;
+    $('ppGo').onclick=async()=>{PP.players=ppParse($('ppIn').value);if(!PP.players.length){toast('Paste the players first');return;}PP.players.forEach(p=>p.busy=true);draw();
+      for(const p of PP.players){await ppSearch(p);p.busy=false;draw();}};
+    $('ppFav').onclick=()=>{const ks=Object.keys(PP.favs).sort();openSub('Saved player photos',ks.length?`<div class="set-list">${ks.map(k=>{const L=PP.favs[k];return `<div class="set-row"><span class="i"><img src="${esc((L[0]||{}).thumb||'')}" referrerpolicy="no-referrer"></span><span class="t">${esc((L[0]||{}).name||k)}<small>${L.length} favourite(s)</small></span></div>`;}).join('')}</div>`:'<div class="card"><div class="empty">No saved photos yet.</div></div>');};};
+  openSub('Player photos','<div class="card"><div class="empty">Loading your saved photos…</div></div>',async()=>{await ppLoad();draw();});
+  photoTool.draw=draw;}
+async function ppAdd(i,item){const p=PP.players[i];toast('Saving ★ …');try{await ppRequest(Object.assign({act:'add',name:p.name,page:p.page||p.name,club:p.club,country:p.country},item));
+  const k=pkey(p.name);PP.favs[k]=[{full:item.full||'',thumb:item.thumb||item.full||'',name:p.name,phone:1}].concat(PP.favs[k]||[]);toast('★ Saved: the laptop takes it in 1-2 min');photoTool.draw();}catch(e){toast('Not saved: '+e.message);}}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-pppick],[data-ppdel],[data-ppgoogle],[data-ppmore],[data-ppfile],[data-pplink]');if(!b)return;e.stopPropagation();
+  if(b.dataset.pppick){const [i,k]=b.dataset.pppick.split('|').map(Number);const r=PP.players[i].res[k];b.classList.add('on');return ppAdd(i,{full:r.full,thumb:r.thumb});}
+  if(b.dataset.ppdel){const [i,k]=b.dataset.ppdel.split('|').map(Number);const p=PP.players[i];const F=ppFavs(p);const x=F[k];if(!x||!confirm('Remove this favourite?'))return;
+    try{await ppRequest({act:'remove',name:p.name,page:p.page||p.name,full:x.full});F.splice(k,1);toast('Removed ✓');photoTool.draw();}catch(er){toast('Not removed: '+er.message);}return;}
+  if(b.dataset.ppgoogle){const p=PP.players[+b.dataset.ppgoogle];window.open('https://www.google.com/search?udm=2&q='+encodeURIComponent([p.name,p.club,p.country,'footballer'].filter(Boolean).join(' ')),'_blank');return;}
+  if(b.dataset.ppmore){const p=PP.players[+b.dataset.ppmore];p.busy=true;photoTool.draw();await ppSearch(p);p.busy=false;photoTool.draw();return;}
+  if(b.dataset.pplink){const i=+b.dataset.pplink;const u=($('ppL'+i).value||'').trim();if(!/^https?:\/\//.test(u)){toast('Paste a picture link');return;}return ppAdd(i,{full:u,thumb:u});}
+  if(b.dataset.ppfile){const i=+b.dataset.ppfile;const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=()=>{const f=inp.files[0];if(!f)return;const rd=new FileReader();
+    rd.onload=()=>{const im=new Image();im.onload=async()=>{const m=1600,k=Math.min(1,m/Math.max(im.width,im.height));const cv=document.createElement('canvas');cv.width=im.width*k;cv.height=im.height*k;cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+      const data=cv.toDataURL('image/jpeg',.9);const path='rankx/phone/'+slug(PP.players[i].name)+'-'+Date.now()+'.jpg';toast('Uploading…');
+      try{await ghPut(path,data.split(',')[1],'Studio X: phone photo');await ppAdd(i,{path,thumb:data});}catch(er){toast('Not uploaded: '+er.message);}};im.src=rd.result;};rd.readAsDataURL(f);};inp.click();return;}},true);
+
 function drawIdeas(){const chs=S.channels.filter(chOn);
   $('p-ideas').innerHTML=`<div class="card"><div class="ct">New idea</div><select id="idCh" style="margin:6px 0 8px">${chs.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select>
   <textarea id="idTx" placeholder="Video or Short idea"></textarea><div class="row"><button class="btn" id="idAdd">Save idea</button></div></div>
@@ -428,6 +483,7 @@ function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><
    g('Channels',[r('chans','ch','Channel settings',S.channels.filter(c=>c.on).length+' on · name, logo, link'),r('apikeys','key','Channel API keys','Kept on the laptop, numbers come here'),r('currency','money','Money currency','Used on the Money tab',set('currency')),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
    g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',money:'Money',ideas:'Home'}[set('startTab')]),
      r('autoUpdate','up','Update by itself',SET.autoUpdate.h,set('autoUpdate')?'On':'Off',set('autoUpdate')),r('update','reset','Check for update','v'+VERSION)])+
+   g('Tools',[r('photos','video','Player photos','RankX: search, pick and save player photos')])+
    g('Data',[r('backup','dl','Backup','Save everything to a file'),r('restore','up','Restore','Load a backup file'),r('clearMedia','trash','Clear saved videos','Frees phone space'),r('defaults','reset','Back to default','Settings only')]);}
 
 function drawAll(){drawHome();drawRecords();drawChannels();drawMoney();drawSettings();}
@@ -513,6 +569,7 @@ function setSub(s){
      ${Object.keys(S.feed.files).map(f=>`<div class="muted">• ${esc(f.replace('.json',''))}</div>`).join('')}<div class="row"><button class="btn" id="fNow">Check now</button></div></div>`,()=>{$('fNow').onclick=async()=>{await feed(true);setSub('bots');};});
   if(s==='key')return openSub('API key',`<div class="card"><div class="ct">${key()?'Connected ✓':'Not connected'}</div><div class="cs">Your GitHub mailbox key (the same one Match Vision and Fix notes use). Paste it once: it stays on this phone and also connects Fix notes.</div><div class="row"><button class="btn" id="kSet">${key()?'Change key':'Paste key'}</button></div></div>`,()=>{
      $('kSet').onclick=()=>{const t=prompt('Paste the GitHub key for your private mailbox (surestake707-sync):');if(!t||!t.trim())return;let a={};try{a=JSON.parse(localStorage.getItem('fixhub_sync')||'{}');}catch(e){}a.repo=REPO;a.token=t.trim();a.on=true;try{localStorage.setItem('fixhub_sync',JSON.stringify(a));}catch(e){}toast('Saved ✓');feed(true);setSub('key');};});
+  if(s==='photos')return photoTool();
   if(s==='chans')return chanSettingsList();
   if(s==='apikeys')return apiSub();
   if(s==='currency')return openSub('Money currency',`<div class="set-list">${['$','GH₵','€','£'].map(o=>`<button class="set-row" data-pick="currency" data-val="${o}"><span class="t">${o}</span>${set('currency')===o?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
