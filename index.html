@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.1</title>
+<title>Studio X 1.2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -49,7 +49,7 @@ textarea{min-height:70px;line-height:1.4;resize:vertical}
 .chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:7px 12px 7px 7px;border-radius:99px;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--mute)}
 .chip.on{background:var(--accSoft);border-color:var(--acc);color:#fff}.chip.all{padding-left:12px}
 .lg{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex:none;overflow:hidden}
-.lg img{width:100%;height:100%;object-fit:cover}.lg.big{width:36px;height:36px;border-radius:10px;font-size:16px}.lg.huge{width:72px;height:72px;border-radius:18px;font-size:30px;margin:0 auto}
+.lg img{width:100%;height:100%;object-fit:cover}.lg.big{width:36px;height:36px;border-radius:10px;font-size:16px}.lg.huge{width:64px;height:64px;border-radius:18px;font-size:28px;margin:0 auto}
 /* to do rows (Match Vision) */
 .todo{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #262626}.todo:last-child{border-bottom:0}
 .todo .ic{width:44px;height:44px;border-radius:12px;background:#1E1E1E;flex:none;overflow:hidden;position:relative;display:grid;place-items:center;font-size:18px}
@@ -66,7 +66,7 @@ textarea{min-height:70px;line-height:1.4;resize:vertical}
 /* settings list (Match Vision) */
 .set-list{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
 .set-row{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid #262626;padding:13px 14px;text-align:left}.set-row:last-child{border-bottom:0}
-.set-row .i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--grad);overflow:hidden}
+.set-row .i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--ib,#3A3A3C);overflow:hidden}.set-row .i img{width:100%;height:100%;object-fit:cover}
 .set-row .i svg{width:20px;height:20px}.set-row .i.pic{background:none}.set-row .i.pic svg{width:34px;height:34px;border-radius:9px}
 .set-row .t{flex:1;min-width:0;font-size:15px;font-weight:600}.set-row .t small{display:block;font-size:12.5px;color:var(--dim);font-weight:400;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .set-row .v{font-size:13px;color:var(--dim);font-weight:600}.set-row .v.on{color:var(--acc)}.set-row .chv{color:#555;font-size:22px}
@@ -92,6 +92,20 @@ pre.w{white-space:pre-wrap;word-break:break-word;font-family:var(--f);font-size:
 .rec{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #262626}.rec:last-child{border-bottom:0}.rec .n{margin-left:auto;font-weight:800;font-size:18px}
 .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#fff;color:#000;font-weight:700;padding:10px 16px;border-radius:14px;z-index:300;display:none;font-size:14px;max-width:90%;text-align:center}
 .colors{display:flex;gap:8px;flex-wrap:wrap}.colors button{width:30px;height:30px;border-radius:50%;border:2px solid transparent}.colors button.on{border-color:#fff}
+/* 1.2 big channel tiles, pins, money */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 10px 14px;text-align:center;width:100%;animation:cardIn .3s both}
+.tile .lg{margin:0 auto 10px}.tile b{display:block;font-size:14.5px;font-weight:700}.tile small{display:block;color:var(--dim);font-size:12px;margin-top:2px}
+.tile .cnt{position:absolute;top:10px;right:10px;font-size:11px;font-weight:800;color:var(--onAcc);background:var(--acc);border-radius:99px;padding:2px 7px}
+.tile.pin,.chip.pin{border:1.5px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box}
+.chip.pin.on{background:linear-gradient(#1a1430,#1a1430) padding-box,var(--grad) border-box}
+.tile.add{border-style:dashed;color:var(--dim);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:130px;font-weight:700}
+.prog{height:6px;border-radius:3px;background:#26262a;overflow:hidden;margin-top:5px}.prog i{display:block;height:100%;background:var(--grad)}
+.plus{color:var(--green)!important}.minus{color:var(--red)!important}
+.pillm{font-size:11px;font-weight:700;border-radius:99px;padding:3px 8px;background:var(--card2);border:1px solid var(--line);color:var(--mute)}.pillm.on{color:var(--green);border-color:rgba(48,209,88,.45)}
+.chcard{display:flex;align-items:center;gap:12px}
+/* Fix notes in Studio X colours */
+#fxSheet button.main{background:var(--acc)!important;color:#fff!important}#fxSheet .in{background:#101012!important}
 /* tab bar (Match Vision line icons) */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:var(--navBg);border-top:1px solid var(--line);z-index:100;padding-bottom:env(safe-area-inset-bottom,0px);backdrop-filter:blur(20px)}
 .nav-btn{position:relative;flex:1;padding:11px 4px 10px;background:none;border:none;color:var(--dim);font-size:10.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px}
@@ -101,7 +115,7 @@ pre.w{white-space:pre-wrap;word-break:break-word;font-family:var(--f);font-size:
 .nav-btn[data-tab=home] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'/%3E%3C/svg%3E")}
 .nav-btn[data-tab=records] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M4 20V10M10 20V4M16 20v-7M22 20H2'/%3E%3C/svg%3E")}
 .nav-btn[data-tab=channels] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'%3E%3Crect x='2' y='5' width='14' height='14' rx='3'/%3E%3Cpath d='m16 10 6-3v10l-6-3z'/%3E%3C/svg%3E")}
-.nav-btn[data-tab=ideas] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z'/%3E%3C/svg%3E")}
+.nav-btn[data-tab=money] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='20' height='13' rx='3'/%3E%3Ccircle cx='12' cy='12.5' r='3'/%3E%3Cpath d='M6 9.5v.01M18 15.5v.01'/%3E%3C/svg%3E")}
 .nav-btn[data-tab=settings] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1'/%3E%3C/svg%3E")}
 </style>
 </head>
@@ -110,13 +124,13 @@ pre.w{white-space:pre-wrap;word-break:break-word;font-family:var(--f);font-size:
 <main class="page active" id="p-home"></main>
 <main class="page" id="p-records"></main>
 <main class="page" id="p-channels"></main>
-<main class="page" id="p-ideas"></main>
+<main class="page" id="p-money"></main>
 <main class="page" id="p-settings"></main>
 <nav class="bottom-nav">
   <button class="nav-btn active" data-tab="home"><span class="ni"></span><span class="dot" id="lateDot"></span>Home</button>
   <button class="nav-btn" data-tab="records"><span class="ni"></span>Records</button>
   <button class="nav-btn" data-tab="channels"><span class="ni"></span>Channels</button>
-  <button class="nav-btn" data-tab="ideas"><span class="ni"></span>Ideas</button>
+  <button class="nav-btn" data-tab="money"><span class="ni"></span>Money</button>
   <button class="nav-btn" data-tab="settings"><span class="ni"></span>Settings</button>
 </nav>
 <div id="sub"><div class="subhead"><button id="subBack" aria-label="Back">‹</button><h2 id="subTitle"></h2></div><div class="subbody" id="subBody"></div></div>
@@ -126,7 +140,7 @@ pre.w{white-space:pre-wrap;word-break:break-word;font-family:var(--f);font-size:
 
 <script>
 (function(){
-VERSION='1.1';
+VERSION='1.2';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -147,12 +161,23 @@ const LN={ /* line icons for settings rows */
  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',reset:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',
  phone:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',home:'<path d="M3 10.5 12 3l9 7.5V20H3z"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
  key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/>',plus:'<path d="M12 5v14M5 12h14"/>',video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9v6l5-3z"/>'};
+LN.cloudUp='<path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19 10a4 4 0 0 1 0 8z"/><path d="M12 16v-5M9.5 13.5 12 11l2.5 2.5"/>';
+LN.cloudDown='<path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19 10a4 4 0 0 1 0 8z"/><path d="M12 11v5M9.5 13.5 12 16l2.5-2.5"/>';
+LN.money='<rect x="2" y="6" width="20" height="13" rx="3"/><circle cx="12" cy="12.5" r="3"/>';LN.pin='<path d="M12 17v5M8 3h8l-1 6 3 3H6l3-3z"/>';
+LN.eyeOff='<path d="M3 3l18 18M10.6 6.1A10 10 0 0 1 12 6c6 0 10 6 10 6a17 17 0 0 1-3.2 3.7M6.6 6.6C3.8 8.4 2 12 2 12s4 7 10 7a9.6 9.6 0 0 0 4.3-1"/>';
+LN.cal='<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>';LN.refresh='<path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/>';
+const API_ICON='<svg viewBox="0 0 24 24"><text x="12" y="15.5" text-anchor="middle" font-family="Inter,Arial" font-weight="900" font-size="8.5" fill="#fff">API</text></svg>';
+const BOTFATHER='data:image/jpeg;base64,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';
+const IC={tickOnShare:['#30D158','tick'],lateHours:['#FF9F0A','clock'],showFuture:['#0A84FF','cal'],bots:['img',BOTFATHER],key:['#5E5CE6','api'],
+ autoGet:['#32ADE6','dl'],chans:['#BF5AF2','ch'],showOff:['#636366','eyeOff'],install:['#0A84FF','phone'],startTab:['#5E5CE6','home'],
+ autoUpdate:['#30D158','refresh'],update:['#0A84FF','up'],backup:['#0A84FF','cloudUp'],restore:['#30D158','cloudDown'],clearMedia:['#FF453A','trash'],
+ defaults:['#8E8E93','reset'],currency:['#30D158','money']};
 const ln=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${LN[k]||''}</svg>`;
 
 /* ---------- channels and settings ---------- */
 const COLORS=['#A3E635','#FF453A','#32ADE6','#FFD60A','#30D158','#3B82F6','#8B5CF6','#BF5AF2','#FF9F0A','#F472B6','#22D3EE','#94A3B8'];
 const START=[['RankX Football','YouTube','#A3E635'],['Device Guardian','YouTube','#FF453A'],['Xtech Guides','YouTube','#32ADE6'],['Cine Cascade','YouTube','#FFD60A'],
- ['Game Zeus','YouTube','#30D158'],['Vellox Play','YouTube','#3B82F6'],['Gen2 Solutions','YouTube','#8B5CF6'],['Ink Age','YouTube','#BF5AF2'],['Movie Zone','YouTube','#FF9F0A'],['TikTok','TikTok','#F472B6']];
+ ['Game Zeus','YouTube','#30D158'],['Vellox Play','YouTube','#3B82F6'],['Gen2 Solutions','YouTube','#8B5CF6'],['Ink Age','YouTube','#BF5AF2'],['Movie Zone','YouTube','#FF9F0A']];
 const SET={ /* every setting, its default and one short help line */
  appsShort:{d:['tt','ig','fb'],t:'Apps for Shorts',h:'Where each Short is shared'},
  appsPost:{d:['ig','fb','x'],t:'Apps for post pictures',h:'Where the post picture is shared'},
@@ -161,6 +186,7 @@ const SET={ /* every setting, its default and one short help line */
  lateHours:{d:24,t:'Late after',h:'Hours after its time before it turns red',min:1,max:168,u:'h'},
  showFuture:{d:true,t:'Show coming posts',h:'Posts with a later time show on Home too'},
  showOff:{d:false,t:'Show turned-off channels',h:'Off channels stay hidden'},
+ currency:{d:'$',t:'Money currency',h:'Used on the Money tab'},
  startTab:{d:'home',t:'Open on',h:'First page when the app opens'},
  autoUpdate:{d:true,t:'Update by itself',h:'New version loads when you open the app'},
  showInstall:{d:true,t:'Install button',h:'Shows on Home until installed'},
@@ -169,7 +195,7 @@ const SET={ /* every setting, its default and one short help line */
  autoGet:{d:true,t:'Get videos by itself',h:'Downloads Shorts ready to share (Wi-Fi or data)'},
  style:{d:'1',t:'Look',h:'1. Studio Violet'}};
 
-let S={channels:[],ideas:[],done:{},settings:{},feed:{items:[],files:{},last:0,err:''},logos:{}};
+let S={channels:[],ideas:[],money:{},done:{},settings:{},feed:{items:[],files:{},last:0,err:''},logos:{}};
 function idb(){return new Promise((ok,no)=>{const r=indexedDB.open('studiox',2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('m'))d.createObjectStore('m');};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);});}
 async function kvGet(store,k){try{const d=await idb();return await new Promise(ok=>{const q=d.transaction(store).objectStore(store).get(k);q.onsuccess=()=>ok(q.result);q.onerror=()=>ok(null);});}catch(e){return null;}}
 async function kvPut(store,k,v){try{const d=await idb();await new Promise(ok=>{const t=d.transaction(store,'readwrite');t.objectStore(store).put(v,k);t.oncomplete=ok;t.onerror=ok;});}catch(e){}}
@@ -177,12 +203,15 @@ const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/
 async function load(){const v=await kvGet('kv','data');if(v)Object.assign(S,v);
   if(!S.channels.length)S.channels=START.map(c=>({id:slug(c[0]),name:c[0],platform:c[1],color:c[2],url:'',on:true}));
   S.channels.forEach(c=>{if(/^c\d+$/.test(c.id)){c.id=slug(c.name);}if(!c.color)c.color=COLORS[0];});   // 1.0 -> 1.1
-  S.done=S.done||{};S.ideas=S.ideas||[];S.logos=S.logos||{};S.feed=Object.assign({items:[],files:{},last:0,err:''},S.feed&&S.feed.items?S.feed:{});
+  S.channels=S.channels.filter(c=>!(c.id==='tiktok'&&c.platform==='TikTok'));   // 1.2: TikTok is an app, not a channel
+  S.money=S.money||{};S.done=S.done||{};S.ideas=S.ideas||[];S.logos=S.logos||{};S.feed=Object.assign({items:[],files:{},last:0,err:''},S.feed&&S.feed.items?S.feed:{});
   for(const k in SET)if(!(k in S.settings))S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:SET[k].d;}
 let svT=null;const save=()=>{clearTimeout(svT);svT=setTimeout(()=>kvPut('kv','data',S),150);};
 const set=k=>S.settings[k];
 const chBy=n=>S.channels.find(c=>c.id===n||c.name.toLowerCase()===String(n).toLowerCase());
 const chOn=c=>c&&(c.on||set('showOff'));
+const chList=()=>S.channels.filter(chOn).sort((a,b)=>(b.pin?1:0)-(a.pin?1:0));   // pinned first
+function togglePin(id){const c=chBy(id);if(!c)return;c.pin=!c.pin;save();toast(c.pin?c.name+' pinned to the top ✓':c.name+' unpinned');drawAll();}
 const logo=(c,cls='')=>c?`<span class="lg ${cls}" style="background:${c.color}">${S.logos[c.id]?`<img src="${S.logos[c.id]}">`:esc(c.name[0])}</span>`:'';
 
 /* ---------- tasks made from the bot feed ---------- */
@@ -216,13 +245,19 @@ let homeCh='all';
 function drawHome(){const T=tasks().filter(t=>homeCh==='all'||t.ch.id===homeCh);const open=T.filter(t=>!complete(t));
   const list=open.filter(t=>set('showFuture')||!future(t));const late=open.filter(lateOf).length;
   const wk=Date.now()-7*864e5;const doneWk=Object.values(S.done).filter(x=>x>wk).length;
-  const chs=S.channels.filter(chOn);const ins=$('instRow')?'':'';
+  const chs=chList();const selC=homeCh!=='all'&&chBy(homeCh);const sc=document.querySelector('#p-home .chips');const keepX=sc?sc.scrollLeft:0;
   $('p-home').innerHTML=`${installCard()}
   <div class="summary"><div class="sbox on"><div class="lbl">To post</div><div class="big">${open.length}</div></div><div class="sbox"><div class="lbl">Late</div><div class="big ${late?'red':''}">${late}</div></div><div class="sbox"><div class="lbl">Shared 7d</div><div class="big">${doneWk}</div></div></div>
-  <div class="chips"><button class="chip all ${homeCh==='all'?'on':''}" data-hch="all">All</button>${chs.map(c=>`<button class="chip ${homeCh===c.id?'on':''}" data-hch="${c.id}">${logo(c)}${esc(c.name)}</button>`).join('')}</div>
+  <div class="chips"><button class="chip all ${homeCh==='all'?'on':''}" data-hch="all">All</button>${chs.map(c=>`<button class="chip ${homeCh===c.id?'on':''} ${c.pin?'pin':''}" data-hch="${c.id}" data-lp="${c.id}">${logo(c)}${esc(c.name)}</button>`).join('')}</div>
+  ${selC?chanCard(selC,T):''}
   <div class="card"><div class="ct">To do now</div>${list.length?list.map((t,i)=>todoRow(t,i===0)).join(''):`<div class="empty">${S.feed.items.length?'All shared ✓':feedHelp()}</div>`}</div>
   <p class="muted" style="text-align:center">${feedLine()}</p>`;
+  const nc=document.querySelector('#p-home .chips');if(nc)nc.scrollLeft=keepX;
   $('lateDot').style.display=late?'block':'none';$('lateDot').textContent=late;fillThumbs();}
+function chanCard(c,T){const open=T.filter(t=>!complete(t));const nx=open.find(t=>!future(t))||open[0];const m=S.money[c.id]||{};const tot=(m.list||[]).reduce((a,x)=>a+(+x.amt||0),0);
+  return `<div class="card"><div class="chcard">${logo(c,'big')}<div style="flex:1;min-width:0"><b style="font-size:16px">${esc(c.name)}</b><div class="muted">${open.length} to post${nx?' · next '+niceTime(nx.when):''}</div></div>
+   <span class="pillm ${m.on?'on':''}">${m.on?'Monetized':'Not monetized'}</span></div>
+   <div class="row"><button class="btn out" data-chan="${c.id}">Channel</button><button class="btn out" data-mon="${c.id}">Money ${tot?money(tot):''}</button><button class="btn out" data-pin="${c.id}">${c.pin?'Unpin':'Pin to top'}</button></div></div>`;}
 function todoRow(t,next){const th=t.item.thumb&&t.item.thumb.path;
   return `<div class="todo"><div class="ic">${th?`<img data-m="${th}" alt="">`:t.kind==='short'?'🎬':t.kind==='post'?'🖼️':'▶'}<span class="ch">${logo(t.ch)}</span></div><div class="tx">
   <button class="tt" data-task="${t.id}">${esc(t.label)}${next?'<span class="nx">NEXT</span>':''}<span class="tm ${lateOf(t)?'late':''}">${niceTime(t.when)}</span></button>
@@ -239,15 +274,51 @@ function drawRecords(){const T=tasks();const from={week:Date.now()-7*864e5,month
   const vids=S.feed.items.filter(i=>i.when&&new Date(i.when).getTime()>=from);
   $('p-records').innerHTML=`<div class="bar"><select id="recP">${[['week','This week'],['month','This month'],['year','This year'],['all','All time']].map(o=>`<option value="${o[0]}" ${recP===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
   <div class="summary"><div class="sbox on"><div class="lbl">Shared</div><div class="big">${shares.length}</div></div><div class="sbox"><div class="lbl">Videos</div><div class="big">${vids.length}</div></div><div class="sbox"><div class="lbl">Done</div><div class="big">${T.filter(complete).length}</div></div></div>
-  <div class="sect">Channels</div><div class="card">${S.channels.filter(chOn).map(c=>`<div class="rec">${logo(c,'big')}<div><b>${esc(c.name)}</b><div class="muted">${S.feed.items.filter(i=>chBy(i.channel)===c).length} video(s)</div></div><span class="n">${per[c.id]||0}</span></div>`).join('')}</div>
-  <div class="sect">Shared</div><div class="card">${shares.length?shares.sort((a,b)=>b.ts-a.ts).slice(0,60).map(s=>`<div class="rec">${bi(s.a)}<div style="min-width:0"><b>${esc(s.t.label)}</b><div class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.t.item.title)}</div></div><span class="muted" style="margin-left:auto;white-space:nowrap">${niceTime(new Date(s.ts))}</span></div>`).join(''):'<div class="empty">Nothing shared yet.</div>'}</div>`;
+  <div class="sect">Channels</div><div class="card">${chList().map(c=>`<div class="rec" data-chan="${c.id}" style="cursor:pointer">${logo(c,'big')}<div><b>${esc(c.name)}</b><div class="muted">${S.feed.items.filter(i=>chBy(i.channel)===c).length} video(s)</div></div><span class="n">${per[c.id]||0}</span><span class="chv" style="color:#555;font-size:22px">›</span></div>`).join('')}</div>
+  <div class="sect">Shared</div><div class="card">${shares.length?shares.sort((a,b)=>b.ts-a.ts).slice(0,60).map(s=>`<div class="rec" data-task="${s.t.id}" style="cursor:pointer">${bi(s.a)}<div style="min-width:0"><b>${esc(s.t.label)}</b><div class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.t.item.title)}</div></div><span class="muted" style="margin-left:auto;white-space:nowrap">${niceTime(new Date(s.ts))}</span></div>`).join(''):'<div class="empty">Nothing shared yet.</div>'}</div>`;
   $('recP').onchange=e=>{recP=e.target.value;drawRecords();};}
 
 function drawChannels(){const T=tasks();
-  $('p-channels').innerHTML=`<div class="set-list">${S.channels.filter(chOn).map(c=>{const n=T.filter(t=>t.ch===c&&!complete(t)).length;
-    return `<button class="set-row" data-chan="${c.id}">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${c.on?esc(c.platform):'Off'}${S.feed.items.some(i=>chBy(i.channel)===c)?' · bot connected':''}</small></span>${n?`<span class="v on">${n} to post</span>`:''}<span class="chv">›</span></button>`;}).join('')}
-    <button class="set-row" id="addCh"><span class="i">${ln('plus')}</span><span class="t">Add channel<small>Name, logo and colour</small></span><span class="chv">›</span></button></div>`;}
+  $('p-channels').innerHTML=`<div class="tiles">${chList().map(c=>{const n=T.filter(t=>t.ch===c&&!complete(t)).length;
+    return `<button class="tile ${c.pin?'pin':''}" data-chan="${c.id}" data-lp="${c.id}" style="${c.on?'':'opacity:.45'}">${n?`<span class="cnt">${n}</span>`:''}${logo(c,'huge')}<b>${esc(c.name)}</b><small>${S.feed.items.some(i=>chBy(i.channel)===c)?'Bot connected':c.on?esc(c.platform):'Off'}</small></button>`;}).join('')}
+    <button class="tile add" id="addCh"><span style="font-size:30px">＋</span>Add channel</button></div>
+    <p class="muted" style="text-align:center;margin-top:12px">Hold a channel to pin it to the top.</p>`;}
 
+/* ---------- MONEY: monetization and earnings per channel ---------- */
+let monP='month';
+const money=n=>(n<0?'-':'')+set('currency')+Math.abs(n).toLocaleString('en-GB',{maximumFractionDigits:2});
+const YPP=[['subs','Subscribers',1000],['hours','Watch hours (12 months)',4000],['shorts','Shorts views (90 days)',10000000]];
+function drawMoney(){const from={week:Date.now()-7*864e5,month:Date.now()-30*864e5,year:Date.now()-365*864e5,all:0}[monP];
+  const all=[];for(const c of chList()){const m=S.money[c.id]||{};(m.list||[]).forEach(x=>all.push({...x,c}));}
+  const inP=all.filter(x=>new Date(x.date).getTime()>=from);const tot=inP.reduce((a,x)=>a+(+x.amt||0),0);
+  const mon=chList().filter(c=>(S.money[c.id]||{}).on).length;
+  $('p-money').innerHTML=`<div class="bar"><select id="monP">${[['week','This week'],['month','This month'],['year','This year'],['all','All time']].map(o=>`<option value="${o[0]}" ${monP===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
+  <div class="summary"><div class="sbox on"><div class="lbl">Earned</div><div class="big ${tot>=0?'plus':'minus'}">${money(tot)}</div></div><div class="sbox"><div class="lbl">Monetized</div><div class="big">${mon}/${chList().length}</div></div><div class="sbox"><div class="lbl">Payments</div><div class="big">${inP.length}</div></div></div>
+  <div class="row" style="margin:0 0 12px"><button class="btn" data-mon="add">＋ Add money</button></div>
+  <div class="sect">Channels</div><div class="set-list">${chList().map(c=>{const m=S.money[c.id]||{};const t=(m.list||[]).filter(x=>new Date(x.date).getTime()>=from).reduce((a,x)=>a+(+x.amt||0),0);
+    const p=m.on?'':YPP.slice(0,2).map(([k,,max])=>Math.min(100,Math.round((+(m[k]||0))/max*100))).join('% · ')+'%';
+    return `<button class="set-row" data-mon="${c.id}">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${m.on?'Monetized':'Not yet · '+p+' (subs · hours)'}</small></span><span class="v ${t>0?'plus':t<0?'minus':''}">${money(t)}</span><span class="chv">›</span></button>`;}).join('')}</div>`;
+  $('monP').onchange=e=>{monP=e.target.value;drawMoney();};}
+function moneySub(id){if(id==='add'){const c=chList()[0];return addMoney(c&&c.id);}
+  const c=chBy(id);const m=S.money[c.id]=S.money[c.id]||{on:false,list:[]};m.list=m.list||[];const tot=m.list.reduce((a,x)=>a+(+x.amt||0),0);
+  openSub(c.name+' · Money',`<div class="card"><div class="chcard">${logo(c,'big')}<div style="flex:1"><b>Total earned</b><div class="big ${tot>=0?'plus':'minus'}" style="font-size:24px;font-weight:800">${money(tot)}</div></div></div></div>
+   <div class="set-list"><div class="set-row"><span class="t">Monetized<small>YouTube Partner Program (or TikTok rewards) is on</small></span><label class="sw"><input type="checkbox" id="mOn" ${m.on?'checked':''}><span></span></label></div></div>
+   ${m.on?'':`<div class="card"><div class="ct">Road to monetization</div>${YPP.map(([k,l,max])=>`<div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${l}</span><b>${(+(m[k]||0)).toLocaleString()} / ${max.toLocaleString()}</b></div><div class="prog"><i style="width:${Math.min(100,(+(m[k]||0))/max*100)}%"></i></div></div>`).join('')}
+    <div class="row"><button class="btn out" id="mNums">Update numbers</button></div><p class="muted" style="margin-top:8px">YouTube needs 1,000 subscribers and 4,000 watch hours, or 1,000 subscribers and 10M Shorts views.</p></div>`}
+   <div class="row" style="margin-bottom:12px"><button class="btn" id="mAdd">＋ Add money</button></div>
+   <div class="sect">Payments</div><div class="card">${m.list.length?[...m.list].sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<div class="rec"><div><b>${esc(x.src||'Payment')}</b><div class="muted">${new Date(x.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}${x.note?' · '+esc(x.note):''}</div></div><span class="n ${+x.amt>=0?'plus':'minus'}" style="font-size:16px">${money(+x.amt)}</span><button class="btn red" style="flex:none;padding:6px 9px;margin-left:8px" data-mdel="${c.id}|${x.id}">✕</button></div>`).join(''):'<div class="empty">No payments yet.</div>'}</div>`,()=>{
+   $('mOn').onchange=e=>{m.on=e.target.checked;save();moneySub(id);};
+   if($('mNums'))$('mNums').onclick=()=>{for(const [k,l] of YPP){const v=prompt(l+':',m[k]||0);if(v===null)return;m[k]=+String(v).replace(/[^0-9.]/g,'')||0;}save();moneySub(id);};
+   $('mAdd').onclick=()=>addMoney(c.id);});}
+function addMoney(chId){const chs=chList();openSub('Add money',`<div class="card">
+   <label class="muted">Channel</label><select id="aCh" style="margin:6px 0 10px">${chs.map(c=>`<option value="${c.id}" ${c.id===chId?'selected':''}>${esc(c.name)}</option>`).join('')}</select>
+   <label class="muted">Amount (${set('currency')}) · use minus for a cost</label><input id="aAmt" type="number" step="0.01" inputmode="decimal" style="margin:6px 0 10px">
+   <label class="muted">From</label><select id="aSrc" style="margin:6px 0 10px">${['YouTube AdSense','YouTube Shorts','TikTok Rewards','Facebook','Instagram','Sponsor','Other','Cost'].map(o=>`<option>${o}</option>`).join('')}</select>
+   <label class="muted">Date</label><input id="aDate" type="date" value="${new Date().toISOString().slice(0,10)}" style="margin:6px 0 10px">
+   <label class="muted">Note</label><input id="aNote" placeholder="optional" style="margin-top:6px"></div>
+   <div class="row"><button class="btn" id="aSave">Save</button></div>`,()=>{$('aSave').onclick=()=>{const amt=parseFloat($('aAmt').value);if(isNaN(amt)){toast('Type the amount');return;}
+     const id=$('aCh').value;const m=S.money[id]=S.money[id]||{on:false,list:[]};m.list=m.list||[];m.list.push({id:Date.now(),amt,src:$('aSrc').value,date:$('aDate').value||new Date().toISOString().slice(0,10),note:$('aNote').value.trim()});
+     save();toast('Saved ✓');moneySub(id);};});}
 function drawIdeas(){const chs=S.channels.filter(chOn);
   $('p-ideas').innerHTML=`<div class="card"><div class="ct">New idea</div><select id="idCh" style="margin:6px 0 8px">${chs.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select>
   <textarea id="idTx" placeholder="Video or Short idea"></textarea><div class="row"><button class="btn" id="idAdd">Save idea</button></div></div>
@@ -257,17 +328,19 @@ function drawIdeas(){const chs=S.channels.filter(chOn);
 /* settings: grouped like Match Vision */
 const appsTxt=k=>set(k).map(a=>PN[a]).join(', ');
 function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><div class="set-list">${rows.join('')}</div>`;
-  const r=(id,icon,t,small,v,vOn)=>`<button class="set-row" data-s="${id}"><span class="i ${SVG[icon]?'pic':''}">${SVG[icon]||ln(icon)}</span><span class="t">${t}<small>${small}</small></span>${v!=null?`<span class="v ${vOn?'on':''}">${v}</span>`:''}<span class="chv">›</span></button>`;
+  const icon_=(id,icon)=>{if(SVG[icon])return `<span class="i pic">${SVG[icon]}</span>`;const c=IC[id];if(!c)return `<span class="i">${ln(icon)}</span>`;
+    if(c[0]==='img')return `<span class="i"><img src="${c[1]}" alt=""></span>`;return `<span class="i" style="--ib:${c[0]}">${c[1]==='api'?API_ICON:ln(c[1])}</span>`;};
+  const r=(id,icon,t,small,v,vOn)=>`<button class="set-row" data-s="${id}">${icon_(id,icon)}<span class="t">${t}<small>${small}</small></span>${v!=null?`<span class="v ${vOn?'on':''}">${v}</span>`:''}<span class="chv">›</span></button>`;
   $('p-settings').innerHTML=
    g('Posting',[r('appsShort','tt','Shorts',appsTxt('appsShort')),r('appsPost','ig','Post pictures',appsTxt('appsPost')),r('appsLink','wa','Video link',appsTxt('appsLink')),
      r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture'))])+
-   g('Laptop and bots',[r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','Laptop key',key()?'Connected':'Not connected',key()?'✓':'',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
-   g('Channels',[r('chans','ch','Channels',S.channels.filter(c=>c.on).length+' on'),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
-   g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',ideas:'Ideas'}[set('startTab')]),
+   g('Laptop and bots',[r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','API key',key()?'Connected':'Paste it once to connect',key()?'✓':'Connect',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
+   g('Channels',[r('chans','ch','Channels',S.channels.filter(c=>c.on).length+' on'),r('currency','money','Money currency','Used on the Money tab',set('currency')),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
+   g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',money:'Money',ideas:'Home'}[set('startTab')]),
      r('autoUpdate','up','Update by itself',SET.autoUpdate.h,set('autoUpdate')?'On':'Off',set('autoUpdate')),r('update','reset','Check for update','v'+VERSION)])+
    g('Data',[r('backup','dl','Backup','Save everything to a file'),r('restore','up','Restore','Load a backup file'),r('clearMedia','trash','Clear saved videos','Frees phone space'),r('defaults','reset','Back to default','Settings only')]);}
 
-function drawAll(){drawHome();drawRecords();drawChannels();drawIdeas();drawSettings();}
+function drawAll(){drawHome();drawRecords();drawChannels();drawMoney();drawSettings();}
 function showTab(t){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='p-'+t));scrollTo(0,0);}
 document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
@@ -313,7 +386,8 @@ function chanSub(c){const isNew=!c;c=c||{id:'c'+Date.now(),name:'',platform:'You
    <label class="muted">Where</label><select id="kPlat" style="margin:6px 0 10px">${['YouTube','TikTok','YouTube + TikTok','Instagram','Facebook','Other'].map(o=>`<option ${o===c.platform?'selected':''}>${o}</option>`).join('')}</select>
    <label class="muted">Channel link</label><input id="kUrl" value="${esc(c.url)}" placeholder="https://youtube.com/@..." style="margin:6px 0 10px">
    <label class="muted">Colour</label><div class="colors" id="kCol" style="margin-top:6px">${COLORS.map(x=>`<button style="background:${x}" data-col="${x}" class="${x===c.color?'on':''}"></button>`).join('')}</div></div>
-   <div class="set-list"><div class="set-row"><span class="t">Channel on<small>Off = hidden, nothing deleted</small></span><label class="sw"><input type="checkbox" id="kOn" ${c.on?'checked':''}><span></span></label></div></div>
+   <div class="set-list"><div class="set-row"><span class="t">Channel on<small>Off = hidden, nothing deleted</small></span><label class="sw"><input type="checkbox" id="kOn" ${c.on?'checked':''}><span></span></label></div>
+   <div class="set-row"><span class="t">Pin to the top<small>First everywhere, with a colour border</small></span><label class="sw"><input type="checkbox" id="kPin" ${c.pin?'checked':''}><span></span></label></div></div>
    <div class="row"><button class="btn" id="kSave">Save</button>${c.url?'<button class="btn out" id="kOpen">Open channel</button>':''}</div>
    ${isNew?'':'<div class="row"><button class="btn red" id="kDel">Delete channel</button></div>'}`,()=>{
    let pend=null;
@@ -321,7 +395,7 @@ function chanSub(c){const isNew=!c;c=c||{id:'c'+Date.now(),name:'',platform:'You
    if($('kLogoDel'))$('kLogoDel').onclick=()=>{delete S.logos[c.id];save();toast('Logo removed');chanSub(chBy(c.id));};
    $('kCol').onclick=e=>{const b=e.target.closest('[data-col]');if(!b)return;c.color=b.dataset.col;document.querySelectorAll('#kCol button').forEach(x=>x.classList.toggle('on',x===b));};
    if($('kOpen'))$('kOpen').onclick=()=>window.open(c.url,'_blank');
-   $('kSave').onclick=()=>{const n=$('kName').value.trim();if(!n){toast('Type a name');return;}Object.assign(c,{name:n,platform:$('kPlat').value,url:$('kUrl').value.trim(),on:$('kOn').checked});
+   $('kSave').onclick=()=>{const n=$('kName').value.trim();if(!n){toast('Type a name');return;}Object.assign(c,{name:n,platform:$('kPlat').value,url:$('kUrl').value.trim(),on:$('kOn').checked,pin:$('kPin').checked});
      if(pend)S.logos[c.id]=pend;const i=S.channels.findIndex(x=>x.id===c.id);if(i<0)S.channels.push(c);else S.channels[i]=c;save();toast('Saved ✓');closeSub();};
    if($('kDel'))$('kDel').onclick=()=>{if(!confirm(`Delete ${c.name}? (Turning it off keeps it.)`))return;S.channels=S.channels.filter(x=>x.id!==c.id);delete S.logos[c.id];save();closeSub();};});}
 
@@ -329,12 +403,13 @@ function setSub(s){
   if(s==='appsShort'||s==='appsPost'||s==='appsLink')return appsSub(s);
   if(s==='tickOnShare'||s==='showFuture'||s==='autoUpdate'||s==='autoGet'||s==='showOff')return openSub(SET[s].t,swRow(s,SET[s].t,SET[s].h));
   if(s==='lateHours')return openSub(SET[s].t,stepRow(s));
-  if(s==='startTab')return openSub('Open on',`<div class="set-list">${[['home','Home'],['records','Records'],['channels','Channels'],['ideas','Ideas']].map(o=>`<button class="set-row" data-pick="startTab" data-val="${o[0]}"><span class="t">${o[1]}</span>${set('startTab')===o[0]?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
+  if(s==='startTab')return openSub('Open on',`<div class="set-list">${[['home','Home'],['records','Records'],['channels','Channels'],['money','Money']].map(o=>`<button class="set-row" data-pick="startTab" data-val="${o[0]}"><span class="t">${o[1]}</span>${set('startTab')===o[0]?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
   if(s==='bots')return openSub('Bot feed',swRow('feedOn',SET.feedOn.t,SET.feedOn.h)+stepRow('feedMins')+`<div class="card"><div class="ct">Status</div><div class="muted">${feedLine()}</div>
      ${Object.keys(S.feed.files).map(f=>`<div class="muted">• ${esc(f.replace('.json',''))}</div>`).join('')}<div class="row"><button class="btn" id="fNow">Check now</button></div></div>`,()=>{$('fNow').onclick=async()=>{await feed(true);setSub('bots');};});
-  if(s==='key')return openSub('Laptop key',`<div class="card"><div class="ct">${key()?'Connected ✓':'Not connected'}</div><div class="cs">The same key as Fix notes "Laptop sync". It stays on this phone.</div><div class="row"><button class="btn" id="kSet">${key()?'Change key':'Paste key'}</button></div></div>`,()=>{
+  if(s==='key')return openSub('API key',`<div class="card"><div class="ct">${key()?'Connected ✓':'Not connected'}</div><div class="cs">Your GitHub mailbox key (the same one Match Vision and Fix notes use). Paste it once: it stays on this phone and also connects Fix notes.</div><div class="row"><button class="btn" id="kSet">${key()?'Change key':'Paste key'}</button></div></div>`,()=>{
      $('kSet').onclick=()=>{const t=prompt('Paste the GitHub key for your private mailbox (surestake707-sync):');if(!t||!t.trim())return;let a={};try{a=JSON.parse(localStorage.getItem('fixhub_sync')||'{}');}catch(e){}a.repo=REPO;a.token=t.trim();a.on=true;try{localStorage.setItem('fixhub_sync',JSON.stringify(a));}catch(e){}toast('Saved ✓');feed(true);setSub('key');};});
   if(s==='chans')return showTab('channels');
+  if(s==='currency')return openSub('Money currency',`<div class="set-list">${['$','GH₵','€','£'].map(o=>`<button class="set-row" data-pick="currency" data-val="${o}"><span class="t">${o}</span>${set('currency')===o?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
   if(s==='install')return doInstall();
   if(s==='update')return checkUpdate();
   if(s==='backup')return exportData();
@@ -342,14 +417,22 @@ function setSub(s){
   if(s==='clearMedia'){if(confirm('Clear the saved Shorts and pictures? They download again when needed.')){idb().then(d=>{const t=d.transaction('m','readwrite');t.objectStore('m').clear();t.oncomplete=()=>toast('Cleared ✓');});}return;}
   if(s==='defaults'){if(confirm('Settings back to default? (Channels, ticks and ideas stay.)')){for(const k in SET)S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:SET[k].d;save();drawAll();toast('Done ✓');}return;}}
 
+/* ---------- hold to pin (chips and channel tiles) ---------- */
+let lpT=null,lpFired=false;
+document.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-lp]');if(!b)return;lpFired=false;lpT=setTimeout(()=>{lpFired=true;togglePin(b.dataset.lp);if(navigator.vibrate)navigator.vibrate(30);},550);});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>document.addEventListener(ev,()=>clearTimeout(lpT)));
+document.addEventListener('contextmenu',e=>{if(e.target.closest('[data-lp]'))e.preventDefault();});
 /* ---------- one click handler ---------- */
 document.addEventListener('click',async e=>{const q=sel=>e.target.closest(sel);let b;
   if(b=q('[data-share]')){e.stopPropagation();const t=tasks().find(x=>x.id===b.dataset.share);if(t)share(t,b.dataset.app);return;}
   if(b=q('[data-copy]')){const t=tasks().find(x=>x.id===b.dataset.copy);if(t){toast(await copyWords(t,b.dataset.app)?'Words copied ✓':'Could not copy');}return;}
   if(b=q('[data-tick]')){const k=b.dataset.tick+'|'+b.dataset.app;if(S.done[k])delete S.done[k];else S.done[k]=Date.now();save();taskSub(b.dataset.tick);drawHome();return;}
   if(b=q('[data-task]')){$('sub').dataset.task=b.dataset.task;taskSub(b.dataset.task);return;}
-  if(b=q('[data-hch]')){homeCh=b.dataset.hch;drawHome();return;}
-  if(b=q('[data-chan]')){chanSub(chBy(b.dataset.chan));return;}
+  if(b=q('[data-hch]')){if(lpFired){lpFired=false;return;}homeCh=homeCh===b.dataset.hch?'all':b.dataset.hch;drawHome();return;}
+  if(b=q('[data-pin]')){togglePin(b.dataset.pin);return;}
+  if(b=q('[data-mon]')){moneySub(b.dataset.mon);return;}
+  if(b=q('[data-mdel]')){const [cid,mid]=b.dataset.mdel.split('|');if(confirm('Delete this payment?')){const m=S.money[cid];m.list=m.list.filter(x=>String(x.id)!==mid);save();moneySub(cid);}return;}
+  if(b=q('[data-chan]')){if(lpFired){lpFired=false;return;}chanSub(chBy(b.dataset.chan));return;}
   if(b=q('#addCh')){chanSub(null);return;}
   if(b=q('[data-s]')){$('sub').dataset.task='';setSub(b.dataset.s);return;}
   if(b=q('[data-pick]')){S.settings[b.dataset.pick]=b.dataset.val;save();setSub(b.dataset.pick);return;}
@@ -392,7 +475,7 @@ async function checkUpdate(){try{const r=await navigator.serviceWorker.getRegist
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(r=>{document.addEventListener('visibilitychange',()=>{if(!document.hidden&&set('autoUpdate'))r.update().catch(()=>{});});
   r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='activated'){toast('APP UPDATED ✓');setTimeout(()=>location.reload(),900);}});});}).catch(()=>{});}
 
-load().then(()=>{drawAll();showTab(set('startTab')||'home');feedTimer();setTimeout(feed,1500);});
+load().then(()=>{if(set('startTab')==='ideas')S.settings.startTab='home';drawAll();showTab(set('startTab')||'home');feedTimer();setTimeout(feed,1500);});
 window.__sx={get S(){return S;},showTab,feed,tasks,drawAll};
 })();
 </script>
