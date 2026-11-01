@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#05060A">
+<meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,343 +11,389 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.0.1</title>
+<title>Studio X 1.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* Studio X 1.0 (Philip, 1 Nov 2026): one app for every content channel on the content phone.
-   Style 1 "Studio Dark": black, cyan > violet > pink (from the logo). New looks = new numbered styles. */
-:root{--f:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;--bg:#05060A;--card:#111218;--card2:#181A22;--line:#262833;
-  --cyan:#22D3EE;--violet:#8B5CF6;--pink:#F472B6;--green:#30D158;--red:#FF453A;--yellow:#FFD60A;--mute:#C9C9C9;--dim:#8A8A8A;
-  --grad:linear-gradient(135deg,#22D3EE,#8B5CF6 55%,#F472B6);
+/* Studio X 1.1 (Philip, 1 Nov 2026): Match Vision / Sure Stake look (Inter, flat cards, grouped settings, line tabs)
+   with the Studio X colours. Style 1 "Studio Violet". */
+:root{--f:'Inter',-apple-system,system-ui,'Segoe UI',Roboto,sans-serif;--acc:#8B5CF6;--onAcc:#fff;--accSoft:rgba(139,92,246,.16);--accLine:rgba(139,92,246,.5);
+  --grad:linear-gradient(135deg,#22D3EE,#8B5CF6 55%,#F472B6);--bg:#000;--card:#131315;--card2:#1C1C1F;--line:#222226;--r:18px;--rb:14px;--navBg:rgba(14,14,16,.9);
+  --mute:#A1A1A6;--dim:#6E6E73;--green:#30D158;--red:#FF453A;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*::before,*::after{box-sizing:inherit;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{background:var(--bg)}
-body{background:var(--bg);color:#fff;font-family:var(--f);min-height:100%;max-width:480px;margin:0 auto;padding-bottom:96px}
-button,input,select,textarea{font-family:var(--f)}
-.app-header{display:flex;align-items:center;justify-content:center;gap:10px;padding:18px 16px 6px}
-.app-header img{width:34px;height:34px;border-radius:10px}
-.app-header h1{font-size:24px;font-weight:900;letter-spacing:.5px}
-.app-header h1 b{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.app-header .ver{font-size:11px;color:#666;font-weight:700;margin-left:2px}
-.app-sub{text-align:center;font-size:10px;letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-bottom:6px}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:#0B0C11;border-top:1px solid var(--line);z-index:100;padding-bottom:env(safe-area-inset-bottom,0px)}
-.nav-btn{position:relative;flex:1;padding:13px 4px 11px;background:none;border:none;color:var(--mute);font-size:10px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-.nav-btn .ni{font-size:19px;transition:transform .18s}
-.nav-btn::before{content:'';position:absolute;top:0;left:18%;right:18%;height:3px;background:var(--grad);border-radius:0 0 3px 3px;transform:scaleX(0);transition:transform .2s}
-.nav-btn.active::before{transform:scaleX(1)}.nav-btn.active{color:#fff}.nav-btn.active .ni{transform:translateY(-1px) scale(1.12)}
-.page{display:none;padding:10px 16px}.page.active{display:block;animation:pageIn .25s ease both}
-@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-h2{font-size:18px;font-weight:800;margin:14px 0 8px}
-.muted{color:var(--dim);font-size:13px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 4px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center}
-.stat b{display:block;font-size:24px;font-weight:900}.stat span{font-size:11px;color:var(--dim);font-weight:700}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:6px 0 4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
-.chip{flex:none;display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:6px 12px 6px 6px;font-size:13px;font-weight:700;color:#fff}
-.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;color:#fff;flex:none}
-.av.big{width:52px;height:52px;font-size:24px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ch{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 10px;text-align:center;cursor:pointer;position:relative}
-.ch .av{margin:0 auto 8px}.ch h4{font-size:14px;font-weight:800}.ch small{color:var(--dim);font-size:11px;font-weight:600}
-.ch.off{opacity:.45}.ch .cnt{position:absolute;top:8px;right:10px;font-size:11px;font-weight:800;color:var(--cyan)}
-.ch.add{border-style:dashed;color:var(--dim);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;font-weight:800}
-.post{display:flex;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin:8px 0;cursor:pointer;border-left:4px solid var(--c,#555)}
-.post .th{width:72px;height:40px;border-radius:8px;object-fit:cover;flex:none;background:#000}
-.post .mid{flex:1;min-width:0}
-.post .t{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.post .m{font-size:11px;color:var(--dim);font-weight:600;margin-top:2px}
-.ticks{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
-.tk{font-size:10px;font-weight:800;padding:2px 6px;border-radius:8px;background:#22242c;color:#777}
-.tk.on{background:rgba(48,209,88,.16);color:var(--green)}
-.late{color:var(--red)!important}
-.day{font-size:12px;font-weight:800;color:var(--mute);letter-spacing:1px;text-transform:uppercase;margin:16px 0 2px}
-.bar{display:flex;gap:8px;margin:8px 0}
-select,input[type=text],input[type=url],input[type=datetime-local],input[type=number],textarea{width:100%;background:#0c0d12;color:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:15px}
-textarea{min-height:80px;line-height:1.4}
-.btn{flex:1;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--card2);color:#fff;font-weight:700;font-size:15px;cursor:pointer}
-.btn.main{background:var(--grad);border:0;color:#fff}
-.btn.red{background:rgba(255,69,58,.15);color:var(--red);border-color:rgba(255,69,58,.3)}
-.btn.sm{flex:none;padding:7px 10px;font-size:12px;border-radius:10px}
-.fab{position:fixed;right:16px;bottom:86px;width:56px;height:56px;border-radius:28px;border:0;background:var(--grad);color:#fff;font-size:30px;font-weight:300;z-index:90;box-shadow:0 8px 22px rgba(139,92,246,.45)}
-.sheet{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);display:none}
-.sheet .in{position:absolute;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;max-height:92vh;overflow:auto;background:#101117;border-radius:22px 22px 0 0;padding:16px 16px 30px}
-.sheet h3{font-size:19px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.f{margin:10px 0}.f label{display:block;font-size:12px;font-weight:800;color:var(--mute);margin-bottom:5px}
-.f .help{font-size:12px;color:var(--dim);margin-top:4px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.tg{display:flex;flex-wrap:wrap;gap:8px}
-.tg button{padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:#16171e;color:#aaa;font-weight:700;font-size:13px}
-.tg button.on{background:rgba(48,209,88,.16);color:var(--green);border-color:rgba(48,209,88,.4)}
-.cp{display:flex;gap:6px;align-items:flex-start}.cp>*:first-child{flex:1}
-.set{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin:8px 0}
-.set .top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;font-size:14px}
-.set .help{font-size:12px;color:var(--dim);margin-top:4px}
-.sw{position:relative;width:46px;height:28px;flex:none}.sw input{opacity:0;width:0;height:0}
+html,body{background:var(--bg)}
+body{color:#fff;font-family:var(--f);max-width:480px;margin:0 auto;padding-bottom:96px;letter-spacing:-.1px}
+button{font-family:var(--f);color:#fff;cursor:pointer;transition:transform .12s,filter .16s}button:active{transform:scale(.96);filter:brightness(1.12)}
+input,textarea,select{width:100%;padding:12px 14px;border-radius:12px;background:#101010;border:1px solid #2A2A2A;color:#fff;font-size:15px;font-family:var(--f)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acc)}
+textarea{min-height:70px;line-height:1.4;resize:vertical}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes subIn{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+/* header */
+.app-top{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 12px}
+.bn{font-size:21px;font-weight:800;letter-spacing:.4px}.bn b{font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.bd{color:var(--dim);font-weight:500;font-size:13px;margin-top:1px}
+.tver{color:var(--dim);background:var(--card);border-radius:99px;padding:4px 10px;font-size:12px;font-weight:600}
+/* pages */
+.page{display:none;padding:4px 16px 12px}.page.active{display:block;animation:cardIn .25s both}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px;animation:cardIn .3s both}
+.ct{font-size:16px;font-weight:700;margin-bottom:4px}.cs{font-size:13px;color:var(--dim);line-height:1.45;margin-bottom:10px}
+.sect{color:var(--dim);font-weight:600;letter-spacing:1.6px;font-size:11px;text-transform:uppercase;margin:16px 4px 8px}
+.summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.sbox{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 6px;text-align:center}
+.sbox .lbl{font-size:10px;color:var(--dim);letter-spacing:1.4px;text-transform:uppercase;font-weight:600}.sbox .big{font-size:22px;font-weight:800;margin-top:3px}
+.sbox.on{border-color:var(--acc);background:var(--accSoft)}.sbox.on .lbl{color:var(--acc)}.big.red{color:var(--red)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:7px 12px 7px 7px;border-radius:99px;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--mute)}
+.chip.on{background:var(--accSoft);border-color:var(--acc);color:#fff}.chip.all{padding-left:12px}
+.lg{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex:none;overflow:hidden}
+.lg img{width:100%;height:100%;object-fit:cover}.lg.big{width:36px;height:36px;border-radius:10px;font-size:16px}.lg.huge{width:72px;height:72px;border-radius:18px;font-size:30px;margin:0 auto}
+/* to do rows (Match Vision) */
+.todo{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #262626}.todo:last-child{border-bottom:0}
+.todo .ic{width:44px;height:44px;border-radius:12px;background:#1E1E1E;flex:none;overflow:hidden;position:relative;display:grid;place-items:center;font-size:18px}
+.todo .ic img{width:100%;height:100%;object-fit:cover}.todo .ic .ch{position:absolute;right:-1px;bottom:-1px;width:18px;height:18px;border-radius:50%;border:2px solid var(--card);overflow:hidden}
+.todo .tx{flex:1;min-width:0}
+.todo .tt{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px;background:none;border:0;padding:0;text-align:left;width:100%}
+.nx{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--onAcc);background:var(--acc);padding:2px 6px;border-radius:99px}
+.tm{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--mute);background:var(--card2);border:1px solid var(--line);border-radius:99px;padding:3px 8px;white-space:nowrap}.tm.late{color:var(--red);border-color:rgba(255,69,58,.4)}
+.pv{font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.mini button{display:flex;align-items:center;gap:6px;padding:7px 11px;border-radius:99px;font-size:12px;font-weight:700;background:var(--card2);border:1px solid var(--line)}
+.mini button.done{background:var(--accSoft);border-color:var(--acc)}.mini button.done::after{content:'✓';color:var(--green);font-weight:900}
+.bi{width:16px;height:16px;display:inline-block;flex:none}.bi svg{width:100%;height:100%;display:block}
+/* settings list (Match Vision) */
+.set-list{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.set-row{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid #262626;padding:13px 14px;text-align:left}.set-row:last-child{border-bottom:0}
+.set-row .i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--grad);overflow:hidden}
+.set-row .i svg{width:20px;height:20px}.set-row .i.pic{background:none}.set-row .i.pic svg{width:34px;height:34px;border-radius:9px}
+.set-row .t{flex:1;min-width:0;font-size:15px;font-weight:600}.set-row .t small{display:block;font-size:12.5px;color:var(--dim);font-weight:400;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-row .v{font-size:13px;color:var(--dim);font-weight:600}.set-row .v.on{color:var(--acc)}.set-row .chv{color:#555;font-size:22px}
+/* sub page */
+#sub{position:fixed;inset:0;background:var(--bg);z-index:150;display:none;overflow:auto;padding-bottom:40px}
+#sub.open{display:block;animation:subIn .22s both}
+.subhead{position:sticky;top:0;background:rgba(0,0,0,.92);backdrop-filter:blur(14px);display:flex;align-items:center;gap:8px;padding:14px 10px;z-index:2;max-width:480px;margin:0 auto}
+.subhead button{background:none;border:0;font-size:30px;line-height:1;padding:0 10px;color:var(--acc)}.subhead h2{font-size:18px;font-weight:700}
+.subbody{padding:4px 16px;max-width:480px;margin:0 auto}
+/* controls */
+.btn{flex:1;padding:13px;border-radius:var(--rb);background:var(--acc);border:0;color:var(--onAcc);font-size:14px;font-weight:700}
+.btn.out{background:var(--card2);border:1px solid var(--line);color:#fff}.btn.red{background:transparent;border:1px solid var(--line);color:var(--red)}
+.row{display:flex;gap:8px;margin-top:10px}
+.sw{position:relative;width:46px;height:28px;flex:none}.sw input{opacity:0;width:0;height:0;position:absolute}
 .sw span{position:absolute;inset:0;background:#2a2c36;border-radius:14px;transition:.2s}.sw span::after{content:'';position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
-.sw input:checked+span{background:var(--violet)}.sw input:checked+span::after{transform:translateX(18px)}
-.set select{width:auto;min-width:120px;padding:7px}
+.sw input:checked+span{background:var(--acc)}.sw input:checked+span::after{transform:translateX(18px)}
+.step{display:flex;align-items:center;gap:6px}.step button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--card2);font-size:18px}.step b{min-width:30px;text-align:center}
+pre.w{white-space:pre-wrap;word-break:break-word;font-family:var(--f);font-size:13.5px;line-height:1.45;background:#101010;border:1px solid var(--line);border-radius:12px;padding:10px;max-height:220px;overflow:auto;margin-top:8px}
+.media{width:100%;border-radius:14px;background:#000;display:block;max-height:60vh;object-fit:contain}
+.muted{color:var(--dim);font-size:12.5px;line-height:1.45}
+.empty{color:var(--dim);font-size:13.5px;text-align:center;padding:18px 6px}
+.bar{display:flex;gap:8px;margin-bottom:12px}.bar select{padding:10px 12px}
+.rec{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #262626}.rec:last-child{border-bottom:0}.rec .n{margin-left:auto;font-weight:800;font-size:18px}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#fff;color:#000;font-weight:700;padding:10px 16px;border-radius:14px;z-index:300;display:none;font-size:14px;max-width:90%;text-align:center}
 .colors{display:flex;gap:8px;flex-wrap:wrap}.colors button{width:30px;height:30px;border-radius:50%;border:2px solid transparent}.colors button.on{border-color:#fff}
-.empty{text-align:center;color:var(--dim);padding:26px 10px;font-size:14px}
-.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#fff;color:#000;font-weight:800;padding:10px 16px;border-radius:14px;z-index:300;display:none;font-size:14px}
-.feedline{font-size:12px;color:var(--dim);text-align:center;margin:2px 0 6px}
+/* tab bar (Match Vision line icons) */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:var(--navBg);border-top:1px solid var(--line);z-index:100;padding-bottom:env(safe-area-inset-bottom,0px);backdrop-filter:blur(20px)}
+.nav-btn{position:relative;flex:1;padding:11px 4px 10px;background:none;border:none;color:var(--dim);font-size:10.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px}
+.nav-btn.active{color:var(--acc)}
+.nav-btn .ni{width:24px;height:24px;display:block;background:currentColor;-webkit-mask:var(--ic) center/24px 24px no-repeat;mask:var(--ic) center/24px 24px no-repeat}
+.nav-btn .dot{position:absolute;top:6px;left:calc(50% + 8px);min-width:16px;height:16px;border-radius:8px;background:var(--red);color:#fff;font-size:10px;font-weight:800;line-height:16px;padding:0 4px;display:none}
+.nav-btn[data-tab=home] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'/%3E%3C/svg%3E")}
+.nav-btn[data-tab=records] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M4 20V10M10 20V4M16 20v-7M22 20H2'/%3E%3C/svg%3E")}
+.nav-btn[data-tab=channels] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'%3E%3Crect x='2' y='5' width='14' height='14' rx='3'/%3E%3Cpath d='m16 10 6-3v10l-6-3z'/%3E%3C/svg%3E")}
+.nav-btn[data-tab=ideas] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z'/%3E%3C/svg%3E")}
+.nav-btn[data-tab=settings] .ni{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
-<div class="app-header"><img src="icons/icon-192.png" alt=""><h1>Studio <b>X</b></h1><span class="ver" id="ver"></span></div>
-<div class="app-sub">All my channels · one place</div>
-<div class="feedline" id="feedLine"></div>
-<div id="installBar" style="display:none;margin:4px 16px 0"><button class="btn main" id="installBtn" style="width:100%">⬇ Install Studio X as an app</button><div class="muted" id="installHelp" style="text-align:center;margin-top:6px"></div></div>
-
-<section class="page active" id="p-home"></section>
-<section class="page" id="p-channels"></section>
-<section class="page" id="p-plan"></section>
-<section class="page" id="p-more"></section>
-
-<button class="fab" id="fab" title="New post">+</button>
+<header class="app-top"><div><div class="bn">STUDIO <b>X</b></div><div class="bd" id="hDate"></div></div><span class="tver" id="tver"></span></header>
+<main class="page active" id="p-home"></main>
+<main class="page" id="p-records"></main>
+<main class="page" id="p-channels"></main>
+<main class="page" id="p-ideas"></main>
+<main class="page" id="p-settings"></main>
 <nav class="bottom-nav">
-  <button class="nav-btn active" data-tab="home"><span class="ni">🏠</span>Today</button>
-  <button class="nav-btn" data-tab="channels"><span class="ni">📺</span>Channels</button>
-  <button class="nav-btn" data-tab="plan"><span class="ni">📅</span>Plan</button>
-  <button class="nav-btn" data-tab="more"><span class="ni">⚙️</span>More</button>
+  <button class="nav-btn active" data-tab="home"><span class="ni"></span><span class="dot" id="lateDot"></span>Home</button>
+  <button class="nav-btn" data-tab="records"><span class="ni"></span>Records</button>
+  <button class="nav-btn" data-tab="channels"><span class="ni"></span>Channels</button>
+  <button class="nav-btn" data-tab="ideas"><span class="ni"></span>Ideas</button>
+  <button class="nav-btn" data-tab="settings"><span class="ni"></span>Settings</button>
 </nav>
-<div class="sheet" id="sheet"><div class="in" id="sheetIn"></div></div>
+<div id="sub"><div class="subhead"><button id="subBack" aria-label="Back">‹</button><h2 id="subTitle"></h2></div><div class="subbody" id="subBody"></div></div>
 <div class="toast" id="toast"></div>
-<input type="file" id="fileThumb" accept="image/*" style="display:none">
+<input type="file" id="fileLogo" accept="image/*" style="display:none">
 <input type="file" id="fileImport" accept=".json,application/json" style="display:none">
 
 <script>
 (function(){
-VERSION='1.0.1';
+VERSION='1.1';
 const $=id=>document.getElementById(id);
-$('ver').textContent='v'+VERSION;
+$('tver').textContent='v'+VERSION;
+$('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const toast=m=>{const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',1800);};
-const COLORS=['#22D3EE','#8B5CF6','#F472B6','#30D158','#FF9F0A','#FF453A','#FFD60A','#32ADE6','#BF5AF2','#A3E635','#94A3B8'];
-const KINDS=['Video','Short','TikTok','Post','Idea'];
-const TICKS=[['script','Script'],['build','Built'],['thumb','Thumbnail'],['text','Title + text'],['upload','Uploaded']];
-/* Starting channels (Philip's content phone). Add more any time with "+ Add channel". Turning off hides, never deletes. */
-const START=[
- ['RankX Football','YouTube','#A3E635','R'],['Device Guardian','YouTube','#FF453A','D'],['Xtech Guides','YouTube','#32ADE6','X'],
- ['Cine Cascade','YouTube','#FFD60A','C'],['Game Zeus','YouTube','#30D158','G'],['Vellox Play','YouTube','#3B82F6','V'],
- ['Gen2 Solutions','YouTube','#8B5CF6','G'],['Ink Age','YouTube','#BF5AF2','I'],['Movie Zone','YouTube','#FF9F0A','M'],
- ['TikTok','TikTok','#F472B6','T']];
-/* SETTINGS: every setting has a plain help line. Defaults = how the app behaves now. */
-const SETTINGS=[
- {k:'startTab',t:'Open on',type:'sel',opts:[['home','Today'],['channels','Channels'],['plan','Plan']],d:'home',h:'Which page the app shows when you open it.'},
- {k:'planPeriod',t:'Plan shows by default',type:'sel',opts:[['week','This week'],['month','This month'],['year','This year'],['all','All time']],d:'week',h:'The starting period on the Plan page. You can still change it there.'},
- {k:'showOff',t:'Show turned-off channels',type:'sw',d:false,h:'On = turned-off channels still show (faded). Off = they are hidden. Nothing is deleted.'},
- {k:'showDone',t:'Show uploaded posts on Today',type:'sw',d:false,h:'On = uploaded posts stay on the Today page. Off = Today only shows what still needs work.'},
- {k:'lateRed',t:'Late posts in red',type:'sw',d:true,h:'A post past its time and not uploaded shows its time in red.'},
- {k:'askDelete',t:'Ask before deleting',type:'sw',d:true,h:'Shows a "Delete?" question before a post or channel is removed for good.'},
- {k:'feedOn',t:'Bot feed (laptop bots)',type:'sw',d:true,h:'On = the app reads what your channel bots send (builds, uploads, schedule) from your private mailbox. Uses the same key as Fix notes "Laptop sync". Off = only what you type here.'},
- {k:'feedMins',t:'Check the bot feed every (minutes)',type:'num',d:5,min:1,max:60,h:'How often the app looks for new bot news while it is open.'},
- {k:'showInstall',t:'Show the Install button',type:'sw',d:true,h:'Shows "Install Studio X as an app" at the top until the app is installed. It hides by itself inside the installed app.'},
- {k:'autoUpdate',t:'Update by itself',type:'sw',d:true,h:'On = every time you open the app it checks for a new version and reloads with "APP UPDATED". Off = only when you tap "Check for app update".'},
- {k:'style',t:'Look',type:'sel',opts:[['1','1. Studio Dark']],d:'1',h:'The app style. New looks are added as new numbers; this one always stays.'}];
+const toast=m=>{const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',2200);};
 
-/* ---------- storage (IndexedDB, survives app updates) ---------- */
-let S={channels:[],posts:[],settings:{},feed:{last:0,sha:''}};
-function idb(){return new Promise((ok,no)=>{const r=indexedDB.open('studiox',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);});}
-async function load(){try{const d=await idb();const v=await new Promise(ok=>{const q=d.transaction('kv').objectStore('kv').get('data');q.onsuccess=()=>ok(q.result);q.onerror=()=>ok(null);});if(v)S=Object.assign(S,v);}catch(e){}
-  if(!S.channels.length)S.channels=START.map((c,i)=>({id:'c'+(i+1),name:c[0],platform:c[1],color:c[2],letter:c[3],url:'',on:true,note:''}));
-  for(const s of SETTINGS)if(!(s.k in S.settings))S.settings[s.k]=s.d;}
-let st=null;function save(){clearTimeout(st);st=setTimeout(async()=>{try{const d=await idb();d.transaction('kv','readwrite').objectStore('kv').put(S,'data');}catch(e){toast('Could not save!');}},150);}
+/* ---------- real app logos (same as Match Vision) ---------- */
+const SVG={"tg": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"12\" fill=\"#29A9EB\"/><path fill=\"#fff\" d=\"M5.4 11.7l11.3-4.4c.5-.2 1 .1.8.9l-1.9 9c-.1.6-.5.8-1 .5l-2.9-2.1-1.4 1.4c-.2.2-.3.3-.6.3l.2-3 5.4-4.9c.2-.2 0-.3-.3-.1l-6.7 4.2-2.9-.9c-.6-.2-.6-.6.1-.9z\"/></svg>", "wa": "<svg viewBox=\"0 0 24 24\"><path fill=\"#25D366\" d=\"M12 1.6A10.4 10.4 0 0 0 3.1 17.4L1.6 22.4l5.2-1.4A10.4 10.4 0 1 0 12 1.6z\"/><path fill=\"#fff\" d=\"M8.7 6.8c-.2-.5-.4-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3c.1.2 2 3.2 5 4.4 2.5 1 3 .8 3.5.7.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3l-1.9-.9c-.3-.1-.5-.1-.7.1l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.2z\"/></svg>", "x": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#000\"/><rect x=\".5\" y=\".5\" width=\"23\" height=\"23\" rx=\"5.5\" fill=\"none\" stroke=\"#555\"/><path fill=\"#fff\" d=\"M13.6 10.8L19 4.8h-1.3l-4.7 5.2-3.8-5.2H5l5.7 7.9L5 19.2h1.3l5-5.6 4 5.6h4.2l-5.9-8.4zm-1.8 2l-.6-.8L6.8 5.8h2l3.7 5.1.6.8 4.8 6.6h-2l-4.1-5.5z\"/></svg>", "ig": "<svg viewBox=\"0 0 24 24\"><defs><linearGradient id=\"igg\" x1=\"0\" y1=\"1\" x2=\"1\" y2=\"0\"><stop offset=\"0\" stop-color=\"#FEDA75\"/><stop offset=\".35\" stop-color=\"#FA7E1E\"/><stop offset=\".65\" stop-color=\"#D62976\"/><stop offset=\"1\" stop-color=\"#4F5BD5\"/></linearGradient></defs><rect width=\"24\" height=\"24\" rx=\"6.5\" fill=\"url(#igg)\"/><rect x=\"5.5\" y=\"5.5\" width=\"13\" height=\"13\" rx=\"4\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\"/><circle cx=\"12\" cy=\"12\" r=\"3.1\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\"/><circle cx=\"16.1\" cy=\"7.9\" r=\"1\" fill=\"#fff\"/></svg>", "tt": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#000\"/><rect x=\".5\" y=\".5\" width=\"23\" height=\"23\" rx=\"5.5\" fill=\"none\" stroke=\"#444\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6\" fill=\"none\" stroke=\"#25F4EE\" stroke-width=\"2.2\" stroke-linecap=\"round\" transform=\"translate(-.6 -.4)\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6\" fill=\"none\" stroke=\"#FE2C55\" stroke-width=\"2.2\" stroke-linecap=\"round\" transform=\"translate(.6 .4)\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6M13.6 5.5c.4 2 1.8 3.3 3.8 3.4\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.2\" stroke-linecap=\"round\"/></svg>", "yt": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#FF0000\"/><path d=\"M10 8.3v7.4l6-3.7z\" fill=\"#fff\"/></svg>", "fb": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#1877F2\"/><path fill=\"#fff\" d=\"M15.6 12.6l.4-2.9h-2.8V7.9c0-.8.4-1.6 1.7-1.6H16V3.8s-1.1-.2-2.2-.2c-2.3 0-3.8 1.4-3.8 3.9v2.2H7.5v2.9H10V20h3.2v-7.4h2.4z\"/></svg>"};
+SVG.copy='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+const PN={tt:'TikTok',ig:'Instagram',fb:'Facebook',wa:'WhatsApp',tg:'Telegram',x:'X',yt:'YouTube'};
+const WK={tt:'tiktok',ig:'instagram',fb:'facebook',wa:'whatsapp',tg:'telegram',x:'x',yt:'youtube'};
+const ALLAPPS=['tt','ig','fb','wa','tg','x','yt'];
+const bi=p=>SVG[p]?`<span class="bi">${SVG[p]}</span>`:'';
+const LN={ /* line icons for settings rows */
+ apps:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ tick:'<path d="M5 12l5 5L20 7"/>',dl:'<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',up:'<path d="M12 21V9M7 14l5-5 5 5M4 3h16"/>',
+ laptop:'<rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2 19h20"/>',ch:'<rect x="2" y="5" width="14" height="14" rx="3"/><path d="m16 10 6-3v10l-6-3z"/>',
+ eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',reset:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>',
+ phone:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',home:'<path d="M3 10.5 12 3l9 7.5V20H3z"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+ key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/>',plus:'<path d="M12 5v14M5 12h14"/>',video:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9v6l5-3z"/>'};
+const ln=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${LN[k]||''}</svg>`;
+
+/* ---------- channels and settings ---------- */
+const COLORS=['#A3E635','#FF453A','#32ADE6','#FFD60A','#30D158','#3B82F6','#8B5CF6','#BF5AF2','#FF9F0A','#F472B6','#22D3EE','#94A3B8'];
+const START=[['RankX Football','YouTube','#A3E635'],['Device Guardian','YouTube','#FF453A'],['Xtech Guides','YouTube','#32ADE6'],['Cine Cascade','YouTube','#FFD60A'],
+ ['Game Zeus','YouTube','#30D158'],['Vellox Play','YouTube','#3B82F6'],['Gen2 Solutions','YouTube','#8B5CF6'],['Ink Age','YouTube','#BF5AF2'],['Movie Zone','YouTube','#FF9F0A'],['TikTok','TikTok','#F472B6']];
+const SET={ /* every setting, its default and one short help line */
+ appsShort:{d:['tt','ig','fb'],t:'Apps for Shorts',h:'Where each Short is shared'},
+ appsPost:{d:['ig','fb','x'],t:'Apps for post pictures',h:'Where the post picture is shared'},
+ appsLink:{d:['wa','tg'],t:'Apps for the video link',h:'Where the YouTube link is shared'},
+ tickOnShare:{d:true,t:'Tick when shared',h:'Sharing ticks that app by itself'},
+ lateHours:{d:24,t:'Late after',h:'Hours after its time before it turns red',min:1,max:168,u:'h'},
+ showFuture:{d:true,t:'Show coming posts',h:'Posts with a later time show on Home too'},
+ showOff:{d:false,t:'Show turned-off channels',h:'Off channels stay hidden'},
+ startTab:{d:'home',t:'Open on',h:'First page when the app opens'},
+ autoUpdate:{d:true,t:'Update by itself',h:'New version loads when you open the app'},
+ showInstall:{d:true,t:'Install button',h:'Shows on Home until installed'},
+ feedOn:{d:true,t:'Bot feed',h:'Posts from your laptop bots'},
+ feedMins:{d:5,t:'Check every',h:'Minutes between bot checks',min:1,max:60,u:'min'},
+ autoGet:{d:true,t:'Get videos by itself',h:'Downloads Shorts ready to share (Wi-Fi or data)'},
+ style:{d:'1',t:'Look',h:'1. Studio Violet'}};
+
+let S={channels:[],ideas:[],done:{},settings:{},feed:{items:[],files:{},last:0,err:''},logos:{}};
+function idb(){return new Promise((ok,no)=>{const r=indexedDB.open('studiox',2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('m'))d.createObjectStore('m');};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);});}
+async function kvGet(store,k){try{const d=await idb();return await new Promise(ok=>{const q=d.transaction(store).objectStore(store).get(k);q.onsuccess=()=>ok(q.result);q.onerror=()=>ok(null);});}catch(e){return null;}}
+async function kvPut(store,k,v){try{const d=await idb();await new Promise(ok=>{const t=d.transaction(store,'readwrite');t.objectStore(store).put(v,k);t.oncomplete=ok;t.onerror=ok;});}catch(e){}}
+const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+async function load(){const v=await kvGet('kv','data');if(v)Object.assign(S,v);
+  if(!S.channels.length)S.channels=START.map(c=>({id:slug(c[0]),name:c[0],platform:c[1],color:c[2],url:'',on:true}));
+  S.channels.forEach(c=>{if(/^c\d+$/.test(c.id)){c.id=slug(c.name);}if(!c.color)c.color=COLORS[0];});   // 1.0 -> 1.1
+  S.done=S.done||{};S.ideas=S.ideas||[];S.logos=S.logos||{};S.feed=Object.assign({items:[],files:{},last:0,err:''},S.feed&&S.feed.items?S.feed:{});
+  for(const k in SET)if(!(k in S.settings))S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:SET[k].d;}
+let svT=null;const save=()=>{clearTimeout(svT);svT=setTimeout(()=>kvPut('kv','data',S),150);};
 const set=k=>S.settings[k];
-const chOf=id=>S.channels.find(c=>c.id===id)||{name:'?',color:'#555',letter:'?'};
-const chOn=c=>c.on||set('showOff');
+const chBy=n=>S.channels.find(c=>c.id===n||c.name.toLowerCase()===String(n).toLowerCase());
+const chOn=c=>c&&(c.on||set('showOff'));
+const logo=(c,cls='')=>c?`<span class="lg ${cls}" style="background:${c.color}">${S.logos[c.id]?`<img src="${S.logos[c.id]}">`:esc(c.name[0])}</span>`:'';
 
-/* ---------- dates ---------- */
-const now=()=>new Date();
-const dayKey=d=>{d=new Date(d);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
-function dayName(k){const t=dayKey(now()),tm=dayKey(Date.now()+864e5),y=dayKey(Date.now()-864e5);if(k===t)return 'Today';if(k===tm)return 'Tomorrow';if(k===y)return 'Yesterday';
-  return new Date(k+'T12:00').toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'});}
-const tm=w=>new Date(w).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-function inPeriod(w,p){if(p==='all')return true;if(!w)return p==='none';const d=new Date(w),n=now();
-  if(p==='week'){const s=new Date(n);s.setHours(0,0,0,0);s.setDate(s.getDate()-((s.getDay()+6)%7));const e=new Date(s);e.setDate(e.getDate()+7);return d>=s&&d<e;}
-  if(p==='month')return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth();
-  if(p==='year')return d.getFullYear()===n.getFullYear();return false;}
-const isDone=p=>!!(p.ticks&&p.ticks.upload);
-const isLate=p=>p.when&&!isDone(p)&&new Date(p.when)<now();
+/* ---------- tasks made from the bot feed ---------- */
+function tasks(){const out=[];
+  for(const it of S.feed.items){const c=chBy(it.channel);if(!chOn(c))continue;
+    const base={item:it,ch:c};
+    (it.shorts||[]).forEach(s=>out.push({...base,id:it.id+':s'+s.n,kind:'short',label:(it.shorts.length>1?'Short '+s.n:'Short'),when:s.when||it.when,file:s.file,words:s.words||{},apps:set('appsShort')}));
+    if(it.post)out.push({...base,id:it.id+':post',kind:'post',label:'Post picture',when:it.post.when||it.when,file:it.post.file,words:it.post.words||{},apps:set('appsPost')});
+    if(it.youtube)out.push({...base,id:it.id+':link',kind:'link',label:'Video link',when:it.when,url:it.youtube.url,words:it.share||{},apps:set('appsLink')});}
+  return out.sort((a,b)=>(a.when||'').localeCompare(b.when||''));}
+const isDone=(t,a)=>!!S.done[t.id+'|'+a];
+const complete=t=>t.apps.every(a=>isDone(t,a));
+const lateOf=t=>t.when&&!complete(t)&&(Date.now()-new Date(t.when))>set('lateHours')*3600e3;
+const future=t=>t.when&&new Date(t.when)>Date.now();
+function niceTime(w){if(!w)return '';const d=new Date(w),n=new Date();const day=d.toDateString()===n.toDateString()?'Today':d.toDateString()===new Date(Date.now()+864e5).toDateString()?'Tomorrow':d.toDateString()===new Date(Date.now()-864e5).toDateString()?'Yesterday':d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  return day+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
 
-/* ---------- drawing ---------- */
-function postCard(p){const c=chOf(p.ch);const late=isLate(p)&&set('lateRed');
-  return `<div class="post" style="--c:${c.color}" data-post="${p.id}">${p.thumb?`<img class="th" src="${p.thumb}">`:''}<div class="mid">
-  <div class="t">${esc(p.title||'(no title)')}</div>
-  <div class="m"><span style="color:${c.color}">${esc(c.name)}</span> · ${esc(p.kind)}${p.when?` · <span class="${late?'late':''}">${dayName(dayKey(p.when))} ${tm(p.when)}</span>`:''}${p.src==='bot'?' · 🤖':''}</div>
-  <div class="ticks">${TICKS.map(([k,n])=>`<span class="tk ${p.ticks&&p.ticks[k]?'on':''}">${p.ticks&&p.ticks[k]?'✓ ':''}${n}</span>`).join('')}</div></div></div>`;}
-function grouped(list){if(!list.length)return '<div class="empty">Nothing here yet. Tap + to add a post.</div>';
-  const g={},nd=[];list.forEach(p=>{if(!p.when){nd.push(p);return;}(g[dayKey(p.when)]=g[dayKey(p.when)]||[]).push(p);});
-  let h=Object.keys(g).sort().map(k=>`<div class="day">${dayName(k)}</div>`+g[k].sort((a,b)=>a.when.localeCompare(b.when)).map(postCard).join('')).join('');
-  if(nd.length)h+=`<div class="day">No date · ideas</div>`+nd.map(postCard).join('');return h;}
-const live=()=>S.posts.filter(p=>!p.hidden&&chOn(chOf(p.ch)));
-
-function drawHome(){const L=live();const today=dayKey(now());
-  const due=L.filter(p=>p.when&&dayKey(p.when)===today&&!isDone(p)).length;
-  const late=L.filter(isLate).length;const up=L.filter(p=>isDone(p)&&inPeriod(p.when,'week')).length;
-  const list=L.filter(p=>p.when&&(dayKey(p.when)<=dayKey(Date.now()+864e5))&&(set('showDone')||!isDone(p))&&(dayKey(p.when)>=today||!isDone(p)));
-  const chs=S.channels.filter(chOn);
-  $('p-home').innerHTML=`<div class="stats"><div class="stat"><b>${due}</b><span>Due today</span></div><div class="stat"><b class="${late?'late':''}">${late}</b><span>Late</span></div><div class="stat"><b style="color:var(--green)">${up}</b><span>Uploaded this week</span></div></div>
-  <div class="chips">${chs.map(c=>{const n=L.filter(p=>p.ch===c.id&&!isDone(p)).length;return `<button class="chip" data-chan="${c.id}"><span class="av" style="background:${c.color}">${esc(c.letter)}</span>${esc(c.name)}${n?` · ${n}`:''}</button>`;}).join('')}</div>
-  <h2>Today, late and tomorrow</h2>${grouped(list)}`;}
-function drawChannels(){const L=live();
-  $('p-channels').innerHTML=`<h2>My channels</h2><div class="grid">${S.channels.filter(chOn).map(c=>{const n=L.filter(p=>p.ch===c.id&&!isDone(p)).length;
-    return `<div class="ch ${c.on?'':'off'}" data-chan="${c.id}">${n?`<span class="cnt">${n}</span>`:''}<div class="av big" style="background:${c.color}">${esc(c.letter)}</div><h4>${esc(c.name)}</h4><small>${esc(c.platform)}${c.on?'':' · off'}</small></div>`;}).join('')}
-    <div class="ch add" id="addCh"><div style="font-size:30px">＋</div>Add channel</div></div>
-    ${S.channels.some(c=>!c.on)&&!set('showOff')?`<p class="muted" style="margin-top:10px">${S.channels.filter(c=>!c.on).length} channel(s) turned off. Turn on "Show turned-off channels" in More to see them.</p>`:''}`;}
-let planCh='all',planP=null;
-function drawPlan(){if(planP===null)planP=set('planPeriod');
-  const L=live().filter(p=>(planCh==='all'||p.ch===planCh)&&(planP==='none'?!p.when:inPeriod(p.when,planP)));
-  $('p-plan').innerHTML=`<div class="bar"><select id="planCh"><option value="all">All channels</option>${S.channels.filter(chOn).map(c=>`<option value="${c.id}" ${planCh===c.id?'selected':''}>${esc(c.name)}</option>`).join('')}</select>
-  <select id="planP">${[['week','This week'],['month','This month'],['year','This year'],['all','All time'],['none','No date (ideas)']].map(o=>`<option value="${o[0]}" ${planP===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
-  <p class="muted">${L.length} post(s) · ${L.filter(isDone).length} uploaded</p>${grouped(L)}`;
-  $('planCh').onchange=e=>{planCh=e.target.value;drawPlan();};$('planP').onchange=e=>{planP=e.target.value;drawPlan();};}
-function drawMore(){const hid=S.posts.filter(p=>p.hidden).length;
-  $('p-more').innerHTML=`<h2>Settings</h2>${SETTINGS.map(s=>{const v=set(s.k);let ctl='';
-    if(s.type==='sw')ctl=`<label class="sw"><input type="checkbox" data-set="${s.k}" ${v?'checked':''}><span></span></label>`;
-    else if(s.type==='sel')ctl=`<select data-set="${s.k}">${s.opts.map(o=>`<option value="${o[0]}" ${String(v)===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`;
-    else ctl=`<span style="display:flex;gap:6px;align-items:center"><button class="btn sm" data-step="${s.k}" data-d="-1">−</button><b style="min-width:26px;text-align:center">${v}</b><button class="btn sm" data-step="${s.k}" data-d="1">+</button></span>`;
-    return `<div class="set"><div class="top"><span>${s.t}</span>${ctl}</div><div class="help">${s.h}</div></div>`;}).join('')}
-  <div class="bar"><button class="btn" id="defaults">↺ Back to default</button></div>
-  <h2>Hidden posts</h2><p class="muted">${hid} hidden post(s). Hidden posts are kept, not deleted.</p>
-  <div class="bar"><button class="btn" id="showHidden">👁 Show hidden posts</button></div>
-  <h2>Backup</h2><p class="muted">Save all channels, posts and settings to a file. Do this before any big change.</p>
-  <div class="bar"><button class="btn main" id="exp">⬇ Export</button><button class="btn" id="imp">⬆ Import</button></div>
-  <h2>Bot feed</h2><p class="muted" id="feedInfo">${feedText()}</p>
-  <div class="bar"><button class="btn" id="feedNow">🔄 Check now</button><button class="btn" id="upd">⟳ Check for app update</button></div>
-  <p class="muted" style="text-align:center;margin-top:16px">Studio X v${VERSION} · data stays on this phone</p>`;}
-function drawAll(){drawHome();drawChannels();drawPlan();drawMore();}
-
-/* ---------- tabs ---------- */
-function showTab(t){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
-  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='p-'+t));$('fab').style.display=t==='more'?'none':'block';scrollTo(0,0);}
-document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-
-/* ---------- sheets ---------- */
-const openSheet=h=>{$('sheetIn').innerHTML=h;$('sheet').style.display='block';};
-const closeSheet=()=>{$('sheet').style.display='none';};
-$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet();});
-
-let edit=null,thumbNew=undefined;
-function postSheet(p,chId){thumbNew=undefined;
-  edit=p?JSON.parse(JSON.stringify(p)):{id:'p'+Date.now(),ch:chId||(planCh!=='all'?planCh:(S.channels.find(c=>c.on)||{}).id),kind:'Video',title:'',caption:'',tags:'',when:'',link:'',notes:'',ticks:{},src:'phone'};
-  const chs=S.channels.filter(c=>c.on||c.id===edit.ch);
-  openSheet(`<h3>${p?'✏️ Edit post':'➕ New post'}</h3>
-  <div class="row2"><div class="f"><label>Channel</label><select id="eCh">${chs.map(c=>`<option value="${c.id}" ${c.id===edit.ch?'selected':''}>${esc(c.name)}</option>`).join('')}</select></div>
-  <div class="f"><label>Type</label><select id="eKind">${KINDS.map(k=>`<option ${k===edit.kind?'selected':''}>${k}</option>`).join('')}</select></div></div>
-  <div class="f"><label>Title</label><div class="cp"><input type="text" id="eTitle" value="${esc(edit.title)}" placeholder="Top 30 Most Valuable Footballers 2026/27 | ..."><button class="btn sm" data-copy="eTitle">Copy</button></div></div>
-  <div class="f"><label>Post time</label><input type="datetime-local" id="eWhen" value="${esc(edit.when)}"><div class="help">Empty = an idea with no date yet.</div></div>
-  <div class="f"><label>Steps done</label><div class="tg" id="eTicks">${TICKS.map(([k,n])=>`<button data-tk="${k}" class="${edit.ticks[k]?'on':''}">${edit.ticks[k]?'✓ ':''}${n}</button>`).join('')}</div></div>
-  <div class="f"><label>Description / caption</label><div class="cp"><textarea id="eCap">${esc(edit.caption)}</textarea><button class="btn sm" data-copy="eCap">Copy</button></div></div>
-  <div class="f"><label>Hashtags / tags</label><div class="cp"><input type="text" id="eTags" value="${esc(edit.tags)}" placeholder="#football #ranking"><button class="btn sm" data-copy="eTags">Copy</button></div></div>
-  <div class="f"><label>Thumbnail</label><div id="eThumb">${edit.thumb?`<img src="${edit.thumb}" style="width:100%;border-radius:12px">`:''}</div>
-    <div class="bar"><button class="btn" id="eThumbBtn">🖼️ ${edit.thumb?'Change':'Add'} thumbnail</button>${edit.thumb?'<button class="btn" id="eThumbDel">Remove</button>':''}</div></div>
-  <div class="f"><label>Link (after upload)</label><div class="cp"><input type="url" id="eLink" value="${esc(edit.link)}" placeholder="https://youtu.be/..."><button class="btn sm" id="eOpen">Open</button></div></div>
-  <div class="f"><label>Notes</label><textarea id="eNotes" style="min-height:60px">${esc(edit.notes)}</textarea></div>
-  ${edit.src==='bot'?'<p class="muted">🤖 From the bot feed. Your ticks and notes are kept when the bot updates it.</p>':''}
-  <div class="bar"><button class="btn main" id="eSave">Save</button><button class="btn" id="eClose">Close</button></div>
-  ${p?`<div class="bar"><button class="btn" id="eDup">⧉ Copy as new</button><button class="btn" id="eHide">${p.hidden?'👁 Show again':'🙈 Hide'}</button><button class="btn red" id="eDel">Delete</button></div>`:''}`);
-  $('eTicks').onclick=e=>{const b=e.target.closest('[data-tk]');if(!b)return;const k=b.dataset.tk;edit.ticks[k]=!edit.ticks[k];b.classList.toggle('on');b.textContent=(edit.ticks[k]?'✓ ':'')+TICKS.find(t=>t[0]===k)[1];};
-  $('eThumbBtn').onclick=()=>$('fileThumb').click();
-  if($('eThumbDel'))$('eThumbDel').onclick=()=>{thumbNew=null;$('eThumb').innerHTML='';};
-  $('eOpen').onclick=()=>{const u=$('eLink').value.trim();if(u)window.open(u,'_blank');};
-  $('eClose').onclick=closeSheet;
-  $('eSave').onclick=()=>{const n=Object.assign(edit,{ch:$('eCh').value,kind:$('eKind').value,title:$('eTitle').value.trim(),when:$('eWhen').value,caption:$('eCap').value,tags:$('eTags').value,link:$('eLink').value.trim(),notes:$('eNotes').value,upd:Date.now()});
-    if(thumbNew!==undefined)n.thumb=thumbNew;const i=S.posts.findIndex(x=>x.id===n.id);if(i<0)S.posts.push(n);else S.posts[i]=n;save();closeSheet();drawAll();toast('Saved ✓');};
-  if(p){$('eDup').onclick=()=>{const c=JSON.parse(JSON.stringify(p));c.id='p'+Date.now();c.ticks={};c.link='';c.src='phone';c.title=c.title+' (copy)';S.posts.push(c);save();drawAll();postSheet(c);};
-    $('eHide').onclick=()=>{p.hidden=!p.hidden;save();closeSheet();drawAll();toast(p.hidden?'Hidden (kept in More)':'Showing again');};
-    $('eDel').onclick=()=>{if(set('askDelete')&&!confirm('Delete this post for good? (Hide keeps it.)'))return;S.posts=S.posts.filter(x=>x.id!==p.id);save();closeSheet();drawAll();};}}
-$('fileThumb').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,640/im.width);const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);thumbNew=c.toDataURL('image/jpeg',.8);$('eThumb').innerHTML=`<img src="${thumbNew}" style="width:100%;border-radius:12px">`;};im.src=r.result;};r.readAsDataURL(f);};
-
-function chanSheet(c){const L=S.posts.filter(p=>p.ch===c.id&&!p.hidden);
-  openSheet(`<h3><span class="av" style="background:${c.color}">${esc(c.letter)}</span>${esc(c.name)}</h3>
-  <div class="bar"><button class="btn main" id="cNew">➕ New post</button>${c.url?'<button class="btn" id="cOpen">▶ Open channel</button>':''}<button class="btn" id="cEdit">✏️ Edit</button></div>
-  <p class="muted">${L.filter(p=>!isDone(p)).length} to do · ${L.filter(isDone).length} uploaded</p>${grouped(L.sort((a,b)=>(b.when||'').localeCompare(a.when||'')))}`);
-  $('cNew').onclick=()=>postSheet(null,c.id);$('cEdit').onclick=()=>chanEdit(c);if($('cOpen'))$('cOpen').onclick=()=>window.open(c.url,'_blank');}
-function chanEdit(c){const isNew=!c;c=c?JSON.parse(JSON.stringify(c)):{id:'c'+Date.now(),name:'',platform:'YouTube',color:COLORS[S.channels.length%COLORS.length],letter:'',url:'',on:true,note:''};
-  openSheet(`<h3>${isNew?'➕ Add channel':'✏️ Edit channel'}</h3>
-  <div class="f"><label>Name</label><input type="text" id="kName" value="${esc(c.name)}" placeholder="New channel name"></div>
-  <div class="row2"><div class="f"><label>Where</label><select id="kPlat">${['YouTube','TikTok','YouTube + TikTok','Instagram','Facebook','Other'].map(o=>`<option ${o===c.platform?'selected':''}>${o}</option>`).join('')}</select></div>
-  <div class="f"><label>Letter</label><input type="text" id="kLet" maxlength="2" value="${esc(c.letter)}" placeholder="auto"></div></div>
-  <div class="f"><label>Colour</label><div class="colors" id="kCol">${COLORS.map(x=>`<button style="background:${x}" data-col="${x}" class="${x===c.color?'on':''}"></button>`).join('')}</div></div>
-  <div class="f"><label>Channel link</label><input type="url" id="kUrl" value="${esc(c.url)}" placeholder="https://youtube.com/@..."></div>
-  <div class="set"><div class="top"><span>Channel on</span><label class="sw"><input type="checkbox" id="kOn" ${c.on?'checked':''}><span></span></label></div><div class="help">Off = hidden everywhere, posts kept. Turn it on again any time.</div></div>
-  <div class="bar"><button class="btn main" id="kSave">Save</button><button class="btn" id="kClose">Close</button></div>
-  ${isNew?'':'<div class="bar"><button class="btn red" id="kDel">Delete channel and its posts</button></div>'}`);
-  $('kCol').onclick=e=>{const b=e.target.closest('[data-col]');if(!b)return;c.color=b.dataset.col;document.querySelectorAll('#kCol button').forEach(x=>x.classList.toggle('on',x===b));};
-  $('kClose').onclick=closeSheet;
-  $('kSave').onclick=()=>{c.name=$('kName').value.trim();if(!c.name){toast('Type a name');return;}c.platform=$('kPlat').value;c.letter=($('kLet').value.trim()||c.name[0]).toUpperCase();c.url=$('kUrl').value.trim();c.on=$('kOn').checked;
-    const i=S.channels.findIndex(x=>x.id===c.id);if(i<0)S.channels.push(c);else S.channels[i]=c;save();closeSheet();drawAll();toast('Saved ✓');};
-  if($('kDel'))$('kDel').onclick=()=>{const n=S.posts.filter(p=>p.ch===c.id).length;if(!confirm(`Delete ${c.name} and its ${n} post(s) for good?\n(Tip: turning the channel off keeps everything.)`))return;
-    S.channels=S.channels.filter(x=>x.id!==c.id);S.posts=S.posts.filter(p=>p.ch!==c.id);save();closeSheet();drawAll();};}
-
-/* ---------- clicks everywhere ---------- */
-document.addEventListener('click',async e=>{
-  const pp=e.target.closest('[data-post]');if(pp){postSheet(S.posts.find(p=>p.id===pp.dataset.post));return;}
-  const cc=e.target.closest('[data-chan]');if(cc){chanSheet(chOf(cc.dataset.chan));return;}
-  const cp=e.target.closest('[data-copy]');if(cp){const v=$(cp.dataset.copy).value;try{await navigator.clipboard.writeText(v);toast('Copied ✓');}catch(_){prompt('Copy:',v);}return;}
-  const sp=e.target.closest('[data-step]');if(sp){const s=SETTINGS.find(x=>x.k===sp.dataset.step);S.settings[s.k]=Math.max(s.min,Math.min(s.max,(+set(s.k)||s.d)+(+sp.dataset.d)));save();drawMore();feedTimer();return;}
-  const id=e.target.id;
-  if(id==='addCh')chanEdit(null);
-  else if(id==='defaults'){if(confirm('Put every setting back to default? (Channels and posts stay.)')){SETTINGS.forEach(s=>S.settings[s.k]=s.d);save();drawAll();feedTimer();}}
-  else if(id==='showHidden'){const H=S.posts.filter(p=>p.hidden);openSheet(`<h3>🙈 Hidden posts</h3>${H.length?H.map(postCard).join(''):'<div class="empty">No hidden posts.</div>'}<div class="bar"><button class="btn" onclick="document.getElementById('sheet').style.display='none'">Close</button></div>`);}
-  else if(id==='exp')exportData();
-  else if(id==='imp')$('fileImport').click();
-  else if(id==='feedNow')feed(true);
-  else if(id==='upd')checkUpdate();});
-document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.set;if(!k)return;S.settings[k]=e.target.type==='checkbox'?e.target.checked:e.target.value;
-  if(k==='planPeriod')planP=null;save();drawAll();installUI();feedTimer();});
-$('fab').onclick=()=>postSheet(null);
-
-/* ---------- export / import ---------- */
-function exportData(){const b=new Blob([JSON.stringify({app:'Studio X',version:VERSION,saved:new Date().toISOString(),data:S},null,1)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`Studio X backup ${dayKey(now())}.json`;document.body.appendChild(a);a.click();a.remove();toast('Backup saved ✓');}
-$('fileImport').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const d=j.data||j;if(!Array.isArray(d.channels)||!Array.isArray(d.posts))throw 0;
-  if(!confirm(`Replace everything with this backup?\n${d.channels.length} channels, ${d.posts.length} posts.\n(Export first if you are not sure.)`))return;S=Object.assign({channels:[],posts:[],settings:{},feed:{last:0,sha:''}},d);
-  for(const s of SETTINGS)if(!(s.k in S.settings))S.settings[s.k]=s.d;save();drawAll();toast('Backup loaded ✓');}catch(_){alert('This is not a Studio X backup file.');}};r.readAsText(f);};
-
-/* ---------- BOT FEED: laptop bots write studiox/feed.json in the private mailbox (KwabenaPhill/surestake707-sync).
-   Format: {"updated":"...","posts":[{"id":"rankx-2026-11-02","channel":"RankX Football","kind":"Video","title":"...",
-   "when":"2026-11-02T18:00","ticks":{"build":true,"thumb":true,"text":true,"upload":false},"link":"","caption":"","tags":""}]}
-   Bot posts are matched by id: the bot's fields update, your own notes stay. Unknown channel names are added (you can turn them off). */
+/* ---------- media from the private mailbox (kept on the phone) ---------- */
 const REPO='KwabenaPhill/surestake707-sync';
 function key(){let a={},b={};try{a=JSON.parse(localStorage.getItem('fixhub_sync')||'{}');}catch(e){}try{b=JSON.parse(localStorage.getItem('ss707_sync')||'{}');}catch(e){}return a.token||b.token||'';}
-let feedErr='';
-function feedText(){if(!set('feedOn'))return 'Bot feed is off (More > Settings).';if(!key())return 'Not connected yet: tap 📝 > 🔗 Laptop sync and paste the mailbox key once. It stays on this phone.';
-  if(feedErr)return 'Problem: '+feedErr;return S.feed.last?'Last bot news: '+new Date(S.feed.last).toLocaleString():'Connected. Waiting for the first bot news.';}
-function feedLine(){$('feedLine').textContent=set('feedOn')&&key()?(feedErr?'🤖 Bot feed: problem':S.feed.last?'🤖 Bots in step · '+tm(S.feed.last):'🤖 Bot feed on'):'';const fi=$('feedInfo');if(fi)fi.textContent=feedText();}
-async function feed(manual){if(!set('feedOn')||!key()||!navigator.onLine){feedLine();if(manual)toast(feedText());return;}
-  try{const r=await fetch(`https://api.github.com/repos/${REPO}/contents/studiox/feed.json`,{cache:'no-store',headers:{Authorization:'Bearer '+key(),Accept:'application/vnd.github+json'}});
-    if(r.status===404){feedErr='';feedLine();if(manual)toast('No bot news yet');return;}
-    const j=await r.json();if(!r.ok)throw new Error('GitHub '+r.status);
-    if(j.sha===S.feed.sha){feedErr='';feedLine();if(manual)toast('Up to date ✓');return;}
-    const d=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\s/g,'')))));let n=0;
-    for(const b of d.posts||[]){let c=S.channels.find(x=>x.name.toLowerCase()===String(b.channel||'').toLowerCase());
-      if(!c&&b.channel){c={id:'c'+Date.now()+n,name:b.channel,platform:'YouTube',color:COLORS[S.channels.length%COLORS.length],letter:b.channel[0].toUpperCase(),url:'',on:true,note:''};S.channels.push(c);}
-      if(!c)continue;const id='bot:'+b.id;let p=S.posts.find(x=>x.id===id);
-      if(!p){p={id,src:'bot',notes:'',ticks:{}};S.posts.push(p);}
-      Object.assign(p,{ch:c.id,kind:b.kind||p.kind||'Video',title:b.title||p.title||'',when:b.when||p.when||'',link:b.link||p.link||'',caption:b.caption||p.caption||'',tags:b.tags||p.tags||''});
-      p.ticks=Object.assign(p.ticks||{},b.ticks||{});n++;}
-    S.feed={last:Date.now(),sha:j.sha};feedErr='';save();drawAll();if(manual)toast(n+' bot post(s) updated ✓');}
-  catch(e){feedErr=String(e.message||e).slice(0,60);if(manual)toast('Bot feed problem');}feedLine();}
-let ft=null;function feedTimer(){clearInterval(ft);ft=setInterval(()=>{if(!document.hidden)feed();},Math.max(1,+set('feedMins')||5)*60000);feedLine();}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(feed,1500);});
+const api=(p,raw)=>fetch(`https://api.github.com/repos/${REPO}/contents/${p.split('/').map(encodeURIComponent).join('/')}`,{cache:'no-store',headers:{Authorization:'Bearer '+key(),Accept:raw?'application/vnd.github.raw':'application/vnd.github+json'}});
+const urls={};
+async function media(f,quiet){if(!f||!f.path)return null;if(urls[f.path])return urls[f.path];
+  let b=await kvGet('m',f.path);
+  if(!b){if(!key())return null;if(!quiet)toast('Getting it from the laptop…');const r=await api(f.path,true);if(!r.ok)throw new Error('GitHub '+r.status);b=await r.blob();await kvPut('m',f.path,b);}
+  urls[f.path]={blob:b,url:URL.createObjectURL(b)};return urls[f.path];}
+async function fillThumbs(){for(const img of document.querySelectorAll('img[data-m]')){try{const m=await media({path:img.dataset.m},true);if(m)img.src=m.url;}catch(e){}}}
 
-/* ---------- INSTALL (1.0.1, Philip: "give me an install button"). Setting: showInstall ---------- */
+/* ---------- drawing ---------- */
+let homeCh='all';
+function drawHome(){const T=tasks().filter(t=>homeCh==='all'||t.ch.id===homeCh);const open=T.filter(t=>!complete(t));
+  const list=open.filter(t=>set('showFuture')||!future(t));const late=open.filter(lateOf).length;
+  const wk=Date.now()-7*864e5;const doneWk=Object.values(S.done).filter(x=>x>wk).length;
+  const chs=S.channels.filter(chOn);const ins=$('instRow')?'':'';
+  $('p-home').innerHTML=`${installCard()}
+  <div class="summary"><div class="sbox on"><div class="lbl">To post</div><div class="big">${open.length}</div></div><div class="sbox"><div class="lbl">Late</div><div class="big ${late?'red':''}">${late}</div></div><div class="sbox"><div class="lbl">Shared 7d</div><div class="big">${doneWk}</div></div></div>
+  <div class="chips"><button class="chip all ${homeCh==='all'?'on':''}" data-hch="all">All</button>${chs.map(c=>`<button class="chip ${homeCh===c.id?'on':''}" data-hch="${c.id}">${logo(c)}${esc(c.name)}</button>`).join('')}</div>
+  <div class="card"><div class="ct">To do now</div>${list.length?list.map((t,i)=>todoRow(t,i===0)).join(''):`<div class="empty">${S.feed.items.length?'All shared ✓':feedHelp()}</div>`}</div>
+  <p class="muted" style="text-align:center">${feedLine()}</p>`;
+  $('lateDot').style.display=late?'block':'none';$('lateDot').textContent=late;fillThumbs();}
+function todoRow(t,next){const th=t.item.thumb&&t.item.thumb.path;
+  return `<div class="todo"><div class="ic">${th?`<img data-m="${th}" alt="">`:t.kind==='short'?'🎬':t.kind==='post'?'🖼️':'▶'}<span class="ch">${logo(t.ch)}</span></div><div class="tx">
+  <button class="tt" data-task="${t.id}">${esc(t.label)}${next?'<span class="nx">NEXT</span>':''}<span class="tm ${lateOf(t)?'late':''}">${niceTime(t.when)}</span></button>
+  <div class="pv">${esc(t.item.title)}</div>
+  <div class="mini">${t.apps.map(a=>`<button data-share="${t.id}" data-app="${a}" class="${isDone(t,a)?'done':''}">${bi(a)}${PN[a]}</button>`).join('')}<button data-copy="${t.id}" data-app="${t.apps[0]}">${bi('copy')}Copy</button></div></div></div>`;}
+function feedHelp(){return !key()?'Connect the laptop: Settings › Laptop and bots.':!set('feedOn')?'Bot feed is off (Settings).':'Waiting for the bots. New uploads show here.';}
+function feedLine(){if(!set('feedOn'))return 'Bot feed off';if(!key())return 'Laptop not connected';if(S.feed.err)return 'Bot feed: '+S.feed.err;
+  return S.feed.last?'Bots in step · '+new Date(S.feed.last).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'Bot feed on';}
+
+let recP='week';
+function drawRecords(){const T=tasks();const from={week:Date.now()-7*864e5,month:Date.now()-30*864e5,year:Date.now()-365*864e5,all:0}[recP];
+  const shares=[];for(const t of T)for(const a of t.apps){const ts=S.done[t.id+'|'+a];if(ts&&ts>=from)shares.push({t,a,ts});}
+  const per={};shares.forEach(s=>{per[s.t.ch.id]=(per[s.t.ch.id]||0)+1;});
+  const vids=S.feed.items.filter(i=>i.when&&new Date(i.when).getTime()>=from);
+  $('p-records').innerHTML=`<div class="bar"><select id="recP">${[['week','This week'],['month','This month'],['year','This year'],['all','All time']].map(o=>`<option value="${o[0]}" ${recP===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>
+  <div class="summary"><div class="sbox on"><div class="lbl">Shared</div><div class="big">${shares.length}</div></div><div class="sbox"><div class="lbl">Videos</div><div class="big">${vids.length}</div></div><div class="sbox"><div class="lbl">Done</div><div class="big">${T.filter(complete).length}</div></div></div>
+  <div class="sect">Channels</div><div class="card">${S.channels.filter(chOn).map(c=>`<div class="rec">${logo(c,'big')}<div><b>${esc(c.name)}</b><div class="muted">${S.feed.items.filter(i=>chBy(i.channel)===c).length} video(s)</div></div><span class="n">${per[c.id]||0}</span></div>`).join('')}</div>
+  <div class="sect">Shared</div><div class="card">${shares.length?shares.sort((a,b)=>b.ts-a.ts).slice(0,60).map(s=>`<div class="rec">${bi(s.a)}<div style="min-width:0"><b>${esc(s.t.label)}</b><div class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.t.item.title)}</div></div><span class="muted" style="margin-left:auto;white-space:nowrap">${niceTime(new Date(s.ts))}</span></div>`).join(''):'<div class="empty">Nothing shared yet.</div>'}</div>`;
+  $('recP').onchange=e=>{recP=e.target.value;drawRecords();};}
+
+function drawChannels(){const T=tasks();
+  $('p-channels').innerHTML=`<div class="set-list">${S.channels.filter(chOn).map(c=>{const n=T.filter(t=>t.ch===c&&!complete(t)).length;
+    return `<button class="set-row" data-chan="${c.id}">${logo(c,'big')}<span class="t">${esc(c.name)}<small>${c.on?esc(c.platform):'Off'}${S.feed.items.some(i=>chBy(i.channel)===c)?' · bot connected':''}</small></span>${n?`<span class="v on">${n} to post</span>`:''}<span class="chv">›</span></button>`;}).join('')}
+    <button class="set-row" id="addCh"><span class="i">${ln('plus')}</span><span class="t">Add channel<small>Name, logo and colour</small></span><span class="chv">›</span></button></div>`;}
+
+function drawIdeas(){const chs=S.channels.filter(chOn);
+  $('p-ideas').innerHTML=`<div class="card"><div class="ct">New idea</div><select id="idCh" style="margin:6px 0 8px">${chs.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select>
+  <textarea id="idTx" placeholder="Video or Short idea"></textarea><div class="row"><button class="btn" id="idAdd">Save idea</button></div></div>
+  ${chs.map(c=>{const L=S.ideas.filter(i=>i.ch===c.id);return L.length?`<div class="sect">${esc(c.name)}</div><div class="card">${L.map(i=>`<div class="rec"><span style="flex:1;${i.done?'text-decoration:line-through;color:var(--dim)':''}">${esc(i.text)}</span><button class="btn out" style="flex:none;padding:7px 10px" data-idone="${i.id}">${i.done?'↺':'✓'}</button><button class="btn red" style="flex:none;padding:7px 10px" data-idel="${i.id}">✕</button></div>`).join('')}</div>`:'';}).join('')||''}`;
+  $('idAdd').onclick=()=>{const t=$('idTx').value.trim();if(!t)return;S.ideas.push({id:Date.now(),ch:$('idCh').value,text:t,done:false});save();drawIdeas();toast('Idea saved ✓');};}
+
+/* settings: grouped like Match Vision */
+const appsTxt=k=>set(k).map(a=>PN[a]).join(', ');
+function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><div class="set-list">${rows.join('')}</div>`;
+  const r=(id,icon,t,small,v,vOn)=>`<button class="set-row" data-s="${id}"><span class="i ${SVG[icon]?'pic':''}">${SVG[icon]||ln(icon)}</span><span class="t">${t}<small>${small}</small></span>${v!=null?`<span class="v ${vOn?'on':''}">${v}</span>`:''}<span class="chv">›</span></button>`;
+  $('p-settings').innerHTML=
+   g('Posting',[r('appsShort','tt','Shorts',appsTxt('appsShort')),r('appsPost','ig','Post pictures',appsTxt('appsPost')),r('appsLink','wa','Video link',appsTxt('appsLink')),
+     r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture'))])+
+   g('Laptop and bots',[r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','Laptop key',key()?'Connected':'Not connected',key()?'✓':'',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
+   g('Channels',[r('chans','ch','Channels',S.channels.filter(c=>c.on).length+' on'),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
+   g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',ideas:'Ideas'}[set('startTab')]),
+     r('autoUpdate','up','Update by itself',SET.autoUpdate.h,set('autoUpdate')?'On':'Off',set('autoUpdate')),r('update','reset','Check for update','v'+VERSION)])+
+   g('Data',[r('backup','dl','Backup','Save everything to a file'),r('restore','up','Restore','Load a backup file'),r('clearMedia','trash','Clear saved videos','Frees phone space'),r('defaults','reset','Back to default','Settings only')]);}
+
+function drawAll(){drawHome();drawRecords();drawChannels();drawIdeas();drawSettings();}
+function showTab(t){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='p-'+t));scrollTo(0,0);}
+document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+
+/* ---------- sub pages ---------- */
+function openSub(title,html,after){$('subTitle').textContent=title;$('subBody').innerHTML=html;$('sub').classList.add('open');$('sub').scrollTop=0;after&&after();}
+const closeSub=()=>{$('sub').classList.remove('open');drawAll();};
+$('subBack').onclick=closeSub;
+const swRow=(k,label,help)=>`<div class="set-list"><div class="set-row"><span class="t">${label}<small>${help}</small></span><label class="sw"><input type="checkbox" data-set="${k}" ${set(k)?'checked':''}><span></span></label></div></div>`;
+const stepRow=k=>`<div class="set-list"><div class="set-row"><span class="t">${SET[k].t}<small>${SET[k].h}</small></span><span class="step"><button data-step="${k}" data-d="-1">−</button><b>${set(k)}</b><button data-step="${k}" data-d="1">+</button></span></div></div>`;
+function appsSub(k){openSub(SET[k].t,`<p class="muted" style="margin:4px 4px 10px">${SET[k].h}</p><div class="set-list">${ALLAPPS.map(a=>`<div class="set-row"><span class="i pic">${SVG[a]}</span><span class="t">${PN[a]}</span><label class="sw"><input type="checkbox" data-app-k="${k}" data-a="${a}" ${set(k).includes(a)?'checked':''}><span></span></label></div>`).join('')}</div>`);}
+
+function taskSub(id){const t=tasks().find(x=>x.id===id);if(!t)return;
+  openSub(t.label,`<div class="card" style="padding:10px"><div id="tMedia" class="empty">${t.kind==='link'?'':'Loading…'}</div>
+   <div class="ct" style="margin-top:10px">${esc(t.item.title)}</div><div class="muted">${esc(t.ch.name)} · ${niceTime(t.when)}${t.url?` · <a style="color:var(--acc)" href="${t.url}" target="_blank">Open on YouTube</a>`:''}</div>
+   ${t.file&&t.file.skip?`<p class="muted" style="color:var(--red)">File ${esc(t.file.skip)}: share it from the laptop.</p>`:''}</div>
+   ${t.apps.map(a=>`<div class="card"><div style="display:flex;align-items:center;gap:8px">${bi(a)}<b>${PN[a]}</b>${isDone(t,a)?'<span class="muted" style="margin-left:auto;color:var(--green)">Shared ✓</span>':''}</div>
+    <pre class="w">${esc(t.words[WK[a]]||t.words.instagram||t.words.tiktok||'')}</pre>
+    <div class="row"><button class="btn" data-share="${t.id}" data-app="${a}">Share</button><button class="btn out" data-copy="${t.id}" data-app="${a}">Copy words</button><button class="btn out" data-tick="${t.id}" data-app="${a}">${isDone(t,a)?'Undo ✓':'Mark ✓'}</button></div></div>`).join('')}
+   ${t.file?`<div class="row"><button class="btn out" id="tSave">⬇ Save to phone</button></div>`:''}`,
+   async()=>{if(t.kind==='link'){$('tMedia').innerHTML=t.item.thumb?`<img class="media" data-m="${t.item.thumb.path}">`:'';fillThumbs();return;}
+     try{const m=await media(t.file);if(!m){$('tMedia').textContent='Connect the laptop key first.';return;}
+       $('tMedia').innerHTML=t.kind==='short'?`<video class="media" src="${m.url}" controls playsinline></video>`:`<img class="media" src="${m.url}">`;}
+     catch(e){$('tMedia').textContent='Could not get it: '+e.message;}
+     if($('tSave'))$('tSave').onclick=async()=>{const m=await media(t.file);const a=document.createElement('a');a.href=m.url;a.download=fname(t);document.body.appendChild(a);a.click();a.remove();};});}
+const fname=t=>slug(t.item.title).slice(0,40)+(t.kind==='short'?'-short-'+t.id.split(':s').pop()+'.mp4':'.jpg');
+
+async function copyWords(t,a){const w=t.words[WK[a]]||t.words.instagram||t.words.tiktok||'';try{await navigator.clipboard.writeText(w);return true;}catch(e){return false;}}
+async function share(t,a){const w=t.words[WK[a]]||t.words.instagram||t.words.tiktok||'';const copied=await copyWords(t,a);
+  try{if(t.kind==='link'){await navigator.share({text:w});}
+    else{const m=await media(t.file);if(!m){toast('Connect the laptop key first (Settings).');return;}
+      const file=new File([m.blob],fname(t),{type:t.kind==='short'?'video/mp4':'image/jpeg'});
+      if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],text:w});else{toast('This phone cannot share files here. Use Save to phone.');return;}}
+    if(set('tickOnShare')){S.done[t.id+'|'+a]=Date.now();save();}
+    toast(copied?`Words copied: paste them in ${PN[a]} ✓`:'Shared ✓');refresh();}
+  catch(e){if(e&&e.name==='AbortError')return;toast('Could not share: '+(e.message||e));}}
+function refresh(){if($('sub').classList.contains('open')){const id=$('sub').dataset.task;if(id)taskSub(id);}drawHome();drawRecords();drawChannels();}
+
+function chanSub(c){const isNew=!c;c=c||{id:'c'+Date.now(),name:'',platform:'YouTube',color:COLORS[S.channels.length%COLORS.length],url:'',on:true};
+  openSub(isNew?'Add channel':c.name,`<div class="card" style="text-align:center"><div id="kLogo">${c.name?logo(c,'huge'):'<span class="lg huge" style="background:#333">?</span>'}</div>
+   <div class="row"><button class="btn out" id="kLogoBtn">Change logo</button>${S.logos[c.id]?'<button class="btn red" id="kLogoDel">Remove</button>':''}</div></div>
+   <div class="card"><label class="muted">Name</label><input id="kName" value="${esc(c.name)}" style="margin:6px 0 10px">
+   <label class="muted">Where</label><select id="kPlat" style="margin:6px 0 10px">${['YouTube','TikTok','YouTube + TikTok','Instagram','Facebook','Other'].map(o=>`<option ${o===c.platform?'selected':''}>${o}</option>`).join('')}</select>
+   <label class="muted">Channel link</label><input id="kUrl" value="${esc(c.url)}" placeholder="https://youtube.com/@..." style="margin:6px 0 10px">
+   <label class="muted">Colour</label><div class="colors" id="kCol" style="margin-top:6px">${COLORS.map(x=>`<button style="background:${x}" data-col="${x}" class="${x===c.color?'on':''}"></button>`).join('')}</div></div>
+   <div class="set-list"><div class="set-row"><span class="t">Channel on<small>Off = hidden, nothing deleted</small></span><label class="sw"><input type="checkbox" id="kOn" ${c.on?'checked':''}><span></span></label></div></div>
+   <div class="row"><button class="btn" id="kSave">Save</button>${c.url?'<button class="btn out" id="kOpen">Open channel</button>':''}</div>
+   ${isNew?'':'<div class="row"><button class="btn red" id="kDel">Delete channel</button></div>'}`,()=>{
+   let pend=null;
+   $('kLogoBtn').onclick=()=>{$('fileLogo').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=256,cv=document.createElement('canvas');cv.width=cv.height=s;const k=Math.max(s/im.width,s/im.height),w=im.width*k,h=im.height*k;cv.getContext('2d').drawImage(im,(s-w)/2,(s-h)/2,w,h);pend=cv.toDataURL('image/jpeg',.85);$('kLogo').innerHTML=`<span class="lg huge"><img src="${pend}"></span>`;};im.src=r.result;};r.readAsDataURL(f);};$('fileLogo').click();};
+   if($('kLogoDel'))$('kLogoDel').onclick=()=>{delete S.logos[c.id];save();toast('Logo removed');chanSub(chBy(c.id));};
+   $('kCol').onclick=e=>{const b=e.target.closest('[data-col]');if(!b)return;c.color=b.dataset.col;document.querySelectorAll('#kCol button').forEach(x=>x.classList.toggle('on',x===b));};
+   if($('kOpen'))$('kOpen').onclick=()=>window.open(c.url,'_blank');
+   $('kSave').onclick=()=>{const n=$('kName').value.trim();if(!n){toast('Type a name');return;}Object.assign(c,{name:n,platform:$('kPlat').value,url:$('kUrl').value.trim(),on:$('kOn').checked});
+     if(pend)S.logos[c.id]=pend;const i=S.channels.findIndex(x=>x.id===c.id);if(i<0)S.channels.push(c);else S.channels[i]=c;save();toast('Saved ✓');closeSub();};
+   if($('kDel'))$('kDel').onclick=()=>{if(!confirm(`Delete ${c.name}? (Turning it off keeps it.)`))return;S.channels=S.channels.filter(x=>x.id!==c.id);delete S.logos[c.id];save();closeSub();};});}
+
+function setSub(s){
+  if(s==='appsShort'||s==='appsPost'||s==='appsLink')return appsSub(s);
+  if(s==='tickOnShare'||s==='showFuture'||s==='autoUpdate'||s==='autoGet'||s==='showOff')return openSub(SET[s].t,swRow(s,SET[s].t,SET[s].h));
+  if(s==='lateHours')return openSub(SET[s].t,stepRow(s));
+  if(s==='startTab')return openSub('Open on',`<div class="set-list">${[['home','Home'],['records','Records'],['channels','Channels'],['ideas','Ideas']].map(o=>`<button class="set-row" data-pick="startTab" data-val="${o[0]}"><span class="t">${o[1]}</span>${set('startTab')===o[0]?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
+  if(s==='bots')return openSub('Bot feed',swRow('feedOn',SET.feedOn.t,SET.feedOn.h)+stepRow('feedMins')+`<div class="card"><div class="ct">Status</div><div class="muted">${feedLine()}</div>
+     ${Object.keys(S.feed.files).map(f=>`<div class="muted">• ${esc(f.replace('.json',''))}</div>`).join('')}<div class="row"><button class="btn" id="fNow">Check now</button></div></div>`,()=>{$('fNow').onclick=async()=>{await feed(true);setSub('bots');};});
+  if(s==='key')return openSub('Laptop key',`<div class="card"><div class="ct">${key()?'Connected ✓':'Not connected'}</div><div class="cs">The same key as Fix notes "Laptop sync". It stays on this phone.</div><div class="row"><button class="btn" id="kSet">${key()?'Change key':'Paste key'}</button></div></div>`,()=>{
+     $('kSet').onclick=()=>{const t=prompt('Paste the GitHub key for your private mailbox (surestake707-sync):');if(!t||!t.trim())return;let a={};try{a=JSON.parse(localStorage.getItem('fixhub_sync')||'{}');}catch(e){}a.repo=REPO;a.token=t.trim();a.on=true;try{localStorage.setItem('fixhub_sync',JSON.stringify(a));}catch(e){}toast('Saved ✓');feed(true);setSub('key');};});
+  if(s==='chans')return showTab('channels');
+  if(s==='install')return doInstall();
+  if(s==='update')return checkUpdate();
+  if(s==='backup')return exportData();
+  if(s==='restore')return $('fileImport').click();
+  if(s==='clearMedia'){if(confirm('Clear the saved Shorts and pictures? They download again when needed.')){idb().then(d=>{const t=d.transaction('m','readwrite');t.objectStore('m').clear();t.oncomplete=()=>toast('Cleared ✓');});}return;}
+  if(s==='defaults'){if(confirm('Settings back to default? (Channels, ticks and ideas stay.)')){for(const k in SET)S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:SET[k].d;save();drawAll();toast('Done ✓');}return;}}
+
+/* ---------- one click handler ---------- */
+document.addEventListener('click',async e=>{const q=sel=>e.target.closest(sel);let b;
+  if(b=q('[data-share]')){e.stopPropagation();const t=tasks().find(x=>x.id===b.dataset.share);if(t)share(t,b.dataset.app);return;}
+  if(b=q('[data-copy]')){const t=tasks().find(x=>x.id===b.dataset.copy);if(t){toast(await copyWords(t,b.dataset.app)?'Words copied ✓':'Could not copy');}return;}
+  if(b=q('[data-tick]')){const k=b.dataset.tick+'|'+b.dataset.app;if(S.done[k])delete S.done[k];else S.done[k]=Date.now();save();taskSub(b.dataset.tick);drawHome();return;}
+  if(b=q('[data-task]')){$('sub').dataset.task=b.dataset.task;taskSub(b.dataset.task);return;}
+  if(b=q('[data-hch]')){homeCh=b.dataset.hch;drawHome();return;}
+  if(b=q('[data-chan]')){chanSub(chBy(b.dataset.chan));return;}
+  if(b=q('#addCh')){chanSub(null);return;}
+  if(b=q('[data-s]')){$('sub').dataset.task='';setSub(b.dataset.s);return;}
+  if(b=q('[data-pick]')){S.settings[b.dataset.pick]=b.dataset.val;save();setSub(b.dataset.pick);return;}
+  if(b=q('[data-step]')){const k=b.dataset.step;S.settings[k]=Math.max(SET[k].min,Math.min(SET[k].max,(+set(k))+(+b.dataset.d)));save();b.parentNode.querySelector('b').textContent=set(k);if(k==='feedMins')feedTimer();return;}
+  if(b=q('[data-idone]')){const i=S.ideas.find(x=>x.id==b.dataset.idone);if(i){i.done=!i.done;save();drawIdeas();}return;}
+  if(b=q('[data-idel]')){if(confirm('Delete this idea?')){S.ideas=S.ideas.filter(x=>x.id!=b.dataset.idel);save();drawIdeas();}return;}
+  if(b=q('#instBtn')){doInstall();return;}});
+document.addEventListener('change',e=>{const el=e.target;
+  if(el.dataset.set){S.settings[el.dataset.set]=el.checked;save();if(el.dataset.set==='feedOn')feed();return;}
+  if(el.dataset.appK){const k=el.dataset.appK,a=el.dataset.a;let L=set(k).filter(x=>x!==a);if(el.checked)L=ALLAPPS.filter(x=>L.includes(x)||x===a);S.settings[k]=L;save();}});
+
+/* ---------- bot feed: studiox/feed/<channel>.json from each bot ---------- */
+async function feed(manual){if(!set('feedOn')||!key()||!navigator.onLine){if(manual)toast(feedLine());return;}
+  try{const r=await api('studiox/feed');if(r.status===404){S.feed.err='';if(manual)toast('No bot news yet');save();drawHome();return;}
+    const list=await r.json();if(!r.ok)throw new Error('GitHub '+r.status);let ch=false;
+    for(const f of list.filter(x=>x.name.endsWith('.json'))){if(S.feed.files[f.name]===f.sha)continue;
+      const j=await (await api('studiox/feed/'+f.name,true)).json();
+      if(j.channel&&!chBy(j.channel))S.channels.push({id:slug(j.channel),name:j.channel,platform:'YouTube',color:COLORS[S.channels.length%COLORS.length],url:'',on:true});
+      S.feed.items=S.feed.items.filter(i=>i.channel!==j.channel).concat(j.items||[]);S.feed.files[f.name]=f.sha;ch=true;}
+    S.feed.last=Date.now();S.feed.err='';save();if(ch){drawAll();if(set('autoGet'))autoGet();}else drawHome();if(manual)toast(ch?'New posts ✓':'Up to date ✓');}
+  catch(e){S.feed.err=String(e.message||e).slice(0,50);save();drawHome();if(manual)toast('Bot feed: '+S.feed.err);}}
+async function autoGet(){for(const t of tasks())if(!complete(t)&&t.file&&t.file.path){try{await media(t.file,true);}catch(e){}}}
+let ft=null;function feedTimer(){clearInterval(ft);ft=setInterval(()=>{if(!document.hidden)feed();},Math.max(1,+set('feedMins'))*60000);}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(feed,1200);});
+
+/* ---------- backup ---------- */
+function exportData(){const b=new Blob([JSON.stringify({app:'Studio X',version:VERSION,saved:new Date().toISOString(),data:S})],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`Studio X backup ${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();toast('Backup saved ✓');}
+$('fileImport').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const d=j.data||j;if(!Array.isArray(d.channels))throw 0;
+  if(!confirm('Replace everything with this backup?'))return;S=Object.assign(S,d);save();drawAll();toast('Backup loaded ✓');}catch(_){alert('This is not a Studio X backup.');}};r.readAsText(f);};
+
+/* ---------- install and update ---------- */
 let deferred=null;const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone;
-function installUI(){const bar=$('installBar');if(standalone()||!set('showInstall')){bar.style.display='none';return;}
-  bar.style.display='block';$('installHelp').textContent=deferred?'Tap the button, then "Install".':'If the button does nothing: Chrome ⋮ > "Add to home screen" > "Install". Close Chrome fully first if it said "could not install".';}
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;installUI();});
-addEventListener('appinstalled',()=>{deferred=null;toast('Installed ✓ Open Studio X from your home screen');installUI();});
-$('installBtn').onclick=async()=>{if(deferred){deferred.prompt();const r=await deferred.userChoice;deferred=null;installUI();if(r.outcome!=='accepted')toast('Not installed');}
-  else alert('Chrome ⋮ (top right) > "Add to home screen" > "Install".\n\nIf it says "could not install": close Chrome fully (swipe it away), open the link again and wait 10 seconds, then try again.');};
-/* ---------- app update ---------- */
-async function checkUpdate(){try{const r=await navigator.serviceWorker.getRegistration();if(r){await r.update();}toast('Checking… the app reloads if there is a new version');setTimeout(()=>location.reload(),1500);}catch(_){location.reload();}}
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(r=>{document.addEventListener('visibilitychange',()=>{if(!document.hidden&&set('autoUpdate'))r.update().catch(()=>{});});r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='activated'){toast('APP UPDATED ✓');setTimeout(()=>location.reload(),900);}});});}).catch(()=>{});}
+function installCard(){return standalone()||!set('showInstall')?'':`<div class="card" style="display:flex;align-items:center;gap:10px;padding:12px"><span class="t" style="flex:1;font-weight:600">Install Studio X as an app</span><button class="btn" style="flex:none;padding:10px 14px" id="instBtn">Install</button></div>`;}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;});
+addEventListener('appinstalled',()=>{deferred=null;toast('Installed ✓');drawHome();});
+async function doInstall(){if(standalone())return toast('Already installed ✓');if(deferred){deferred.prompt();await deferred.userChoice;deferred=null;drawHome();}
+  else alert('Chrome ⋮ (top right) > "Add to home screen" > "Install".');}
+async function checkUpdate(){try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.update();}catch(_){}toast('Checking…');setTimeout(()=>location.reload(),1200);}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(r=>{document.addEventListener('visibilitychange',()=>{if(!document.hidden&&set('autoUpdate'))r.update().catch(()=>{});});
+  r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='activated'){toast('APP UPDATED ✓');setTimeout(()=>location.reload(),900);}});});}).catch(()=>{});}
 
-load().then(()=>{installUI();drawAll();showTab(set('startTab')||'home');feedTimer();setTimeout(feed,3000);});
-window.__sx={get S(){return S;},showTab,feed};
+load().then(()=>{drawAll();showTab(set('startTab')||'home');feedTimer();setTimeout(feed,1500);});
+window.__sx={get S(){return S;},showTab,feed,tasks,drawAll};
 })();
 </script>
 
@@ -556,5 +602,6 @@ function voiceTyping(btn,box,tell){
   draw();
 })();
 </script>
+
 </body>
 </html>
