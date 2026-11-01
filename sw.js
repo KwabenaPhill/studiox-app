@@ -1,6 +1,6 @@
 // Studio X app - online first, with the last saved copy when there is no internet.
 // Only files of this app are kept. Bot feed (GitHub API) is never cached.
-const VERSION = '1.3';
+const VERSION = '1.4';
 const CACHE = 'sx-app-' + VERSION;
 const FILES = ['./', 'index.html', 'manifest.json', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/icon-maskable-512.png'];
 self.addEventListener('install', event => {

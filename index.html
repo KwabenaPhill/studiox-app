@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.3</title>
+<title>Studio X 1.4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -146,7 +146,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='1.3';
+VERSION='1.4';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -431,17 +431,29 @@ function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><
    g('Data',[r('backup','dl','Backup','Save everything to a file'),r('restore','up','Restore','Load a backup file'),r('clearMedia','trash','Clear saved videos','Frees phone space'),r('defaults','reset','Back to default','Settings only')]);}
 
 function drawAll(){drawHome();drawRecords();drawChannels();drawMoney();drawSettings();}
-function showTab(t){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
+/* 1.4 (Philip: "the phone Back button must take me back to where I was, not the home screen") */
+let curTab='home',subDepth=0,popSkip=0;
+function showTab(t,fromPop){if(!fromPop&&t!==curTab){try{history.pushState({tab:t},'');}catch(e){}}curTab=t;
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='p-'+t));scrollTo(0,0);}
 document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 
 /* ---------- sub pages ---------- */
 /* 1.3: sub pages stack, so Back goes one page back (channel > payment > back to the channel) */
 let subStack=[],subCur=null,subTask='';
-function openSub(title,html,after){if($('sub').classList.contains('open')&&subCur&&subCur.title!==title)subStack.push(subCur);subCur={title,html,after};subTask='';
+function openSub(title,html,after){const wasOpen=$('sub').classList.contains('open');
+  if(!wasOpen||(subCur&&subCur.title!==title)){try{history.pushState({sub:subDepth+1},'');subDepth++;}catch(e){}}
+  if(wasOpen&&subCur&&subCur.title!==title)subStack.push(subCur);subCur={title,html,after};subTask='';
   $('subTitle').textContent=title;$('subBody').innerHTML=html;$('sub').classList.add('open');$('sub').scrollTop=0;after&&after();}
-const closeSub=()=>{subStack=[];subCur=null;$('sub').classList.remove('open');drawAll();};
-$('subBack').onclick=()=>{const p=subStack.pop();if(!p){closeSub();return;}subCur=p;$('subTitle').textContent=p.title;$('subBody').innerHTML=p.html;$('sub').scrollTop=0;p.after&&p.after();fillThumbs();};
+const closeSub=()=>{const n=subDepth;subDepth=0;subStack=[];subCur=null;$('sub').classList.remove('open');drawAll();
+  if(n>0){popSkip++;try{history.go(-n);}catch(e){popSkip=0;}}};
+function subBackStep(){subDepth=Math.max(0,subDepth-1);const p=subStack.pop();
+  if(!p){subStack=[];subCur=null;$('sub').classList.remove('open');drawAll();return;}
+  subCur=p;$('subTitle').textContent=p.title;$('subBody').innerHTML=p.html;$('sub').scrollTop=0;p.after&&p.after();fillThumbs();}
+$('subBack').onclick=()=>{if(subDepth>0)history.back();else subBackStep();};
+addEventListener('popstate',e=>{if(popSkip){popSkip--;return;}
+  if($('sub').classList.contains('open')){subBackStep();return;}
+  const t=(e.state&&e.state.tab)||'home';showTab(t,true);});
 const swRow=(k,label,help)=>`<div class="set-list"><div class="set-row"><span class="t">${label}<small>${help}</small></span><label class="sw"><input type="checkbox" data-set="${k}" ${set(k)?'checked':''}><span></span></label></div></div>`;
 const stepRow=k=>`<div class="set-list"><div class="set-row"><span class="t">${SET[k].t}<small>${SET[k].h}</small></span><span class="step"><button data-step="${k}" data-d="-1">−</button><b>${set(k)}</b><button data-step="${k}" data-d="1">+</button></span></div></div>`;
 function appsSub(k){openSub(SET[k].t,`<p class="muted" style="margin:4px 4px 10px">${SET[k].h}</p><div class="set-list">${ALLAPPS.map(a=>`<div class="set-row"><span class="i pic">${SVG[a]}</span><span class="t">${PN[a]}</span><label class="sw"><input type="checkbox" data-app-k="${k}" data-a="${a}" ${set(k).includes(a)?'checked':''}><span></span></label></div>`).join('')}</div>`);}
@@ -579,7 +591,7 @@ async function checkUpdate(){try{const r=await navigator.serviceWorker.getRegist
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(r=>{document.addEventListener('visibilitychange',()=>{if(!document.hidden&&set('autoUpdate'))r.update().catch(()=>{});});
   r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='activated'){toast('APP UPDATED ✓');setTimeout(()=>location.reload(),900);}});});}).catch(()=>{});}
 
-load().then(()=>{if(set('startTab')==='ideas')S.settings.startTab='home';drawAll();showTab(set('startTab')||'home');feedTimer();setTimeout(feed,1500);});
+load().then(()=>{if(set('startTab')==='ideas')S.settings.startTab='home';drawAll();{const st=set('startTab')||'home';curTab=st;try{history.replaceState({tab:st},'');}catch(e){}showTab(st,true);}feedTimer();setTimeout(feed,1500);});
 window.__sx={get S(){return S;},showTab,feed,tasks,drawAll};
 })();
 </script>
