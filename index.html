@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.5.1</title>
+<title>Studio X 1.6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -150,7 +150,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='1.5.1';
+VERSION='1.6';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -229,7 +229,8 @@ function tasks(){const out=[];
   for(const it of S.feed.items){const c=chBy(it.channel);if(!chOn(c))continue;
     const base={item:it,ch:c};
     (it.shorts||[]).forEach(s=>out.push({...base,id:it.id+':s'+s.n,kind:'short',label:(it.shorts.length>1?'Short '+s.n:'Short'),when:s.when||it.when,file:s.file,words:s.words||{},apps:set('appsShort')}));
-    if(it.post)out.push({...base,id:it.id+':post',kind:'post',label:'Post picture',when:it.post.when||it.when,file:it.post.file,words:it.post.words||{},apps:set('appsPost')});
+    (it.posts||[]).forEach(q=>out.push({...base,id:it.id+':sq'+q.n,kind:'post',label:'Square post '+q.n+' ('+(q.files||[]).length+' pictures)',when:q.when||it.when,file:(q.files||[])[0],files:q.files||[],words:q.words||{},apps:set('appsPost')}));   // 1.6
+    if(it.post&&!(it.posts||[]).length)out.push({...base,id:it.id+':post',kind:'post',label:'Post picture',when:it.post.when||it.when,file:it.post.file,words:it.post.words||{},apps:set('appsPost')});
     if(it.youtube)out.push({...base,id:it.id+':link',kind:'link',label:'Video link',when:it.when,url:it.youtube.url,words:it.share||{},apps:set('appsLink')});}
   return out.sort((a,b)=>(a.when||'').localeCompare(b.when||''));}
 const isDone=(t,a)=>!!S.done[t.id+'|'+a];
@@ -525,7 +526,7 @@ function taskSub(id){const t=tasks().find(x=>x.id===id);if(!t)return;setTimeout(
    ${t.file?`<div class="row"><button class="btn out" id="tSave">⬇ Save to phone</button></div>`:''}`,
    async()=>{if(t.kind==='link'){$('tMedia').innerHTML=t.item.thumb?`<img class="media" data-m="${t.item.thumb.path}">`:'';fillThumbs();return;}
      try{const m=await media(t.file);if(!m){$('tMedia').textContent='Connect the laptop key first.';return;}
-       $('tMedia').innerHTML=t.kind==='short'?`<video class="media" src="${m.url}" controls playsinline></video>`:`<img class="media" src="${m.url}">`;}
+       $('tMedia').innerHTML=t.kind==='short'?`<video class="media" src="${m.url}" controls playsinline></video>`:(t.files&&t.files.length>1?`<div class="pp-grid">${t.files.map(f=>`<img data-m="${f.path}" style="width:100%;border-radius:8px">`).join('')}</div>`:`<img class="media" src="${m.url}">`);if(t.files)fillThumbs();}
      catch(e){$('tMedia').textContent='Could not get it: '+e.message;}
      if($('tSave'))$('tSave').onclick=async()=>{const m=await media(t.file);const a=document.createElement('a');a.href=m.url;a.download=fname(t);document.body.appendChild(a);a.click();a.remove();};});}
 const fname=t=>slug(t.item.title).slice(0,40)+(t.kind==='short'?'-short-'+t.id.split(':s').pop()+'.mp4':'.jpg');
@@ -533,6 +534,9 @@ const fname=t=>slug(t.item.title).slice(0,40)+(t.kind==='short'?'-short-'+t.id.s
 async function copyWords(t,a){const w=t.words[WK[a]]||t.words.instagram||t.words.tiktok||'';try{await navigator.clipboard.writeText(w);return true;}catch(e){return false;}}
 async function share(t,a){const w=t.words[WK[a]]||t.words.instagram||t.words.tiktok||'';const copied=await copyWords(t,a);
   try{if(t.kind==='link'){await navigator.share({text:w});}
+    else if(t.files&&t.files.length>1){toast('Getting '+t.files.length+' pictures…');const fs=[];   // 1.6: the whole square post at once
+      for(let i=0;i<t.files.length;i++){const m=await media(t.files[i],true);if(!m){toast('Connect the laptop key first (Settings).');return;}fs.push(new File([m.blob],slug(t.item.title).slice(0,30)+'-'+(i+1)+'.jpg',{type:'image/jpeg'}));}
+      if(navigator.canShare&&navigator.canShare({files:fs}))await navigator.share({files:fs,text:w});else{toast('This phone cannot share files here. Use Save to phone.');return;}}
     else{const m=await media(t.file);if(!m){toast('Connect the laptop key first (Settings).');return;}
       const file=new File([m.blob],fname(t),{type:t.kind==='short'?'video/mp4':'image/jpeg'});
       if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],text:w});else{toast('This phone cannot share files here. Use Save to phone.');return;}}
