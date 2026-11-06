@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.6.1</title>
+<title>Studio X 1.7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -57,6 +57,7 @@ textarea{min-height:70px;line-height:1.4;resize:vertical}
 .todo .tx{flex:1;min-width:0}
 .todo .tt{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px;background:none;border:0;padding:0;text-align:left;width:100%}
 .nx{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--onAcc);background:var(--acc);padding:2px 6px;border-radius:99px}
+.ghead{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;color:var(--txt,#fff);padding:2px 0 8px;font:inherit;cursor:pointer;text-align:left}.ghead b{font-size:13px;letter-spacing:.06em}.gcount{font-size:11px;font-weight:700;color:var(--mute);background:var(--card2);border:1px solid var(--line);border-radius:99px;padding:2px 8px}.glate{font-size:11px;font-weight:700;color:#fff;background:var(--red);border-radius:99px;padding:2px 8px}.gchev{margin-left:auto;color:var(--mute);font-size:18px}.gvid{border-top:1px solid var(--line);padding-top:8px;margin-top:4px}.gvt{font-size:11.5px;color:var(--mute);margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tm{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--mute);background:var(--card2);border:1px solid var(--line);border-radius:99px;padding:3px 8px;white-space:nowrap}.tm.late{color:var(--red);border-color:rgba(255,69,58,.4)}
 .pv{font-size:12.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
@@ -150,7 +151,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='1.6.1';
+VERSION='1.7';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -160,9 +161,11 @@ const toast=m=>{const t=$('toast');t.textContent=m;t.style.display='block';clear
 /* ---------- real app logos (same as Match Vision) ---------- */
 const SVG={"tg": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"12\" fill=\"#29A9EB\"/><path fill=\"#fff\" d=\"M5.4 11.7l11.3-4.4c.5-.2 1 .1.8.9l-1.9 9c-.1.6-.5.8-1 .5l-2.9-2.1-1.4 1.4c-.2.2-.3.3-.6.3l.2-3 5.4-4.9c.2-.2 0-.3-.3-.1l-6.7 4.2-2.9-.9c-.6-.2-.6-.6.1-.9z\"/></svg>", "wa": "<svg viewBox=\"0 0 24 24\"><path fill=\"#25D366\" d=\"M12 1.6A10.4 10.4 0 0 0 3.1 17.4L1.6 22.4l5.2-1.4A10.4 10.4 0 1 0 12 1.6z\"/><path fill=\"#fff\" d=\"M8.7 6.8c-.2-.5-.4-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3c.1.2 2 3.2 5 4.4 2.5 1 3 .8 3.5.7.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3l-1.9-.9c-.3-.1-.5-.1-.7.1l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.2z\"/></svg>", "x": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#000\"/><rect x=\".5\" y=\".5\" width=\"23\" height=\"23\" rx=\"5.5\" fill=\"none\" stroke=\"#555\"/><path fill=\"#fff\" d=\"M13.6 10.8L19 4.8h-1.3l-4.7 5.2-3.8-5.2H5l5.7 7.9L5 19.2h1.3l5-5.6 4 5.6h4.2l-5.9-8.4zm-1.8 2l-.6-.8L6.8 5.8h2l3.7 5.1.6.8 4.8 6.6h-2l-4.1-5.5z\"/></svg>", "ig": "<svg viewBox=\"0 0 24 24\"><defs><linearGradient id=\"igg\" x1=\"0\" y1=\"1\" x2=\"1\" y2=\"0\"><stop offset=\"0\" stop-color=\"#FEDA75\"/><stop offset=\".35\" stop-color=\"#FA7E1E\"/><stop offset=\".65\" stop-color=\"#D62976\"/><stop offset=\"1\" stop-color=\"#4F5BD5\"/></linearGradient></defs><rect width=\"24\" height=\"24\" rx=\"6.5\" fill=\"url(#igg)\"/><rect x=\"5.5\" y=\"5.5\" width=\"13\" height=\"13\" rx=\"4\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\"/><circle cx=\"12\" cy=\"12\" r=\"3.1\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\"/><circle cx=\"16.1\" cy=\"7.9\" r=\"1\" fill=\"#fff\"/></svg>", "tt": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#000\"/><rect x=\".5\" y=\".5\" width=\"23\" height=\"23\" rx=\"5.5\" fill=\"none\" stroke=\"#444\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6\" fill=\"none\" stroke=\"#25F4EE\" stroke-width=\"2.2\" stroke-linecap=\"round\" transform=\"translate(-.6 -.4)\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6\" fill=\"none\" stroke=\"#FE2C55\" stroke-width=\"2.2\" stroke-linecap=\"round\" transform=\"translate(.6 .4)\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6M13.6 5.5c.4 2 1.8 3.3 3.8 3.4\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.2\" stroke-linecap=\"round\"/></svg>", "yt": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#FF0000\"/><path d=\"M10 8.3v7.4l6-3.7z\" fill=\"#fff\"/></svg>", "fb": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#1877F2\"/><path fill=\"#fff\" d=\"M15.6 12.6l.4-2.9h-2.8V7.9c0-.8.4-1.6 1.7-1.6H16V3.8s-1.1-.2-2.2-.2c-2.3 0-3.8 1.4-3.8 3.9v2.2H7.5v2.9H10V20h3.2v-7.4h2.4z\"/></svg>"};
 SVG.copy='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
-const PN={tt:'TikTok',ig:'Instagram',fb:'Facebook',wa:'WhatsApp',tg:'Telegram',x:'X',yt:'YouTube'};
-const WK={tt:'tiktok',ig:'instagram',fb:'facebook',wa:'whatsapp',tg:'telegram',x:'x',yt:'youtube'};
-const ALLAPPS=['tt','ig','fb','wa','tg','x','yt'];
+const PN={tt:'TikTok',ig:'Instagram',fb:'Facebook',wa:'WhatsApp',tg:'Telegram',x:'X',yt:'YouTube',sc:'Snapchat'};
+const WK={tt:'tiktok',ig:'instagram',fb:'facebook',wa:'whatsapp',tg:'telegram',x:'x',yt:'youtube',sc:'snapchat'};
+const ALLAPPS=['tt','ig','fb','wa','tg','x','yt','sc'];
+SVG.sc='<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#FFFC00"/><path fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round" d="M12 4.6c2.6 0 4.3 2 4.3 4.4v1.6c.5.2 1 .1 1.4-.1.4.1.5.5.2.8-.5.4-1.3.5-1.6.8.4 1.4 1.6 2.6 3 3-.1.6-1 .8-1.8.9-.2.5-.1.9-.6 1-.6.1-1.3-.2-2.1.1-.8.3-1.5 1.4-2.8 1.4s-2-1.1-2.8-1.4c-.8-.3-1.5 0-2.1-.1-.5-.1-.4-.5-.6-1-.8-.1-1.7-.3-1.8-.9 1.4-.4 2.6-1.6 3-3-.3-.3-1.1-.4-1.6-.8-.3-.3-.2-.7.2-.8.4.2.9.3 1.4.1V9c0-2.4 1.7-4.4 4.3-4.4z"/></svg>';
+const SNAP_CH=c=>c&&/rankx/i.test(c.name||c.id||'');   // 1.7: Snapchat Spotlight for RankX Shorts first
 const bi=p=>SVG[p]?`<span class="bi">${SVG[p]}</span>`:'';
 const LN={ /* line icons for settings rows */
  apps:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -180,7 +183,7 @@ const API_ICON='<svg viewBox="0 0 24 24"><text x="12" y="15.5" text-anchor="midd
 const BOTFATHER='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCABgAGADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6pooooAKCcDJorzf4/wDjS58GfDy5lsJDFe6hILGGRfvR7gxdh7hVbHuRQB5/45/aSvJtXl0zwjHFFaxMy/b5UDPPtOCyKeAnXBIJPXisyP4i+L5bT7W3iC8RuuSyhc+mMY//AFGuH8PeDLSC1ha9M0lyibvlkZRESOVUD9eua9N8B6XZ2WnQkIXcZUGUlio3HgZ6fzPeuGeMinoehDAyauy74S/aAutLu1sfGKi4t5TiK/tkBZSOu5V4Ye6jI9DXt2latYa5YxX+m3cN3azDKSxNuU//AF/btXg3xA8F6XqGmS6zbWsEF5bxkuyKAJo/4lYY6+h6545BIrM+FniS98BXdwQj3Gn3WN9vI2zDDo464OOD7Yz0FdNCp7XRbnJiafsU5PY+l6KwfD/jbSPEWI7eYw3OObeb5W/Ds34VvV0VKcqb5ZqzOalWhVjz03dBRRRUGgUUVyfxE8VHw7pQhtn2313lIyOsa/xP+uB7n2rSjSlVmoR3ZjiK8KFN1Z7ITUvHkcXiay0LT40uZHnWK4kJOI89QMdWHfsP5efftMzWj2Wg2tz86maVipPCEx4Vj6c5x+NP8DaVcz6vaSxqxmlbeG/55Qg/PIT6tgovrlj2rC+Mepf25qGpzQYmjs9qxjqHVPvgfUF69SvgIqThT15YtvzZ4mFzWbiqlbTmkkvJf1+Z5ivjaB5I7Sysr/Ub51TzYrW3ZhFuAJ3MeMc5r0KHQvEeoeHorfQNStrC+dwsUuwvnDnK7cY56VQ8E+NNV0Tw6NH065it4oXaKRkhUSkg4ALEZxgcf/Wrd8KeItMbSHsZrgpcxXMjqGjbaVJHG/GM9e/avkKkYpqyPvYOdnzMqS+E/iRpenXcfim80ya3miKW7wxlGMvUBsHGMD0rKgZPENjJci4ms7p5G8uCROcRlfNBx3G4AV38UlpdXOWyyRKTlTks+OOT2HX64rz3TbKXTdQ1C3mgdvLupZIJw427JQhZSOu7KL+BNdWBhKpXjCmtG1f06/I4MyqQo4WdSq9Unb16fM2IRJJPGsIYys4CBTg7ieMe+a96tdTg0a106w1nUoBqEsapl2wZHAAJ/Pv3ryfwSllZLf8AiDUMmPT1UQKMEtM2duAepGP1z2rF1HUrrXL1Hk3ySELFGm4s2M8DJ5JJJOfU9q+4xWH+tT5Hoo7vzZ+b4DF/UaftFrKey8k9/n0Pomisvw4l3aaTaWWqXEcuoRxAyANk4zgZ9ccDPc1qV8tOPK2j7inPmipWsFeFeL9Ql8U+MpYYWLKZls4MegbbkfUkmvbNUuTZabd3Q6wwvJ+Sk14t4LgTSlHijUI2kVGMdnCAS0854Leyrk5Pr9K9XK7QU63VaL1Z4Wd3qyp4dbN3fov+H+82/GfiGDwz5+g6EfLnkCi7uR95VCgLGp7YXH0z6k1w2lQW11qEEV4XW1LfvigydmMkD64x+Na1lDp17LeXusC8nnlndsRxvgc5JJHfn8BSQ6zaaXpiRCO0jWSTeTFN5kxIORuXqB25NdyxNPD03CO/V+f9bHB9QrYusqk9I9EtdP8Ag9TgtY+y6d4qMlvYxaZYXiL+4hBCxA/LnnqQwBJ9T71p2Hw9gZPPudatI/M58yaAzsff52A59hWH8UfiM2qS6YxtoVtIJDKXUbnkU46N/dyOg6kZ9KjsfEem2mnW88kyJDKP3T7CN4HHHGM+uO9fIYvl9pKVNaH32CUlRjCs/eR6LoZttOsfscMrzlCwMroI9/ckAcADKjA4AA96x4ZE1G6nmhbdHLK7q3Yqoxn6fLWFa6xZ+IxdOv2qLSbCJZdTulXYxjyQI0PUs5bHpjNN8PfFazttXnNzp9sNMuAEhh2DdAgwAN3p03ZroyqvHC1vaz6qxxZ3g5Y6h7Cm9mn/AMD8Trd7/wDCPkB2ERuwxXsTswD/ADqfw5qEGkvd6m8ay3NtGPsqOMqJWbG8/wC6Mn64rUtfEOmXyJCNFtyspIWMuibj7ZAH4g1jNprSrcfZBHFBKVaNZ7mPcBnoea+rpYynVi4y2b/C58RXy2rRlGcdWl26pOz+8ueHfE91Z+K7XVry5kmd5BHPI5yWRuD+A4OPavfK+brrRry1tzO/kMnQmOdHI98A5r6B8O3Zv9B066Jy0ttG5PuVGf1riziMHy1Kfpp+B6HD8qsXOlVT76/iN8TKX8Oaqq9TaTY/74NeO6fqP23R9NtVaVPs8BiH7wogYysS3HXII+mK9uuUWeF4XwUkUo30IxXzj4lu/wDhFtCurU/JOwaDLYJUhjuI9OM/mK48LUiqUk+jT/BnpYqjN4iMo9U1+KPPvGvj+9tdfaCyuppISXygmIRgQQCecHOM89RiuP1LXtV1KOOF7xIo5nEbCIngd/QdM1j39413qUs7Hq5A9gBjFGmj7fNNGk/lPGA3zKD8ucEj6da4KnvPmZ61O0PdWx1EGjR+NNSvLE3GpR3UUbC1tYUUqyJkIBuIwOBx6kmptHsvifr/AIQi8J6f4R1O4sLGZ5g4sihjkzlh5jgDqDwD3rQ+Floll8TVji1NNRXyCfNWJo+c9MNz2H5/Wvsi02nRrbe8q9cbM8nng+1Zrdpl1Hs0fF01n8TPCvh270y78LaxFoOp+XK4NmJRngglkBKnIHB/KsvUfCs2hQWseoTahBfXHzyQYBESkgKx7k4zlfXHvX3Nbjb4Yjxx/og6f7tfI3x2WMeKUme52GPaPJCEtKDuyQegxgZHfdx0qZrokVQ1ersc1N4t1Cxla0tbmJbKwAgiWUnLr6secsa9N8CXWoR2H9valaSyGZALa1z+5RNpJkYYPLcbRj34rzuPw2vjXxzp1nFA0MccEc2o7drK6jGCCpIy/C4+p7GvbJGknMltZAN5KsxIHylvU4/h6D6ACrpO0ed6DxVNRqOlB8y6PuRyajBq9kkbwxQknfsjkiEiH0OVHr/eIrvvCXjy106y07R7m0uUCBLZJiOGJ4HTI/WvK9At9amAi1nyJJdnz4KsC2eqgAYQD15r1jwF4KtoTDrFzboCvz2yY7/89CPX0Hbr1PG8qsnHkctNziVCEZ+0UddrneS/dr5Y+Pepf2l4qvLLS42lNuBHJtxjzMAvz067R/wE19E/EDXpfDHgzWNYgIE1rbM8RIyA5wFP5kV8feG/EsE/iuN9bX7bbM7s6SHiWQ87m9Tk55rCc3CLaOmjTU5K5X8I/Cw+Ig0V1qyWl0oJWJF8wkkZ5PT6/WuM1fS77wZ4sNjqMO2W3kCyJ2kQjqPYjBr6Gv8ARHj16DxR4ejtLZIIvLksY/l3jvJjAzwSMDnjNeAeONfuvFniu61O5dJJJJdiFFwNiDavH0HWubDVZzk7nTiqMKcVyrU7X4Vso+JyiNRsMJKkLjcMDmvtHTA50eELt+6c59Oa+GfgpqCnxxBLcSBRbwSKzHsoHFfcnh+aK90O0miJKOhZSeO5610X95nLL4UO27PD230tsf8AjtfHfx+vbe38RyxTW3nPJbjy3zjyju+9054yMcdc9q+x9RZbXRLhpDhYoGLH0AWviL9oW4S78Sw3du++J4AAe/LHt+GKH8SQR+FnSeA44fCHguPVLWQT3F1Kkt2UHzRx9CBnOQAfwyT341tX8StZ6lBr2nSE6eoCXUUZOFQnIkx3APPtXjPgTxfcaPcPYSSkwScpu+YIcYIwexHbpXSnWf7OuWtoAzQyjdFChyVzwUx+eM9ifauatFt2Z20ZxUU1/TPTda8SXVvrdjqHh2SWa6u/3DwRR+ZvduhAHXOOntkcGvoTwLZajY+HLePVF8u5cmRos5MWcfKT65yT6EkV8n6Jo+r+GotL8TSS/Zxa3YNtFu4aRTkpnucfKT6nHY4+yNPu4r6zguoDuhnjWWM+qsMj9DVYelb3nuZ4qtf3Vscb8b4nm+FXiZYwSy2ZkwPRWVj+gNfEFpebdRXKq3705DHAIZfXtytfobqluLuyntm8vbKhRhJGJFKkYIKnggjIr5d8bfs0rDdSXXh+7MIzuWAgtEOc4A+8o/E10SV1Y5qc+WVzL8GeLItKJEt43lupR4J8bgD6H6cVk+OPA/hsaNJ4g8LIbeK2Ja5t5pTIqLtJBUgEjLYUZ4ywyR1ptv4N8UaDdrHNp07qw2GSKH7Sgx0AAww/Gut03wR4g1ixurO4M+m29zHsZ5IkXcMg48vJJz74rijCcJpxPRqTpzpvmZ5r8HbKCT4iJal4Z4pbRi7RbsfMoJXkDlScHtkcEjmvrrxPqF/4a+HyDR5Le2xF5K3FxP5fksXAVt7Aj1znHWvIPAXwH1PQfFMGr6fdfb0+ZJt8awpGCODkdeewr0/4n6PZ6xoelaPdXrzQWt4st3bwvtFyFBJjb/Z5+owK7Uveuea37qRc+HGu3vif4fTtq11BeT7HRpY51kMisobnaOCAwBHUEGvmX41aTZReJfsv2q1tIYLP5PtLOS/zNwCqnn64619C/C3wxpmjajr6aVvs7XUgnk2by71tcKc7M8tk8n6CuH+JXwU1TxLr813fXC2Vt5axRyxIsokOST15XtwaGveTBP3Wj5Qsod97Ess8NoDlvNm3bVwCQDtBPOMdOprqrDXbe2CNFHEJA2GZGJMgB7MeRXpM37OUsqRJNqyjywQXhiyX9OD0qO3/AGcQX2rrF8w9Bar/AI03FPcFOUdjj9f8f6j4jurS3aBYbW0UQW1lEp2xjPQDqWJPXrk+9fbHw2sNS0vwLoVlq5b7fBZxpMrHJRsfdPuBgH3FeO/DX4HQ+E9Vj1Znivr+I5glvEBEHuqDjd/tHJHbFe9aWt4sZ+1yQOe3lKR/M1RB/9k=';
 const IC={tickOnShare:['#30D158','tick'],lateHours:['#FF9F0A','clock'],showFuture:['#0A84FF','cal'],bots:['img',BOTFATHER],key:['#5E5CE6','api'],
  autoGet:['#32ADE6','dl'],chans:['#BF5AF2','ch'],showOff:['#636366','eyeOff'],install:['#0A84FF','phone'],startTab:['#5E5CE6','home'],
- autoUpdate:['#30D158','refresh'],update:['#0A84FF','up'],backup:['#0A84FF','cloudUp'],restore:['#30D158','cloudDown'],clearMedia:['#FF453A','trash'],
+ autoUpdate:['#30D158','refresh'],update:['#0A84FF','up'],backup:['#0A84FF','cloudUp'],restore:['#30D158','cloudDown'],clearMedia:['#FF453A','trash'],fresh:['#FF453A','trash'],groupByChannel:['#BF5AF2','apps'],snapRankX:['#FFD60A','video'],
  defaults:['#8E8E93','reset'],photos:['#A3E635','video'],currency:['#30D158','money'],apikeys:['#FF9F0A','api']};
 const ln=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${LN[k]||''}</svg>`;
 
@@ -195,6 +198,9 @@ const SET={ /* every setting, its default and one short help line */
  tickOnShare:{d:true,t:'Tick when shared',h:'Sharing ticks that app by itself'},
  lateHours:{d:24,t:'Late after',h:'Hours after its time before it turns red',min:1,max:168,u:'h'},
  showFuture:{d:true,t:'Show coming posts',h:'Posts with a later time show on Home too'},
+ groupByChannel:{d:true,t:'Group by channel',h:'Home shows one group per channel, videos newest first'},
+ snapRankX:{d:true,t:'Snapchat for RankX',h:'RankX Shorts also get a Snapchat button'},
+ freshFrom:{d:0,t:'Start fresh',h:'Only videos sent after this show'},
  showOff:{d:false,t:'Show turned-off channels',h:'Off channels stay hidden'},
  currency:{d:'$',t:'Money currency',h:'Used on the Money tab'},
  startTab:{d:'home',t:'Open on',h:'First page when the app opens'},
@@ -226,9 +232,11 @@ const logo=(c,cls='')=>c?`<span class="lg ${cls}" style="background:${c.color}">
 
 /* ---------- tasks made from the bot feed ---------- */
 function tasks(){const out=[];
+  const fresh=+set('freshFrom')||0;
   for(const it of S.feed.items){const c=chBy(it.channel);if(!chOn(c))continue;
+    if(fresh&&new Date(it.sent||it.uploaded||it.when||0).getTime()<fresh)continue;   // 1.7: start fresh
     const base={item:it,ch:c};
-    (it.shorts||[]).forEach(s=>out.push({...base,id:it.id+':s'+s.n,kind:'short',label:(it.shorts.length>1?'Short '+s.n:'Short'),when:s.when||it.when,file:s.file,words:s.words||{},apps:set('appsShort')}));
+    (it.shorts||[]).forEach(s=>out.push({...base,id:it.id+':s'+s.n,kind:'short',label:(it.shorts.length>1?'Short '+s.n:'Short'),when:s.when||it.when,file:s.file,words:s.words||{},apps:(set('snapRankX')!==false&&SNAP_CH(c)&&!set('appsShort').includes('sc'))?[...set('appsShort'),'sc']:set('appsShort')}));
     (it.posts||[]).forEach(q=>out.push({...base,id:it.id+':sq'+q.n,kind:'post',label:'Square post '+q.n+' ('+(q.files||[]).length+' pictures)',when:q.when||it.when,file:(q.files||[])[0],files:q.files||[],words:q.words||{},apps:set('appsPost')}));   // 1.6
     if(it.post&&!(it.posts||[]).length)out.push({...base,id:it.id+':post',kind:'post',label:'Post picture',when:it.post.when||it.when,file:it.post.file,words:it.post.words||{},apps:set('appsPost')});
     if(it.youtube)out.push({...base,id:it.id+':link',kind:'link',label:'Video link',when:it.when,url:it.youtube.url,words:it.share||{},apps:set('appsLink')});}
@@ -261,10 +269,19 @@ function drawHome(){const T=tasks().filter(t=>homeCh==='all'||t.ch.id===homeCh);
   <div class="summary"><button class="sbox on" data-box="open"><div class="lbl">To post</div><div class="big">${open.length}</div></button><button class="sbox" data-box="late"><div class="lbl">Late</div><div class="big ${late?'red':''}">${late}</div></button><button class="sbox" data-box="shared"><div class="lbl">Shared 7d</div><div class="big">${doneWk}</div></button></div>
   <div class="chips"><button class="chip all ${homeCh==='all'?'on':''}" data-hch="all">All</button>${chs.map(c=>`<button class="chip ${homeCh===c.id?'on':''} ${c.pin?'pin':''}" data-hch="${c.id}" data-lp="${c.id}">${logo(c)}${esc(c.name)}</button>`).join('')}</div>
   ${selC?chanCard(selC,T):''}
-  <div class="card"><div class="ct">To do now</div>${list.length?list.map((t,i)=>todoRow(t,i===0)).join(''):`<div class="empty">${S.feed.items.length?'All shared ✓':feedHelp()}</div>`}</div>
+  ${list.length?(set('groupByChannel')!==false?groupedHome(list):`<div class="card"><div class="ct">To do now</div>${list.map((t,i)=>todoRow(t,i===0)).join('')}</div>`):`<div class="card"><div class="ct">To do now</div><div class="empty">${S.feed.items.length?'All shared ✓':feedHelp()}</div></div>`}
   <p class="muted" style="text-align:center">${feedLine()}</p>`;
   const nc=document.querySelector('#p-home .chips');if(nc)nc.scrollLeft=keepX;
   $('lateDot').style.display=late?'block':'none';$('lateDot').textContent=late;fillThumbs();}
+/* 1.7 (Philip, 6 Nov): Home grouped by channel: a header per channel (logo, name, tasks, red late count), tap = fold;
+   inside, videos newest first with their tasks under them. */
+function groupedHome(list){S.fold=S.fold||{};const first=list[0];const out=[];
+  for(const c of chList()){const L=list.filter(t=>t.ch.id===c.id);if(!L.length)continue;const late=L.filter(lateOf).length;const shut=!!S.fold[c.id];
+    const vids=[];L.forEach(t=>{let v=vids.find(x=>x.it.id===t.item.id);if(!v){v={it:t.item,ts:[]};vids.push(v);}v.ts.push(t);});
+    vids.sort((a,b)=>(b.it.when||'').localeCompare(a.it.when||''));
+    out.push(`<div class="card grp"><button class="ghead" data-fold="${c.id}">${logo(c)}<b>${esc(c.name.toUpperCase())}</b><span class="gcount">${L.length}</span>${late?`<span class="glate">${late} late</span>`:''}<span class="gchev">${shut?'›':'⌄'}</span></button>
+     ${shut?'':vids.map(v=>`<div class="gvid"><div class="gvt">${esc(v.it.title||'')}</div>${v.ts.sort((a,b)=>(a.when||'').localeCompare(b.when||'')).map(t=>todoRow(t,t===first)).join('')}</div>`).join('')}</div>`);}
+  return out.join('');}
 function chanCard(c,T){const open=T.filter(t=>!complete(t));const nx=open.find(t=>!future(t))||open[0];const m=S.money[c.id]||{};const tot=(m.list||[]).reduce((a,x)=>a+(+x.amt||0),0);
   return `<div class="card"><div class="chcard" data-cpage="${c.id}" style="cursor:pointer">${logo(c,'big')}<div style="flex:1;min-width:0"><b style="font-size:16px">${esc(c.name)}</b><div class="muted">${open.length} to post${nx?' · next '+niceTime(nx.when):''}</div></div>
    <span class="pillm ${m.on?'on':''}">${m.on?'Monetized':'Not monetized'}</span></div>
@@ -479,13 +496,13 @@ function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><
   const r=(id,icon,t,small,v,vOn)=>`<button class="set-row" data-s="${id}">${icon_(id,icon)}<span class="t">${t}<small>${small}</small></span>${v!=null?`<span class="v ${vOn?'on':''}">${v}</span>`:''}<span class="chv">›</span></button>`;
   $('p-settings').innerHTML=
    g('Posting',[r('appsShort','tt','Shorts',appsTxt('appsShort')),r('appsPost','ig','Post pictures',appsTxt('appsPost')),r('appsLink','wa','Video link',appsTxt('appsLink')),
-     r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture'))])+
+     r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture')),r('groupByChannel','ch','Group by channel',SET.groupByChannel.h,set('groupByChannel')!==false?'On':'Off',set('groupByChannel')!==false),r('snapRankX','video','Snapchat for RankX',SET.snapRankX.h,set('snapRankX')!==false?'On':'Off',set('snapRankX')!==false)])+
    g('Laptop and bots',[r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','API key',key()?'Connected':'Paste it once to connect',key()?'✓':'Connect',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
    g('Channels',[r('chans','ch','Channel settings',S.channels.filter(c=>c.on).length+' on · name, logo, link'),r('apikeys','key','Channel API keys','Kept on the laptop, numbers come here'),r('currency','money','Money currency','Used on the Money tab',set('currency')),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
    g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',money:'Money',ideas:'Home'}[set('startTab')]),
      r('autoUpdate','up','Update by itself',SET.autoUpdate.h,set('autoUpdate')?'On':'Off',set('autoUpdate')),r('update','reset','Check for update','v'+VERSION)])+
    g('Tools',[r('photos','video','Player photos','RankX: search, pick and save player photos')])+
-   g('Data',[r('backup','dl','Backup','Save everything to a file'),r('restore','up','Restore','Load a backup file'),r('clearMedia','trash','Clear saved videos','Frees phone space'),r('defaults','reset','Back to default','Settings only')]);}
+   g('Data',[r('backup','dl','Backup','Save everything to a file'),r('restore','up','Restore','Load a backup file'),r('clearMedia','trash','Clear saved videos','Frees phone space'),r('fresh','trash','Start fresh',set('freshFrom')?'Since '+new Date(set('freshFrom')).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Hide every old video (backup first)'),r('defaults','reset','Back to default','Settings only')]);}
 
 function drawAll(){drawHome();drawRecords();drawChannels();drawMoney();drawSettings();}
 /* 1.4 (Philip: "the phone Back button must take me back to where I was, not the home screen") */
@@ -567,7 +584,7 @@ function chanSub(c){const isNew=!c;c=c||{id:'c'+Date.now(),name:'',platform:'You
 
 function setSub(s){
   if(s==='appsShort'||s==='appsPost'||s==='appsLink')return appsSub(s);
-  if(s==='tickOnShare'||s==='showFuture'||s==='autoUpdate'||s==='autoGet'||s==='showOff')return openSub(SET[s].t,swRow(s,SET[s].t,SET[s].h));
+  if(s==='tickOnShare'||s==='showFuture'||s==='autoUpdate'||s==='autoGet'||s==='showOff'||s==='groupByChannel'||s==='snapRankX')return openSub(SET[s].t,swRow(s,SET[s].t,SET[s].h));
   if(s==='lateHours')return openSub(SET[s].t,stepRow(s));
   if(s==='startTab')return openSub('Open on',`<div class="set-list">${[['home','Home'],['records','Records'],['channels','Channels'],['money','Money']].map(o=>`<button class="set-row" data-pick="startTab" data-val="${o[0]}"><span class="t">${o[1]}</span>${set('startTab')===o[0]?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
   if(s==='bots')return openSub('Bot feed',swRow('feedOn',SET.feedOn.t,SET.feedOn.h)+stepRow('feedMins')+`<div class="card"><div class="ct">Status</div><div class="muted">${feedLine()}</div>
@@ -582,6 +599,7 @@ function setSub(s){
   if(s==='update')return checkUpdate();
   if(s==='backup')return exportData();
   if(s==='restore')return $('fileImport').click();
+  if(s==='fresh'){if(confirm('Start fresh? A backup file is saved first. Old videos and their ticks leave Home; settings, logos, pins and money stay.')){exportData();S.settings.freshFrom=Date.now();S.done={};save();drawAll();toast('Fresh start ✓ Only new builds show now');}return;}
   if(s==='clearMedia'){if(confirm('Clear the saved Shorts and pictures? They download again when needed.')){idb().then(d=>{const t=d.transaction('m','readwrite');t.objectStore('m').clear();t.oncomplete=()=>toast('Cleared ✓');});}return;}
   if(s==='defaults'){if(confirm('Settings back to default? (Channels, ticks and ideas stay.)')){for(const k in SET)S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:SET[k].d;save();drawAll();toast('Done ✓');}return;}}
 
@@ -592,6 +610,7 @@ document.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-lp]'
 document.addEventListener('contextmenu',e=>{if(e.target.closest('[data-lp]'))e.preventDefault();});
 /* ---------- one click handler ---------- */
 document.addEventListener('click',async e=>{const q=sel=>e.target.closest(sel);let b;
+  if(b=q('[data-fold]')){S.fold=S.fold||{};S.fold[b.dataset.fold]=!S.fold[b.dataset.fold];save();drawHome();return;}
   if(b=q('[data-share]')){e.stopPropagation();const t=tasks().find(x=>x.id===b.dataset.share);if(t)share(t,b.dataset.app);return;}
   if(b=q('[data-copy]')){const t=tasks().find(x=>x.id===b.dataset.copy);if(t){toast(await copyWords(t,b.dataset.app)?'Words copied ✓':'Could not copy');}return;}
   if(b=q('[data-tick]')){const k=b.dataset.tick+'|'+b.dataset.app;if(S.done[k])delete S.done[k];else S.done[k]=Date.now();save();taskSub(b.dataset.tick);drawHome();return;}
