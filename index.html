@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.7</title>
+<title>Studio X 1.8</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -151,7 +151,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='1.7';
+VERSION='1.8';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -161,11 +161,10 @@ const toast=m=>{const t=$('toast');t.textContent=m;t.style.display='block';clear
 /* ---------- real app logos (same as Match Vision) ---------- */
 const SVG={"tg": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"12\" fill=\"#29A9EB\"/><path fill=\"#fff\" d=\"M5.4 11.7l11.3-4.4c.5-.2 1 .1.8.9l-1.9 9c-.1.6-.5.8-1 .5l-2.9-2.1-1.4 1.4c-.2.2-.3.3-.6.3l.2-3 5.4-4.9c.2-.2 0-.3-.3-.1l-6.7 4.2-2.9-.9c-.6-.2-.6-.6.1-.9z\"/></svg>", "wa": "<svg viewBox=\"0 0 24 24\"><path fill=\"#25D366\" d=\"M12 1.6A10.4 10.4 0 0 0 3.1 17.4L1.6 22.4l5.2-1.4A10.4 10.4 0 1 0 12 1.6z\"/><path fill=\"#fff\" d=\"M8.7 6.8c-.2-.5-.4-.5-.7-.5h-.6c-.2 0-.5.1-.8.4s-1 1-1 2.4 1 2.8 1.2 3c.1.2 2 3.2 5 4.4 2.5 1 3 .8 3.5.7.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3l-1.9-.9c-.3-.1-.5-.1-.7.1l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.2z\"/></svg>", "x": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#000\"/><rect x=\".5\" y=\".5\" width=\"23\" height=\"23\" rx=\"5.5\" fill=\"none\" stroke=\"#555\"/><path fill=\"#fff\" d=\"M13.6 10.8L19 4.8h-1.3l-4.7 5.2-3.8-5.2H5l5.7 7.9L5 19.2h1.3l5-5.6 4 5.6h4.2l-5.9-8.4zm-1.8 2l-.6-.8L6.8 5.8h2l3.7 5.1.6.8 4.8 6.6h-2l-4.1-5.5z\"/></svg>", "ig": "<svg viewBox=\"0 0 24 24\"><defs><linearGradient id=\"igg\" x1=\"0\" y1=\"1\" x2=\"1\" y2=\"0\"><stop offset=\"0\" stop-color=\"#FEDA75\"/><stop offset=\".35\" stop-color=\"#FA7E1E\"/><stop offset=\".65\" stop-color=\"#D62976\"/><stop offset=\"1\" stop-color=\"#4F5BD5\"/></linearGradient></defs><rect width=\"24\" height=\"24\" rx=\"6.5\" fill=\"url(#igg)\"/><rect x=\"5.5\" y=\"5.5\" width=\"13\" height=\"13\" rx=\"4\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\"/><circle cx=\"12\" cy=\"12\" r=\"3.1\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\"/><circle cx=\"16.1\" cy=\"7.9\" r=\"1\" fill=\"#fff\"/></svg>", "tt": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#000\"/><rect x=\".5\" y=\".5\" width=\"23\" height=\"23\" rx=\"5.5\" fill=\"none\" stroke=\"#444\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6\" fill=\"none\" stroke=\"#25F4EE\" stroke-width=\"2.2\" stroke-linecap=\"round\" transform=\"translate(-.6 -.4)\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6\" fill=\"none\" stroke=\"#FE2C55\" stroke-width=\"2.2\" stroke-linecap=\"round\" transform=\"translate(.6 .4)\"/><path d=\"M13.6 5.5v9.2a2.6 2.6 0 1 1-2.3-2.6M13.6 5.5c.4 2 1.8 3.3 3.8 3.4\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.2\" stroke-linecap=\"round\"/></svg>", "yt": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#FF0000\"/><path d=\"M10 8.3v7.4l6-3.7z\" fill=\"#fff\"/></svg>", "fb": "<svg viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#1877F2\"/><path fill=\"#fff\" d=\"M15.6 12.6l.4-2.9h-2.8V7.9c0-.8.4-1.6 1.7-1.6H16V3.8s-1.1-.2-2.2-.2c-2.3 0-3.8 1.4-3.8 3.9v2.2H7.5v2.9H10V20h3.2v-7.4h2.4z\"/></svg>"};
 SVG.copy='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
-const PN={tt:'TikTok',ig:'Instagram',fb:'Facebook',wa:'WhatsApp',tg:'Telegram',x:'X',yt:'YouTube',sc:'Snapchat'};
-const WK={tt:'tiktok',ig:'instagram',fb:'facebook',wa:'whatsapp',tg:'telegram',x:'x',yt:'youtube',sc:'snapchat'};
-const ALLAPPS=['tt','ig','fb','wa','tg','x','yt','sc'];
-SVG.sc='<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#FFFC00"/><path fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round" d="M12 4.6c2.6 0 4.3 2 4.3 4.4v1.6c.5.2 1 .1 1.4-.1.4.1.5.5.2.8-.5.4-1.3.5-1.6.8.4 1.4 1.6 2.6 3 3-.1.6-1 .8-1.8.9-.2.5-.1.9-.6 1-.6.1-1.3-.2-2.1.1-.8.3-1.5 1.4-2.8 1.4s-2-1.1-2.8-1.4c-.8-.3-1.5 0-2.1-.1-.5-.1-.4-.5-.6-1-.8-.1-1.7-.3-1.8-.9 1.4-.4 2.6-1.6 3-3-.3-.3-1.1-.4-1.6-.8-.3-.3-.2-.7.2-.8.4.2.9.3 1.4.1V9c0-2.4 1.7-4.4 4.3-4.4z"/></svg>';
-const SNAP_CH=c=>c&&/rankx/i.test(c.name||c.id||'');   // 1.7: Snapchat Spotlight for RankX Shorts first
+const PN={tt:'TikTok',ig:'Instagram',fb:'Facebook',th:'Threads',wa:'WhatsApp',tg:'Telegram',x:'X',yt:'YouTube'};   // 1.8: Snapchat removed, Threads added
+const WK={tt:'tiktok',ig:'instagram',fb:'facebook',th:'threads',wa:'whatsapp',tg:'telegram',x:'x',yt:'youtube'};
+const ALLAPPS=['tt','ig','fb','th','wa','tg','x','yt'];
+SVG.th='<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#000"/><path fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" d="M15.6 11.3c-.4-2.2-2-3.3-4-3.2-2.3.1-3.8 1.9-3.8 4.2 0 2.6 1.7 4.4 4.3 4.4 2.7 0 4.3-1.6 4.3-4 0-1.3-.6-2.1-1.9-2.4-1.7-.4-3.5.4-3.4 1.8.1 1.3 1.7 1.6 2.7 1.1 1.2-.6 1.4-2 1.3-3.2"/></svg>';
 const bi=p=>SVG[p]?`<span class="bi">${SVG[p]}</span>`:'';
 const LN={ /* line icons for settings rows */
  apps:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -183,7 +182,7 @@ const API_ICON='<svg viewBox="0 0 24 24"><text x="12" y="15.5" text-anchor="midd
 const BOTFATHER='data:image/jpeg;base64,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';
 const IC={tickOnShare:['#30D158','tick'],lateHours:['#FF9F0A','clock'],showFuture:['#0A84FF','cal'],bots:['img',BOTFATHER],key:['#5E5CE6','api'],
  autoGet:['#32ADE6','dl'],chans:['#BF5AF2','ch'],showOff:['#636366','eyeOff'],install:['#0A84FF','phone'],startTab:['#5E5CE6','home'],
- autoUpdate:['#30D158','refresh'],update:['#0A84FF','up'],backup:['#0A84FF','cloudUp'],restore:['#30D158','cloudDown'],clearMedia:['#FF453A','trash'],fresh:['#FF453A','trash'],groupByChannel:['#BF5AF2','apps'],snapRankX:['#FFD60A','video'],
+ autoUpdate:['#30D158','refresh'],update:['#0A84FF','up'],backup:['#0A84FF','cloudUp'],restore:['#30D158','cloudDown'],clearMedia:['#FF453A','trash'],fresh:['#FF453A','trash'],groupByChannel:['#BF5AF2','apps'],chApps:['#FF9F0A','apps'],
  defaults:['#8E8E93','reset'],photos:['#A3E635','video'],currency:['#30D158','money'],apikeys:['#FF9F0A','api']};
 const ln=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${LN[k]||''}</svg>`;
 
@@ -192,14 +191,14 @@ const COLORS=['#A3E635','#FF453A','#32ADE6','#FFD60A','#30D158','#3B82F6','#8B5C
 const START=[['RankX Football','YouTube','#A3E635'],['Device Guardian','YouTube','#FF453A'],['Xtech Guides','YouTube','#32ADE6'],['Cine Cascade','YouTube','#FFD60A'],
  ['Game Zeus','YouTube','#30D158'],['Vellox Play','YouTube','#3B82F6'],['Gen2 Solutions','YouTube','#8B5CF6'],['Ink Age','YouTube','#BF5AF2'],['Movie Zone','YouTube','#FF9F0A']];
 const SET={ /* every setting, its default and one short help line */
- appsShort:{d:['tt','ig','fb'],t:'Apps for Shorts',h:'Where each Short is shared'},
+ appsShort:{d:['tt','ig','fb','yt'],t:'Apps for Shorts',h:'TikTok, Instagram Reels, Facebook Reels, YouTube Shorts'},
  appsPost:{d:['ig','fb','x'],t:'Apps for post pictures',h:'Where the post picture is shared'},
  appsLink:{d:['wa','tg'],t:'Apps for the video link',h:'Where the YouTube link is shared'},
  tickOnShare:{d:true,t:'Tick when shared',h:'Sharing ticks that app by itself'},
  lateHours:{d:24,t:'Late after',h:'Hours after its time before it turns red',min:1,max:168,u:'h'},
  showFuture:{d:true,t:'Show coming posts',h:'Posts with a later time show on Home too'},
  groupByChannel:{d:true,t:'Group by channel',h:'Home shows one group per channel, videos newest first'},
- snapRankX:{d:true,t:'Snapchat for RankX',h:'RankX Shorts also get a Snapchat button'},
+ chApps:{d:{},t:'App buttons per channel',h:'Turn each app button On/Off per channel (synced with the laptop)'},
  freshFrom:{d:0,t:'Start fresh',h:'Only videos sent after this show'},
  showOff:{d:false,t:'Show turned-off channels',h:'Off channels stay hidden'},
  currency:{d:'$',t:'Money currency',h:'Used on the Money tab'},
@@ -221,7 +220,9 @@ async function load(){const v=await kvGet('kv','data');if(v)Object.assign(S,v);
   S.channels.forEach(c=>{if(/^c\d+$/.test(c.id)){c.id=slug(c.name);}if(!c.color)c.color=COLORS[0];});   // 1.0 -> 1.1
   S.channels=S.channels.filter(c=>!(c.id==='tiktok'&&c.platform==='TikTok'));   // 1.2: TikTok is an app, not a channel
   S.money=S.money||{};S.stats=S.stats||{};S.done=S.done||{};S.ideas=S.ideas||[];S.logos=S.logos||{};S.feed=Object.assign({items:[],files:{},last:0,err:''},S.feed&&S.feed.items?S.feed:{});
-  for(const k in SET)if(!(k in S.settings))S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:SET[k].d;}
+  for(const k in SET)if(!(k in S.settings))S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:(SET[k].d&&typeof SET[k].d==='object')?{}:SET[k].d;
+  if(!S.settings._m18){['appsShort','appsPost','appsLink'].forEach(k=>{S.settings[k]=(S.settings[k]||[]).filter(a=>a!=='sc');});   // 1.8: Snapchat out, YouTube Shorts in
+    if(!S.settings.appsShort.includes('yt'))S.settings.appsShort.push('yt');delete S.settings.snapRankX;S.settings._m18=1;}}
 let svT=null;const save=()=>{clearTimeout(svT);svT=setTimeout(()=>kvPut('kv','data',S),150);};
 const set=k=>S.settings[k];
 const chBy=n=>S.channels.find(c=>c.id===n||c.name.toLowerCase()===String(n).toLowerCase());
@@ -236,11 +237,13 @@ function tasks(){const out=[];
   for(const it of S.feed.items){const c=chBy(it.channel);if(!chOn(c))continue;
     if(fresh&&new Date(it.sent||it.uploaded||it.when||0).getTime()<fresh)continue;   // 1.7: start fresh
     const base={item:it,ch:c};
-    (it.shorts||[]).forEach(s=>out.push({...base,id:it.id+':s'+s.n,kind:'short',label:(it.shorts.length>1?'Short '+s.n:'Short'),when:s.when||it.when,file:s.file,words:s.words||{},apps:(set('snapRankX')!==false&&SNAP_CH(c)&&!set('appsShort').includes('sc'))?[...set('appsShort'),'sc']:set('appsShort')}));
-    (it.posts||[]).forEach(q=>out.push({...base,id:it.id+':sq'+q.n,kind:'post',label:'Square post '+q.n+' ('+(q.files||[]).length+' pictures)',when:q.when||it.when,file:(q.files||[])[0],files:q.files||[],words:q.words||{},apps:set('appsPost')}));   // 1.6
-    if(it.post&&!(it.posts||[]).length)out.push({...base,id:it.id+':post',kind:'post',label:'Post picture',when:it.post.when||it.when,file:it.post.file,words:it.post.words||{},apps:set('appsPost')});
-    if(it.youtube)out.push({...base,id:it.id+':link',kind:'link',label:'Video link',when:it.when,url:it.youtube.url,words:it.share||{},apps:set('appsLink')});}
+    (it.shorts||[]).forEach(s=>out.push({...base,id:it.id+':s'+s.n,kind:'short',label:(it.shorts.length>1?'Short '+s.n:'Short'),when:s.when||it.when,file:s.file,words:s.words||{},apps:chApp(c,set('appsShort'))}));
+    (it.posts||[]).forEach(q=>out.push({...base,id:it.id+':sq'+q.n,kind:'post',label:'Square post '+q.n+' ('+(q.files||[]).length+' pictures)',when:q.when||it.when,file:(q.files||[])[0],files:q.files||[],xFiles:q.x_files||0,words:q.words||{},apps:chApp(c,set('appsPost'))}));   // 1.6
+    if(it.post&&!(it.posts||[]).length)out.push({...base,id:it.id+':post',kind:'post',label:'Post picture',when:it.post.when||it.when,file:it.post.file,words:it.post.words||{},apps:chApp(c,set('appsPost'))});
+    if(it.youtube)out.push({...base,id:it.id+':link',kind:'link',label:'Video link',when:it.when,url:it.youtube.url,words:it.share||{},apps:chApp(c,set('appsLink'))});}
   return out.sort((a,b)=>(a.when||'').localeCompare(b.when||''));}
+/* 1.8: per channel app buttons (Philip: Instagram already shares to Facebook and Threads) */
+const chApp=(c,L)=>{const m=(set('chApps')||{})[c&&c.id]||{};return L.filter(a=>m[a]!==false);};
 const isDone=(t,a)=>!!S.done[t.id+'|'+a];
 const complete=t=>t.apps.every(a=>isDone(t,a));
 const lateOf=t=>t.when&&!complete(t)&&(Date.now()-new Date(t.when))>set('lateHours')*3600e3;
@@ -496,7 +499,7 @@ function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><
   const r=(id,icon,t,small,v,vOn)=>`<button class="set-row" data-s="${id}">${icon_(id,icon)}<span class="t">${t}<small>${small}</small></span>${v!=null?`<span class="v ${vOn?'on':''}">${v}</span>`:''}<span class="chv">›</span></button>`;
   $('p-settings').innerHTML=
    g('Posting',[r('appsShort','tt','Shorts',appsTxt('appsShort')),r('appsPost','ig','Post pictures',appsTxt('appsPost')),r('appsLink','wa','Video link',appsTxt('appsLink')),
-     r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture')),r('groupByChannel','ch','Group by channel',SET.groupByChannel.h,set('groupByChannel')!==false?'On':'Off',set('groupByChannel')!==false),r('snapRankX','video','Snapchat for RankX',SET.snapRankX.h,set('snapRankX')!==false?'On':'Off',set('snapRankX')!==false)])+
+     r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture')),r('groupByChannel','ch','Group by channel',SET.groupByChannel.h,set('groupByChannel')!==false?'On':'Off',set('groupByChannel')!==false),r('chApps','apps','App buttons per channel',SET.chApps.h)])+
    g('Laptop and bots',[r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','API key',key()?'Connected':'Paste it once to connect',key()?'✓':'Connect',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
    g('Channels',[r('chans','ch','Channel settings',S.channels.filter(c=>c.on).length+' on · name, logo, link'),r('apikeys','key','Channel API keys','Kept on the laptop, numbers come here'),r('currency','money','Money currency','Used on the Money tab',set('currency')),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
    g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',money:'Money',ideas:'Home'}[set('startTab')]),
@@ -551,8 +554,8 @@ const fname=t=>slug(t.item.title).slice(0,40)+(t.kind==='short'?'-short-'+t.id.s
 async function copyWords(t,a){const w=t.words[WK[a]]||t.words.instagram||t.words.tiktok||'';try{await navigator.clipboard.writeText(w);return true;}catch(e){return false;}}
 async function share(t,a){const w=t.words[WK[a]]||t.words.instagram||t.words.tiktok||'';const copied=await copyWords(t,a);
   try{if(t.kind==='link'){await navigator.share({text:w});}
-    else if(t.files&&t.files.length>1){toast('Getting '+t.files.length+' pictures…');const fs=[];   // 1.6: the whole square post at once
-      for(let i=0;i<t.files.length;i++){const m=await media(t.files[i],true);if(!m){toast('Connect the laptop key first (Settings).');return;}fs.push(new File([m.blob],slug(t.item.title).slice(0,30)+'-'+(i+1)+'.jpg',{type:'image/jpeg'}));}
+    else if(t.files&&t.files.length>1){const nf=(a==='x'&&t.xFiles)?Math.min(t.xFiles,t.files.length):t.files.length;toast('Getting '+nf+' pictures…');const fs=[];   // 1.6 + 1.8: X gets the first slides only
+      for(let i=0;i<nf;i++){const m=await media(t.files[i],true);if(!m){toast('Connect the laptop key first (Settings).');return;}fs.push(new File([m.blob],slug(t.item.title).slice(0,30)+'-'+(i+1)+'.jpg',{type:'image/jpeg'}));}
       if(navigator.canShare&&navigator.canShare({files:fs}))await navigator.share({files:fs,text:w});else{toast('This phone cannot share files here. Use Save to phone.');return;}}
     else{const m=await media(t.file);if(!m){toast('Connect the laptop key first (Settings).');return;}
       const file=new File([m.blob],fname(t),{type:t.kind==='short'?'video/mp4':'image/jpeg'});
@@ -584,7 +587,8 @@ function chanSub(c){const isNew=!c;c=c||{id:'c'+Date.now(),name:'',platform:'You
 
 function setSub(s){
   if(s==='appsShort'||s==='appsPost'||s==='appsLink')return appsSub(s);
-  if(s==='tickOnShare'||s==='showFuture'||s==='autoUpdate'||s==='autoGet'||s==='showOff'||s==='groupByChannel'||s==='snapRankX')return openSub(SET[s].t,swRow(s,SET[s].t,SET[s].h));
+  if(s==='tickOnShare'||s==='showFuture'||s==='autoUpdate'||s==='autoGet'||s==='showOff'||s==='groupByChannel')return openSub(SET[s].t,swRow(s,SET[s].t,SET[s].h));
+  if(s==='chApps')return chAppsSub();
   if(s==='lateHours')return openSub(SET[s].t,stepRow(s));
   if(s==='startTab')return openSub('Open on',`<div class="set-list">${[['home','Home'],['records','Records'],['channels','Channels'],['money','Money']].map(o=>`<button class="set-row" data-pick="startTab" data-val="${o[0]}"><span class="t">${o[1]}</span>${set('startTab')===o[0]?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
   if(s==='bots')return openSub('Bot feed',swRow('feedOn',SET.feedOn.t,SET.feedOn.h)+stepRow('feedMins')+`<div class="card"><div class="ct">Status</div><div class="muted">${feedLine()}</div>
@@ -634,6 +638,7 @@ document.addEventListener('click',async e=>{const q=sel=>e.target.closest(sel);l
   if(b=q('[data-idel]')){if(confirm('Delete this idea?')){S.ideas=S.ideas.filter(x=>x.id!=b.dataset.idel);save();drawIdeas();}return;}
   if(b=q('#instBtn')){doInstall();return;}});
 document.addEventListener('change',e=>{const el=e.target;
+  if(el.dataset.chapp){const [cid,a]=el.dataset.chapp.split('|');const m=S.settings.chApps=S.settings.chApps||{};m[cid]=m[cid]||{};m[cid][a]=el.checked;S.settings.chAppsUpd=Date.now();save();drawHome();pushChApps();return;}
   if(el.dataset.set){S.settings[el.dataset.set]=el.checked;save();if(el.dataset.set==='feedOn')feed();return;}
   if(el.dataset.appK){const k=el.dataset.appK,a=el.dataset.a;let L=set(k).filter(x=>x!==a);if(el.checked)L=ALLAPPS.filter(x=>L.includes(x)||x===a);S.settings[k]=L;save();}});
 
@@ -654,6 +659,20 @@ async function feed(manual){if(!set('feedOn')||!key()||!navigator.onLine){if(man
 async function autoGet(){for(const t of tasks())if(!complete(t)&&t.file&&t.file.path){try{await media(t.file,true);}catch(e){}}}
 let ft=null;function feedTimer(){clearInterval(ft);ft=setInterval(()=>{if(!document.hidden)feed();},Math.max(1,+set('feedMins'))*60000);}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(feed,1200);});
+
+/* ---------- 1.8: app buttons per channel, synced with the laptop (studiox/settings/app_buttons.json) ---------- */
+function chAppsSub(){const chs=S.channels.filter(c=>c.on);
+  openSub('App buttons per channel',`<p class="muted" style="margin:4px 4px 10px">Every app keeps its button. Turn a button Off for a channel when another app already shares there (Instagram -> Facebook, Threads). Synced with the laptop.</p>`+
+   chs.map(c=>`<div class="sect">${logo(c)} ${esc(c.name)}</div><div class="set-list">${ALLAPPS.map(a=>`<div class="set-row"><span class="i pic">${SVG[a]}</span><span class="t">${PN[a]}</span><label class="sw"><input type="checkbox" data-chapp="${c.id}|${a}" ${(((set('chApps')||{})[c.id]||{})[a])!==false?'checked':''}><span></span></label></div>`).join('')}</div>`).join('')+
+   `<p class="muted" style="margin:10px 4px">${S.settings.chAppsSync?'Synced '+new Date(S.settings.chAppsSync).toTimeString().slice(0,5):'Not synced yet'}</p>`);}
+const CHAPPS_PATH='studiox/settings/app_buttons.json';
+async function pushChApps(){if(!key())return;try{const body={upd:S.settings.chAppsUpd||Date.now(),by:'phone',buttons:S.settings.chApps||{}};
+  await ghPut(CHAPPS_PATH,btoa(unescape(encodeURIComponent(JSON.stringify(body,null,1)))),'Studio X app buttons (phone)');S.settings.chAppsSync=Date.now();save();}catch(e){toast('App buttons not synced: '+String(e.message||e).slice(0,40));}}
+async function pullChApps(){if(!key()||!navigator.onLine)return;try{const j=await ghRaw(CHAPPS_PATH);if(!j)return pushChApps();
+  if((j.upd||0)>(S.settings.chAppsUpd||0)){S.settings.chApps=j.buttons||{};S.settings.chAppsUpd=j.upd;S.settings.chAppsSync=Date.now();save();drawAll();}
+  else if((j.upd||0)<(S.settings.chAppsUpd||0))pushChApps();else{S.settings.chAppsSync=Date.now();save();}}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(pullChApps,2500);});
+setTimeout(pullChApps,4000);
 
 /* ---------- backup ---------- */
 function exportData(){const b=new Blob([JSON.stringify({app:'Studio X',version:VERSION,saved:new Date().toISOString(),data:S})],{type:'application/json'});
