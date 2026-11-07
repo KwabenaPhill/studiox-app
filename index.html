@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 1.8</title>
+<title>Studio X 1.9</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -151,7 +151,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='1.8';
+VERSION='1.9';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -191,6 +191,7 @@ const COLORS=['#A3E635','#FF453A','#32ADE6','#FFD60A','#30D158','#3B82F6','#8B5C
 const START=[['RankX Football','YouTube','#A3E635'],['Device Guardian','YouTube','#FF453A'],['Xtech Guides','YouTube','#32ADE6'],['Cine Cascade','YouTube','#FFD60A'],
  ['Game Zeus','YouTube','#30D158'],['Vellox Play','YouTube','#3B82F6'],['Gen2 Solutions','YouTube','#8B5CF6'],['Ink Age','YouTube','#BF5AF2'],['Movie Zone','YouTube','#FF9F0A']];
 const SET={ /* every setting, its default and one short help line */
+ remind:{d:true,t:'Reminders',h:'A reminder at each post time with the post ready to share'},
  appsShort:{d:['tt','ig','fb','yt'],t:'Apps for Shorts',h:'TikTok, Instagram Reels, Facebook Reels, YouTube Shorts'},
  appsPost:{d:['ig','fb','x'],t:'Apps for post pictures',h:'Where the post picture is shared'},
  appsLink:{d:['wa','tg'],t:'Apps for the video link',h:'Where the YouTube link is shared'},
@@ -237,10 +238,10 @@ function tasks(){const out=[];
   for(const it of S.feed.items){const c=chBy(it.channel);if(!chOn(c))continue;
     if(fresh&&new Date(it.sent||it.uploaded||it.when||0).getTime()<fresh)continue;   // 1.7: start fresh
     const base={item:it,ch:c};
-    (it.shorts||[]).forEach(s=>out.push({...base,id:it.id+':s'+s.n,kind:'short',label:(it.shorts.length>1?'Short '+s.n:'Short'),when:s.when||it.when,file:s.file,words:s.words||{},apps:chApp(c,set('appsShort'))}));
-    (it.posts||[]).forEach(q=>out.push({...base,id:it.id+':sq'+q.n,kind:'post',label:'Square post '+q.n+' ('+(q.files||[]).length+' pictures)',when:q.when||it.when,file:(q.files||[])[0],files:q.files||[],xFiles:q.x_files||0,words:q.words||{},apps:chApp(c,set('appsPost'))}));   // 1.6
-    if(it.post&&!(it.posts||[]).length)out.push({...base,id:it.id+':post',kind:'post',label:'Post picture',when:it.post.when||it.when,file:it.post.file,words:it.post.words||{},apps:chApp(c,set('appsPost'))});
-    if(it.youtube)out.push({...base,id:it.id+':link',kind:'link',label:'Video link',when:it.when,url:it.youtube.url,words:it.share||{},apps:chApp(c,set('appsLink'))});}
+    (it.shorts||[]).forEach(s=>out.push({...base,id:it.id+':s'+s.n,kind:'short',label:'Shorts · '+(it.shorts.length>1?'Short '+s.n:'Short'),when:s.when||it.when,file:s.file,words:s.words||{},apps:chApp(c,set('appsShort'))}));
+    (it.posts||[]).forEach(q=>out.push({...base,id:it.id+':sq'+q.n,kind:'post',label:'Posts · Post '+q.n+' ('+(q.files||[]).length+' pictures)',when:q.when||it.when,file:(q.files||[])[0],files:q.files||[],xFiles:q.x_files||0,words:q.words||{},apps:chApp(c,set('appsPost'))}));   // 1.6
+    if(it.post&&!(it.posts||[]).length)out.push({...base,id:it.id+':post',kind:'post',label:'Posts · Post picture',when:it.post.when||it.when,file:it.post.file,words:it.post.words||{},apps:chApp(c,set('appsPost'))});
+    if(it.youtube)out.push({...base,id:it.id+':link',kind:'link',label:'YouTube · Video link',when:it.when,url:it.youtube.url,words:it.share||{},apps:chApp(c,set('appsLink'))});}
   return out.sort((a,b)=>(a.when||'').localeCompare(b.when||''));}
 /* 1.8: per channel app buttons (Philip: Instagram already shares to Facebook and Threads) */
 const chApp=(c,L)=>{const m=(set('chApps')||{})[c&&c.id]||{};return L.filter(a=>m[a]!==false);};
@@ -272,6 +273,7 @@ function drawHome(){const T=tasks().filter(t=>homeCh==='all'||t.ch.id===homeCh);
   <div class="summary"><button class="sbox on" data-box="open"><div class="lbl">To post</div><div class="big">${open.length}</div></button><button class="sbox" data-box="late"><div class="lbl">Late</div><div class="big ${late?'red':''}">${late}</div></button><button class="sbox" data-box="shared"><div class="lbl">Shared 7d</div><div class="big">${doneWk}</div></button></div>
   <div class="chips"><button class="chip all ${homeCh==='all'?'on':''}" data-hch="all">All</button>${chs.map(c=>`<button class="chip ${homeCh===c.id?'on':''} ${c.pin?'pin':''}" data-hch="${c.id}" data-lp="${c.id}">${logo(c)}${esc(c.name)}</button>`).join('')}</div>
   ${selC?chanCard(selC,T):''}
+  ${todayCard(open)}${waitCard()}${newsCard()}
   ${list.length?(set('groupByChannel')!==false?groupedHome(list):`<div class="card"><div class="ct">To do now</div>${list.map((t,i)=>todoRow(t,i===0)).join('')}</div>`):`<div class="card"><div class="ct">To do now</div><div class="empty">${S.feed.items.length?'All shared ✓':feedHelp()}</div></div>`}
   <p class="muted" style="text-align:center">${feedLine()}</p>`;
   const nc=document.querySelector('#p-home .chips');if(nc)nc.scrollLeft=keepX;
@@ -500,7 +502,7 @@ function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><
   $('p-settings').innerHTML=
    g('Posting',[r('appsShort','tt','Shorts',appsTxt('appsShort')),r('appsPost','ig','Post pictures',appsTxt('appsPost')),r('appsLink','wa','Video link',appsTxt('appsLink')),
      r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture')),r('groupByChannel','ch','Group by channel',SET.groupByChannel.h,set('groupByChannel')!==false?'On':'Off',set('groupByChannel')!==false),r('chApps','apps','App buttons per channel',SET.chApps.h)])+
-   g('Laptop and bots',[r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','API key',key()?'Connected':'Paste it once to connect',key()?'✓':'Connect',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
+   g('Laptop and bots',[r('botset','laptop','Channel bot settings',botSetLine()),r('remind','clock','Reminders',SET.remind.h,set('remind')?'On':'Off',set('remind')),r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','API key',key()?'Connected':'Paste it once to connect',key()?'✓':'Connect',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
    g('Channels',[r('chans','ch','Channel settings',S.channels.filter(c=>c.on).length+' on · name, logo, link'),r('apikeys','key','Channel API keys','Kept on the laptop, numbers come here'),r('currency','money','Money currency','Used on the Money tab',set('currency')),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
    g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',money:'Money',ideas:'Home'}[set('startTab')]),
      r('autoUpdate','up','Update by itself',SET.autoUpdate.h,set('autoUpdate')?'On':'Off',set('autoUpdate')),r('update','reset','Check for update','v'+VERSION)])+
@@ -589,6 +591,8 @@ function setSub(s){
   if(s==='appsShort'||s==='appsPost'||s==='appsLink')return appsSub(s);
   if(s==='tickOnShare'||s==='showFuture'||s==='autoUpdate'||s==='autoGet'||s==='showOff'||s==='groupByChannel')return openSub(SET[s].t,swRow(s,SET[s].t,SET[s].h));
   if(s==='chApps')return chAppsSub();
+  if(s==='botset')return botSetList();
+  if(s==='remind')return openSub(SET.remind.t,swRow('remind',SET.remind.t,SET.remind.h)+`<div class="row"><button class="btn out" id="rmAsk">Allow notifications</button></div>`,()=>{$('rmAsk').onclick=()=>{try{Notification.requestPermission().then(p=>toast(p==='granted'?'Notifications on ✓':'Not allowed'));}catch(e){toast('Not possible here');}};});
   if(s==='lateHours')return openSub(SET[s].t,stepRow(s));
   if(s==='startTab')return openSub('Open on',`<div class="set-list">${[['home','Home'],['records','Records'],['channels','Channels'],['money','Money']].map(o=>`<button class="set-row" data-pick="startTab" data-val="${o[0]}"><span class="t">${o[1]}</span>${set('startTab')===o[0]?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
   if(s==='bots')return openSub('Bot feed',swRow('feedOn',SET.feedOn.t,SET.feedOn.h)+stepRow('feedMins')+`<div class="card"><div class="ct">Status</div><div class="muted">${feedLine()}</div>
@@ -654,6 +658,7 @@ async function feed(manual){if(!set('feedOn')||!key()||!navigator.onLine){if(man
       if(S.feed.files['stats/'+f.name]===f.sha)continue;const j=await (await api('studiox/stats/'+f.name,true)).json();const c=chBy(j.channel||'');
       if(c){const v={};['subs','views','hours','shorts'].forEach(k=>{if(j[k]!=null)v[k]=+j[k];});setStats(c.id,v,'bot');if(j.monetized!=null)mOf(c.id).on=!!j.monetized;ch=true;}
       S.feed.files['stats/'+f.name]=f.sha;}}}catch(_){}
+    try{ch=(await extraPull())||ch;}catch(_){}
     S.feed.last=Date.now();S.feed.err='';save();if(ch){drawAll();if(set('autoGet'))autoGet();}else drawHome();if(manual)toast(ch?'New posts ✓':'Up to date ✓');}
   catch(e){S.feed.err=String(e.message||e).slice(0,50);save();drawHome();if(manual)toast('Bot feed: '+S.feed.err);}}
 async function autoGet(){for(const t of tasks())if(!complete(t)&&t.file&&t.file.path){try{await media(t.file,true);}catch(e){}}}
@@ -692,6 +697,60 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(
   r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='activated'){toast('APP UPDATED ✓');setTimeout(()=>location.reload(),900);}});});}).catch(()=>{});}
 
 load().then(()=>{if(set('startTab')==='ideas')S.settings.startTab='home';drawAll();{const st=set('startTab')||'home';curTab=st;try{history.replaceState({tab:st},'');}catch(e){}showTab(st,true);}feedTimer();setTimeout(feed,1500);});
+/* ---------- 1.9 (Philip, 7 Nov 2026): today in time order, waiting kits, news, every bot setting two ways, reminders ---------- */
+function todayCard(open){const now=new Date();const day=now.toDateString();
+  const L=open.filter(t=>t.when&&(new Date(t.when).toDateString()===day||lateOf(t))).sort((a,b)=>(a.when||'').localeCompare(b.when||''));
+  if(!L.length)return '';
+  return `<div class="card"><div class="ct">Today</div>${L.map(t=>`<button class="set-row" data-task="${t.id}" style="padding:8px 2px">${logo(t.ch)}<span class="t">${esc(t.label)}<small>${esc(t.item.title||'')}</small></span><span class="tm ${lateOf(t)||new Date(t.when)<now?'late':''}">${new Date(t.when).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</span></button>`).join('')}</div>`;}
+function waitCard(){const W=[];Object.values(S.extra||{}).forEach(x=>(x.waiting||[]).forEach(w=>W.push({...w,channel:x.channel})));
+  if(!W.length)return '';
+  return `<div class="card" style="border-color:#e07000"><div class="ct" style="color:#ff9f0a">🟠 Waiting for thumbnail (${W.length})</div>${W.map((w,i)=>`<div class="todo"><div class="ic">${w.base&&w.base.path?`<img data-m="${w.base.path}" alt="">`:'🖼️'}</div><div class="tx">
+    <div class="tt" style="cursor:default">${esc(w.title||'')}<span class="tm" style="color:#ff9f0a">${esc(w.status||'Waiting')}</span></div><div class="pv">${esc(w.channel||'')}</div>
+    <div class="mini"><button data-kitcopy="${i}">${bi('copy')}Copy prompt</button>${w.what?`<button data-kitwhat="${i}">${bi('copy')}What to add</button>`:''}</div></div></div>`).join('')}</div>`;}
+const kitList=()=>{const W=[];Object.values(S.extra||{}).forEach(x=>(x.waiting||[]).forEach(w=>W.push(w)));return W;};
+function newsCard(){const N=[];Object.values(S.extra||{}).forEach(x=>(x.news||[]).forEach(n=>N.push({...n,channel:x.channel})));
+  N.sort((a,b)=>(b.t||'').localeCompare(a.t||''));const L=N.filter(n=>Date.now()-new Date(n.t)<7*864e5).slice(0,3);
+  return L.length?`<div class="card"><div class="ct">News</div>${L.map(n=>`<div class="muted" style="padding:4px 2px">📚 ${esc(n.text)} <small>· ${niceTime(n.t)}</small></div>`).join('')}</div>`:'';}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-kitcopy],[data-kitwhat]');if(!a)return;const w=kitList()[+(a.dataset.kitcopy||a.dataset.kitwhat)];if(!w)return;
+  const t=a.dataset.kitcopy!=null?w.prompt:w.what;try{navigator.clipboard.writeText(t||'');toast('Copied ✓');}catch(_){prompt('Copy:',t||'');}},true);
+async function extraPull(){let ch=false;S.extra=S.extra||{};S.botset=S.botset||{};
+  for(const [dir,store] of [['studiox/extra',S.extra],['studiox/settings',S.botset]]){const r=await api(dir);if(!r.ok)continue;
+    for(const f of (await r.json()).filter(x=>x.name.endsWith('.json')&&x.name!=='app_buttons.json')){const k=dir+'/'+f.name;if(S.feed.files[k]===f.sha)continue;
+      const j=await (await api(k,true)).json();const mine=store[f.name];
+      if(!(dir==='studiox/settings'&&mine&&mine.by==='phone'&&(mine.upd||0)>(j.upd||0))){store[f.name]=j;ch=true;}S.feed.files[k]=f.sha;}}
+  return ch;}
+function botSetLine(){const n=Object.keys(S.botset||{}).length;return n?n+' channel'+(n>1?'s':'')+' · synced with the laptop':'Waiting for the bots';}
+function botSetList(){const L=Object.entries(S.botset||{});
+  openSub('Channel bot settings',`<p class="muted" style="margin:0 4px 10px">Every setting of each channel bot, the same as on the laptop. Change it here: the laptop takes it in a few minutes. Newest change wins.</p>
+   <div class="set-list">${L.map(([f,j])=>{const c=chBy(j.channel||'');return `<button class="set-row" data-botset="${esc(f)}">${c?logo(c,'big'):''}<span class="t">${esc(j.channel||f)}<small>${(j.groups||[]).length} groups · ${j.by==='phone'?'sent from phone, waiting for the laptop':'Synced '+(j.synced||'')}</small></span><span class="chv">›</span></button>`;}).join('')||'<div class="empty">No bot has sent its settings yet.</div>'}</div>`);}
+function botSetPage(f){const j=(S.botset||{})[f];if(!j)return;
+  const times={};(j.groups||[]).forEach(g=>g.items.forEach(it=>{if(it.kind==='time'&&it.value)(times[it.value]=times[it.value]||[]).push(it.label);}));
+  const clash=Object.entries(times).filter(([t,L])=>L.length>1);
+  openSub(j.channel||'Bot settings',`${clash.map(([t,L])=>`<div class="card" style="border-color:#e07000"><div class="ct" style="color:#ff9f0a">Same time ${t}</div><div class="muted">${L.map(esc).join(' + ')}</div>
+     <div class="row"><button class="btn out" data-clash="keep">Keep both</button><button class="btn out" data-clash="${esc(t)}">Move 15 min</button></div></div>`).join('')}`+
+   (j.groups||[]).map((g,gi)=>`<div class="sect">${esc(g.name)}</div><div class="set-list">${g.items.map((it,ii)=>{const id=gi+'.'+ii;
+     const ctl=it.kind==='bool'?`<label class="sw"><input type="checkbox" data-bs="${id}" ${it.value?'checked':''}><span></span></label>`:
+       it.kind==='choice'&&it.choices?`<select data-bs="${id}" class="inp" style="max-width:46%">${it.choices.map(o=>`<option ${String(o)===String(it.value)?'selected':''}>${esc(String(o))}</option>`).join('')}</select>`:
+       `<input data-bs="${id}" class="inp" style="max-width:46%" type="${it.kind==='time'?'time':it.kind==='num'?'number':'text'}" value="${esc(String(it.value??''))}">`;
+     return `<div class="set-row"><span class="t">${esc(it.label)}<small>${esc(it.help||'')}</small></span>${ctl}</div>`;}).join('')}</div>`).join('')+
+   `<p class="muted" style="margin:10px 4px">${j.by==='phone'?'Sent from this phone · the laptop takes it next':'Synced '+(j.synced||'')}</p>`,()=>{botCur=f;});}
+let botCur='';
+function botSet(id,val){const j=S.botset[botCur];if(!j)return;const [gi,ii]=id.split('.').map(Number);const it=j.groups[gi].items[ii];
+  it.value=it.kind==='num'?(+val):it.kind==='bool'?!!val:val;j.upd=Date.now();j.by='phone';save();botPush(botCur);}
+async function botPush(f){const j=S.botset[f];try{await ghPut('studiox/settings/'+f,btoa(unescape(encodeURIComponent(JSON.stringify(j,null,1)))),'Studio X: '+(j.channel||f)+' settings (phone)');
+  S.feed.files['studiox/settings/'+f]='';save();toast('Sent to the laptop ✓');}catch(e){toast('Not sent: '+String(e.message||e).slice(0,40));}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-botset]');if(b){botSetPage(b.dataset.botset);return;}
+  const c=e.target.closest('[data-clash]');if(c&&botCur){const t=c.dataset.clash;if(t==='keep'){toast('Kept ✓');return;}const j=S.botset[botCur];let moved=false;
+    j.groups.forEach(g=>g.items.forEach(it=>{if(!moved&&it.kind==='time'&&it.value===t){moved=true;}else if(moved&&it.kind==='time'&&it.value===t){const [h,m]=t.split(':').map(Number);const d=new Date(2000,0,1,h,m+15);it.value=d.toTimeString().slice(0,5);moved='done';}}));
+    j.upd=Date.now();j.by='phone';save();botPush(botCur);botSetPage(botCur);}},true);
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset.bs==null)return;botSet(el.dataset.bs,el.type==='checkbox'?el.checked:el.value);},true);
+/* 270: a reminder at each post time with the post ready to share */
+function remindTick(){if(!set('remind'))return;const last=+(S.remLast||Date.now()-60000);const now=Date.now();
+  const due=tasks().filter(t=>t.when&&!complete(t)&&new Date(t.when).getTime()>last&&new Date(t.when).getTime()<=now);
+  S.remLast=now;save();if(!due.length)return;drawHome();
+  due.forEach(t=>{const txt=(t.ch?t.ch.name+': ':'')+t.label+' · '+(t.item.title||'');toast('⏰ '+txt);
+    try{if(Notification.permission==='granted')navigator.serviceWorker.getRegistration().then(r=>r&&r.showNotification('Studio X · time to post',{body:txt,tag:t.id,icon:'icons/icon-192.png'}));}catch(_){}});}
+setInterval(remindTick,60000);setTimeout(remindTick,5000);
 window.__sx={get S(){return S;},showTab,feed,tasks,drawAll};
 })();
 </script>
