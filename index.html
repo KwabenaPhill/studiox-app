@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 2.0</title>
+<title>Studio X 2.2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -164,7 +164,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='2.0';
+VERSION='2.2';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -202,7 +202,7 @@ const ln=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
 /* ---------- channels and settings ---------- */
 const COLORS=['#A3E635','#FF453A','#32ADE6','#FFD60A','#30D158','#3B82F6','#8B5CF6','#BF5AF2','#FF9F0A','#F472B6','#22D3EE','#94A3B8'];
 const START=[['RankX Football','YouTube','#A3E635'],['Device Guardian','YouTube','#FF453A'],['Xtech Guides','YouTube','#32ADE6'],['Cine Cascade','YouTube','#FFD60A'],
- ['Game Zeus','YouTube','#30D158'],['Vellox Play','YouTube','#3B82F6'],['Gen2 Solutions','YouTube','#8B5CF6'],['Ink Age','YouTube','#BF5AF2'],['Movie Zone','YouTube','#FF9F0A']];
+ ['Game Zeus','YouTube','#30D158'],['Gen2 Tech','YouTube','#8B5CF6'],['Ink Age','YouTube','#BF5AF2'],['Movie Zone','YouTube','#FF9F0A']];
 const SET={ /* every setting, its default and one short help line */
  remind:{d:true,t:'Reminders',h:'A reminder at each post time with the post ready to share'},
  appsShort:{d:['tt','ig','fb','yt'],t:'Apps for Shorts',h:'TikTok, Instagram Reels, Facebook Reels, YouTube Shorts'},
@@ -233,6 +233,8 @@ async function load(){const v=await kvGet('kv','data');if(v)Object.assign(S,v);
   if(!S.channels.length)S.channels=START.map(c=>({id:slug(c[0]),name:c[0],platform:c[1],color:c[2],url:'',on:true}));
   S.channels.forEach(c=>{if(/^c\d+$/.test(c.id)){c.id=slug(c.name);}if(!c.color)c.color=COLORS[0];});   // 1.0 -> 1.1
   S.channels=S.channels.filter(c=>!(c.id==='tiktok'&&c.platform==='TikTok'));   // 1.2: TikTok is an app, not a channel
+  S.channels=S.channels.filter(c=>!(c.id==='vellox-play'||/^vellox play$/i.test(c.name||'')));   // 2.1 (F92): Vellox Play = Game Zeus (old name)
+  S.channels.forEach(c=>{if(/^gen2 solutions$/i.test(c.name||''))c.name='Gen2 Tech';});   // 2.1 (F92): brand plan 14 Nov (the id stays: records kept)
   S.money=S.money||{};S.stats=S.stats||{};S.done=S.done||{};S.ideas=S.ideas||[];S.logos=S.logos||{};S.feed=Object.assign({items:[],files:{},last:0,err:''},S.feed&&S.feed.items?S.feed:{});
   for(const k in SET)if(!(k in S.settings))S.settings[k]=Array.isArray(SET[k].d)?[...SET[k].d]:(SET[k].d&&typeof SET[k].d==='object')?{}:SET[k].d;
   if(!S.settings._m20){S.settings.groupByChannel=false;S.settings._m20=1;}   // 2.0: the Match Vision To do now list
@@ -292,8 +294,8 @@ function drawHome(){const T=tasks().filter(t=>homeCh==='all'||t.ch.id===homeCh);
   <div class="summary"><button class="sbox on" data-box="open"><div class="lbl">To post</div><div class="big">${open.length}</div></button><button class="sbox" data-box="late"><div class="lbl">Late</div><div class="big ${late?'red':''}">${late}</div></button><button class="sbox" data-box="shared"><div class="lbl">Shared 7d</div><div class="big">${doneWk}</div></button></div>
   <div class="chips"><button class="chip all ${homeCh==='all'?'on':''}" data-hch="all">All</button>${chs.map(c=>`<button class="chip ${homeCh===c.id?'on':''} ${c.pin?'pin':''}" data-hch="${c.id}" data-lp="${c.id}">${logo(c)}${esc(c.name)}</button>`).join('')}</div>
   ${selC?chanCard(selC,T):''}
-  ${newsCard()}
   ${list.length?(set('groupByChannel')!==false?groupedHome(list):`<div class="card"><div class="ct">To do now</div>${list.map((t,i)=>todoRow(t,i===0)).join('')}</div>`):`<div class="card"><div class="ct">To do now</div><div class="empty">${S.feed.items.length?'All shared ✓':feedHelp()}</div></div>`}
+  ${newsCard()}
   <p class="muted" style="text-align:center">${feedLine()}</p>`;
   const nc=document.querySelector('#p-home .chips');if(nc)nc.scrollLeft=keepX;
   $('lateDot').style.display=late?'block':'none';$('lateDot').textContent=late;fillThumbs();}
@@ -1006,6 +1008,42 @@ function voiceTyping(btn,box,tell){
   window.addEventListener('online',()=>run());
   setTimeout(run,5000);
   draw();
+})();
+</script>
+<script>
+/* PIC VIEW (Philip, 15 Nov 2026, Fix Hub #1794759022709): in Fix notes, tap any picture to see it full size.
+   Voice recording keeps going: the viewer only sits on top, it never touches the Speak button or the microphone.
+   ‹ › = other pictures of the same note, tap the dark part or ✕ to go back. */
+(function(){
+  if(window.__fxPicView)return;window.__fxPicView=1;
+  let L=[],i=0,v=null;
+  function make(){
+    v=document.createElement('div');v.id='fxPicView';
+    v.style.cssText='display:none;position:fixed;inset:0;z-index:2147483600;background:rgba(0,0,0,.94);flex-direction:column;align-items:center;justify-content:center;padding:12px';
+    const b='background:#1c1c1f;color:#fff;border:1px solid #333;border-radius:12px;font:700 16px system-ui,sans-serif;padding:10px 16px;min-width:48px;cursor:pointer';
+    v.innerHTML='<div id="fxPicRec" style="position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:14px;color:#ff5a5f;font:700 13px system-ui,sans-serif"></div>'+
+      '<img id="fxPicImg" alt="" style="max-width:100%;max-height:80vh;object-fit:contain;border-radius:10px;touch-action:pinch-zoom">'+
+      '<div style="display:flex;gap:10px;align-items:center;margin-top:14px"><button data-pv="-1" style="'+b+'">‹</button><span id="fxPicN" style="color:#bbb;font:600 13px system-ui,sans-serif;min-width:44px;text-align:center"></span><button data-pv="1" style="'+b+'">›</button><button data-pv="0" style="'+b+'">✕ Close</button></div>';
+    document.body.appendChild(v);
+    v.addEventListener('click',e=>{e.stopPropagation();const k=e.target.closest('[data-pv]');
+      if(k){const d=+k.dataset.pv;if(!d){hide();return;}i=(i+d+L.length)%L.length;show();return;}
+      if(e.target===v)hide();});
+    let x0=null;v.addEventListener('touchstart',e=>{x0=e.touches.length===1?e.touches[0].clientX:null;},{passive:true});
+    v.addEventListener('touchend',e=>{if(x0===null||L.length<2)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>60){i=(i+(dx<0?1:-1)+L.length)%L.length;show();}},{passive:true});
+  }
+  function rec(){const s=document.getElementById('fxSheet');return !!(s&&s.querySelector('.rec'));}
+  function show(){v.querySelector('#fxPicImg').src=L[i];v.querySelector('#fxPicN').textContent=L.length>1?(i+1)+' / '+L.length:'';
+    v.querySelectorAll('[data-pv="-1"],[data-pv="1"]').forEach(x=>x.style.visibility=L.length>1?'visible':'hidden');
+    v.querySelector('#fxPicRec').textContent=rec()?'🎤 Still recording':'';}
+  function hide(){if(v)v.style.display='none';}
+  setInterval(()=>{if(v&&v.style.display==='flex')v.querySelector('#fxPicRec').textContent=rec()?'🎤 Still recording':'';},1000);
+  document.addEventListener('click',e=>{
+    const im=e.target&&e.target.closest&&e.target.closest('#fxSheet img');if(!im||!im.src)return;
+    e.preventDefault();e.stopPropagation();
+    const box=im.parentElement.closest('#fxNewPics,.note,div')||im.parentElement;
+    L=[...box.querySelectorAll('img')].map(x=>x.src).filter(Boolean);i=Math.max(0,L.indexOf(im.src));if(!L.length)L=[im.src];
+    if(!v)make();v.style.display='flex';show();},true);
+  document.addEventListener('keydown',e=>{if(v&&v.style.display==='flex'){if(e.key==='Escape')hide();else if(e.key==='ArrowRight'&&L.length>1){i=(i+1)%L.length;show();}else if(e.key==='ArrowLeft'&&L.length>1){i=(i-1+L.length)%L.length;show();}}});
 })();
 </script>
 
