@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Studio X 2.2</title>
+<title>Studio X 2.3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -164,7 +164,7 @@ button.sbox{width:100%;font-family:var(--f);color:#fff;cursor:pointer}
 
 <script>
 (function(){
-VERSION='2.2';
+VERSION='2.3';
 const $=id=>document.getElementById(id);
 $('tver').textContent='v'+VERSION;
 $('hDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
@@ -523,7 +523,7 @@ function drawSettings(){const g=(title,rows)=>`<div class="sect">${title}</div><
   $('p-settings').innerHTML=
    g('Posting',[r('appsShort','tt','Shorts',appsTxt('appsShort')),r('appsPost','ig','Post pictures',appsTxt('appsPost')),r('appsLink','wa','Video link',appsTxt('appsLink')),
      r('tickOnShare','tick','Tick when shared',SET.tickOnShare.h,set('tickOnShare')?'On':'Off',set('tickOnShare')),r('lateHours','clock','Late after',SET.lateHours.h,set('lateHours')+' h'),r('showFuture','eye','Coming posts',SET.showFuture.h,set('showFuture')?'On':'Off',set('showFuture')),r('groupByChannel','ch','Group by channel',SET.groupByChannel.h,set('groupByChannel')!==false?'On':'Off',set('groupByChannel')!==false),r('chApps','apps','App buttons per channel',SET.chApps.h)])+
-   g('Laptop and bots',[r('botset','laptop','Channel bot settings',botSetLine()),r('remind','clock','Reminders',SET.remind.h,set('remind')?'On':'Off',set('remind')),r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','API key',key()?'Connected':'Paste it once to connect',key()?'✓':'Connect',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
+   g('Laptop and bots',[r('botset','laptop','Channel bot settings',botSetLine()),r('tplx','laptop','Channel templates',tplLine()),r('remind','clock','Reminders',SET.remind.h,set('remind')?'On':'Off',set('remind')),r('bots','laptop','Bot feed',feedLine(),set('feedOn')?'On':'Off',set('feedOn')),r('key','key','API key',key()?'Connected':'Paste it once to connect',key()?'✓':'Connect',!!key()),r('autoGet','dl','Get videos by itself',SET.autoGet.h,set('autoGet')?'On':'Off',set('autoGet'))])+
    g('Channels',[r('chans','ch','Channel settings',S.channels.filter(c=>c.on).length+' on · name, logo, link'),r('apikeys','key','Channel API keys','Kept on the laptop, numbers come here'),r('currency','money','Money currency','Used on the Money tab',set('currency')),r('showOff','eye','Turned-off channels',SET.showOff.h,set('showOff')?'Show':'Hide')])+
    g('App',[r('install','phone','Install app',standalone()?'Installed ✓':'Add Studio X to your home screen'),r('startTab','home','Open on',SET.startTab.h,{home:'Home',records:'Records',channels:'Channels',money:'Money',ideas:'Home'}[set('startTab')]),
      r('autoUpdate','up','Update by itself',SET.autoUpdate.h,set('autoUpdate')?'On':'Off',set('autoUpdate')),r('update','reset','Check for update','v'+VERSION)])+
@@ -614,6 +614,7 @@ function setSub(s){
   if(s==='tickOnShare'||s==='showFuture'||s==='autoUpdate'||s==='autoGet'||s==='showOff'||s==='groupByChannel')return openSub(SET[s].t,swRow(s,SET[s].t,SET[s].h));
   if(s==='chApps')return chAppsSub();
   if(s==='botset')return botSetList();
+  if(s==='tplx')return tplList();
   if(s==='remind')return openSub(SET.remind.t,swRow('remind',SET.remind.t,SET.remind.h)+`<div class="row"><button class="btn out" id="rmAsk">Allow notifications</button></div>`,()=>{$('rmAsk').onclick=()=>{try{Notification.requestPermission().then(p=>toast(p==='granted'?'Notifications on ✓':'Not allowed'));}catch(e){toast('Not possible here');}};});
   if(s==='lateHours')return openSub(SET[s].t,stepRow(s));
   if(s==='startTab')return openSub('Open on',`<div class="set-list">${[['home','Home'],['records','Records'],['channels','Channels'],['money','Money']].map(o=>`<button class="set-row" data-pick="startTab" data-val="${o[0]}"><span class="t">${o[1]}</span>${set('startTab')===o[0]?'<span class="v on">✓</span>':''}</button>`).join('')}</div>`);
@@ -760,12 +761,32 @@ function newsCard(){const N=[];Object.values(S.extra||{}).forEach(x=>(x.news||[]
   return L.length?`<div class="card"><div class="ct">News</div>${L.map(n=>`<div class="muted" style="padding:4px 2px">📚 ${esc(n.text)} <small>· ${niceTime(n.t)}</small></div>`).join('')}</div>`:'';}
 document.addEventListener('click',e=>{const a=e.target.closest('[data-kitcopy],[data-kitwhat]');if(!a)return;const w=kitList()[+(a.dataset.kitcopy||a.dataset.kitwhat)];if(!w)return;
   const t=a.dataset.kitcopy!=null?w.prompt:w.what;try{navigator.clipboard.writeText(t||'');toast('Copied ✓');}catch(_){prompt('Copy:',t||'');}},true);
-async function extraPull(){let ch=false;S.extra=S.extra||{};S.botset=S.botset||{};
-  for(const [dir,store] of [['studiox/extra',S.extra],['studiox/settings',S.botset]]){const r=await api(dir);if(!r.ok)continue;
+async function extraPull(){let ch=false;S.extra=S.extra||{};S.botset=S.botset||{};S.tplx=S.tplx||{};
+  for(const [dir,store] of [['studiox/extra',S.extra],['studiox/settings',S.botset],['studiox/template',S.tplx]]){const r=await api(dir);if(!r.ok)continue;
     for(const f of (await r.json()).filter(x=>x.name.endsWith('.json')&&x.name!=='app_buttons.json')){const k=dir+'/'+f.name;if(S.feed.files[k]===f.sha)continue;
       const j=await (await api(k,true)).json();const mine=store[f.name];
       if(!(dir==='studiox/settings'&&mine&&mine.by==='phone'&&(mine.upd||0)>(j.upd||0))){store[f.name]=j;ch=true;}S.feed.files[k]=f.sha;}}
   return ch;}
+/* 2.3 (Philip 16 Nov: "a menu ... each template ... the picture, the text under it ... if one game wins, if two games
+   win, this is how it will be ... anything we change on the laptop should reflect on the app"): every channel's TEMPLATE
+   from its laptop bot (studiox/template/<slug>.json): each post / part, when, its rule, its pictures, its words, every case,
+   its Settings NOW and the last changes. Change a Setting in "Channel bot settings" or on the laptop (Template.bat). */
+function tplLine(){const n=Object.keys(S.tplx||{}).length;return n?n+' channel'+(n>1?'s':'')+' · from the laptop':'Waiting for the bots';}
+function tplList(){const L=Object.entries(S.tplx||{});
+  openSub('Channel templates',`<p class="muted" style="margin:0 4px 10px">Every post of each channel: when it goes out, its picture, its words, every case and its settings, the same as the laptop's Template window.</p>
+   <div class="set-list">${L.map(([f,j])=>{const c=chBy(j.channel||'');return `<button class="set-row" data-tplx="${esc(f)}">${c?logo(c,'big'):''}<span class="t">${esc(j.channel||f)}<small>${(j.cards||[]).length} posts · updated ${esc(j.made||'')}</small></span><span class="chv">›</span></button>`;}).join('')||'<div class="empty">Waiting for the bots (a few minutes).</div>'}</div>`);}
+function tplPage(f){const j=(S.tplx||{})[f];if(!j)return;const groups=[];for(const c of j.cards||[]){let g=groups.find(x=>x.w===c.where);if(!g){g={w:c.where,L:[]};groups.push(g);}g.L.push(c);}
+  const box='white-space:pre-wrap;background:#1c1c1f;border-radius:10px;padding:10px;margin:4px 0 8px;font-size:14px;line-height:1.35';
+  openSub(j.channel||'Template',groups.map(g=>`<div class="sect">${esc(g.w)}</div>`+g.L.map(c=>`<div class="card"><div class="ct">${esc(c.title)}</div>`+
+    (c.when?`<div class="muted" style="margin:2px 0">🕒 ${esc(c.when)}</div>`:'')+(c.rule?`<div class="muted" style="margin:2px 0 8px;white-space:pre-wrap">${esc(c.rule)}</div>`:'')+
+    ((c.pics||[]).length?`<div style="display:flex;gap:8px;overflow-x:auto;margin:6px 0">${c.pics.map(p=>`<img data-m="${esc(p)}" alt="" style="${c.pics.length>1?'width:70%;flex:0 0 70%':'width:100%'};border-radius:12px;background:#111;min-height:60px">`).join('')}</div>`:'')+
+    (c.caption?`<div style="${box}">${esc(c.caption)}</div>`:'')+
+    ((c.cases||[]).length?`<div class="sect" style="margin:8px 0 2px">Every case</div>`+c.cases.map(k=>`<div style="font-weight:700;margin:6px 0 2px">${esc(k.name)}</div><div style="${box}">${esc(k.text||'')}</div>`).join(''):'')+
+    ((c.settings||[]).length?`<div class="sect" style="margin:8px 0 2px">Its settings</div>`+c.settings.map(x=>`<div class="muted" style="margin:3px 0"><b style="color:#fff">${esc(x.label)}</b>: ${esc(x.value)}</div>`).join('')+'<div class="muted" style="margin:6px 0 0;font-size:12px">Change them in Channel bot settings or on the laptop (Template).</div>':'')+
+    `</div>`).join('')).join('')+
+    ((j.changes||[]).length?`<div class="sect">Last changes</div><div class="card">${j.changes.map(h=>`<div class="muted" style="margin:3px 0">${esc(h.at||'')} · ${esc(h.what||'')}${h.undone?' (undone)':''}</div>`).join('')}</div>`:'')+
+    `<p class="muted" style="margin:10px 4px">From the laptop · ${esc(j.made||'')}</p>`,()=>{setTimeout(fillThumbs,50);});}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tplx]');if(b){tplPage(b.dataset.tplx);}},true);
 function botSetLine(){const n=Object.keys(S.botset||{}).length;return n?n+' channel'+(n>1?'s':'')+' · synced with the laptop':'Waiting for the bots';}
 function botSetList(){const L=Object.entries(S.botset||{});
   openSub('Channel bot settings',`<p class="muted" style="margin:0 4px 10px">Every setting of each channel bot, the same as on the laptop. Change it here: the laptop takes it in a few minutes. Newest change wins.</p>
